@@ -11,7 +11,7 @@ import com.mygdx.game.managers.GameScreenManager;
 public class Application extends Game {
 
 	// Application Globals
-	public static String APP_TITLE = "Game";
+	public static String APP_TITLE = "Projectile Wars";
 	public static int APP_DESKTOP_WIDTH = 720; 	// Scaled
 	public static int APP_DESKTOP_HEIGHT = 420;	// Scaled
 	public static int APP_FPS = 60;
