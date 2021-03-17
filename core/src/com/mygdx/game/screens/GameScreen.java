@@ -15,7 +15,7 @@ import static com.mygdx.game.utils.B2DConstants.PPM;
 public class GameScreen extends AbstractScreen {
 
     // Camera
-    public OrthographicCamera camera;
+    public static OrthographicCamera camera;
     private final float width;
     private final float height;
 

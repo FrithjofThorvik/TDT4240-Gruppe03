@@ -7,9 +7,12 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.screens.GameScreen;
 
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
@@ -33,8 +36,17 @@ public class ControllerSystem extends EntitySystem {
             VelocityComponent velocity=vm.get(entity);
 
             if(Gdx.input.isTouched()) {
-                position.x=Gdx.input.getX();
-                position.y=Gdx.graphics.getHeight()-Gdx.input.getY();
+                //get the screen position of the touch
+                float xTouchPixels = Gdx.input.getX();
+                float yTouchPixels = Gdx.input.getY();
+
+                //convert to world position
+                Vector3 touchPoint = new Vector3(xTouchPixels,yTouchPixels,0);
+                touchPoint = GameScreen.camera.unproject(touchPoint);
+
+                //move the entity
+                position.x=touchPoint.x;
+                position.y=touchPoint.y;
             }
         }
     }
