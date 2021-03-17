@@ -8,7 +8,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 public class B2DContactListener implements ContactListener {
 
-    public B2DContactListener() {}
+    public B2DContactListener() {
+    }
 
     // Called when two Fixtures collide
     @Override
@@ -17,9 +18,15 @@ public class B2DContactListener implements ContactListener {
         Fixture fixtureB = contact.getFixtureB();
     }
 
-    @Override public void endContact(Contact contact){}
+    @Override
+    public void endContact(Contact contact) {
+    }
 
-    @Override public void preSolve(Contact contact, Manifold oldManifold) {}
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+    }
 
-    @Override public void postSolve(Contact contact, ContactImpulse impulse) {}
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+    }
 }

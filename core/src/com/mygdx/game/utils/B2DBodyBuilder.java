@@ -13,7 +13,8 @@ import static com.mygdx.game.utils.B2DConstants.PPM;
 
 public class B2DBodyBuilder {
 
-    private B2DBodyBuilder() {}
+    private B2DBodyBuilder() {
+    }
 
     public static Body createBox(World world, float x, float y, float width, float height, short cBits, short mBits, String id) {
         Body body;
@@ -64,7 +65,7 @@ public class B2DBodyBuilder {
         Body body;
         BodyDef bDef = new BodyDef();
         bDef.type = BodyDef.BodyType.StaticBody;
-        body = world.createBody( bDef);
+        body = world.createBody(bDef);
 
         ChainShape shape = new ChainShape();
         shape.createChain(wall);

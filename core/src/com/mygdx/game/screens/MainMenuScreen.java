@@ -25,7 +25,9 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     @Override
-    public void update(float delta) { this.handleInput(); }
+    public void update(float delta) {
+        this.handleInput();
+    }
 
     @Override
     public void render(float delta) {
@@ -44,5 +46,7 @@ public class MainMenuScreen extends AbstractScreen {
         playBtn.dispose();
     }
 
-    @Override public void show() {}
+    @Override
+    public void show() {
+    }
 }
