@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.mygdx.game.Application;
+import com.mygdx.game.ECS.components.HasControlComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.ECS.systems.ControllerSystem;
+import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 
 public class EntityManager {//This class will systems and components, and takes in an engine
@@ -24,19 +26,22 @@ public class EntityManager {//This class will systems and components, and takes 
         engine = e;
 
         //Instantiate systems and add them to engine
-        ControllerSystem cms = new ControllerSystem();
-        engine.addSystem(cms);
+        ControllerSystem cs = new ControllerSystem();
+        engine.addSystem(cs);
         RenderingSystem rs = new RenderingSystem(batch);
         engine.addSystem(rs);
+        ProjectileSystem ps = new ProjectileSystem();
+        engine.addSystem(ps);
 
         //Instantiate entities and add them to the engine
         Entity entity = new Entity();
-        entity.add(new VelocityComponent(MathUtils.random(-1, 1)))
+        entity.add(new VelocityComponent(0))
                 .add(new SpriteComponent(new Texture("badlogic.jpg"), 50f))
                 .add(new RenderableComponent())
                 .add(new PositionComponent(Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 2f))
-                .add(new HealthComponent(100));
+                .add(new HealthComponent(100))
+                .add(new HasControlComponent());
 
         engine.addEntity(entity);
 
