@@ -9,14 +9,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Application;
-import com.mygdx.game.ECS.EntityManager;
 import com.mygdx.game.ECS.components.HasControlComponent;
-import com.mygdx.game.ECS.components.HealthComponent;
-import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
@@ -25,53 +19,53 @@ import com.mygdx.game.ECS.components.TakeAimComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.screens.GameScreen;
 
-import static com.mygdx.game.utils.B2DConstants.PPM;
-
-public class ControllerSystem extends EntitySystem {
+public class AimingSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
-    private EntityManager entityManager;
+    Vector3 touchPoint;
+    int direction=1;
 
     //Using a component mapper is the fastest way to load entities
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 
-    public ControllerSystem(){}
+    public AimingSystem(){}
 
     public void addedToEngine(Engine e){//will be called automatically by the engine
-        entities = e.getEntitiesFor(Family.all(PlayerComponent.class, HasControlComponent.class).get());
+        entities = e.getEntitiesFor(Family.all(TakeAimComponent.class).get());
     }
 
     public void update(float deltaTime){//will be called by the engine automatically
         for(int i=0;i<entities.size();++i){
-            Entity entity = entities.get(i);
-            PositionComponent position=pm.get(entity);
-            VelocityComponent velocity=vm.get(entity);
+            Entity player = entities.get(i);
+            PositionComponent position=pm.get(player);
 
-            if(velocity.velocity!=0){
-                position.x+=velocity.velocity;
-            }
-
+            //take aim
             if(Gdx.input.isTouched()) {
                 //get the screen position of the touch
                 float xTouchPixels = Gdx.input.getX();
                 float yTouchPixels = Gdx.input.getY();
 
                 //convert to world position
-                Vector3 touchPoint = new Vector3(xTouchPixels,yTouchPixels,0);
+                touchPoint = new Vector3(xTouchPixels,yTouchPixels,0);
                 touchPoint = GameScreen.camera.unproject(touchPoint);
-
-                //move the entity
-                position.x=touchPoint.x;
-                position.y=touchPoint.y;
+                if(touchPoint.x>position.x){
+                    direction=1;
+                }
+                else {
+                    direction=-1;
+                }
             }
 
-            //Only the entity that has the HasControlComponent is allowed to fire a projectile
-            //This is just some shit example code :P
-            if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-                entity.add(new TakeAimComponent());
-                entity.remove(HasControlComponent.class);
+            if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
+                Entity projectile = new Entity();
+                projectile.add(new VelocityComponent(30*direction))
+                        .add(new SpriteComponent(new Texture("badlogic.jpg"), 20f))
+                        .add(new RenderableComponent())
+                        .add(new PositionComponent(position.x+direction*player.getComponent(SpriteComponent.class).size,
+                                position.y))
+                        .add(new ProjectileDamageComponent(20,20));
+                getEngine().addEntity(projectile);
+                player.remove(TakeAimComponent.class);
             }
         }
     }
-
 }
