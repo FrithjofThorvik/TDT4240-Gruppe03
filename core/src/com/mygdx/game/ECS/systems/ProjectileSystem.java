@@ -11,8 +11,9 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 
+//This system should control a projectile after it has been created/fired
 public class ProjectileSystem extends EntitySystem {
-    private ImmutableArray<Entity> entities;
+    private ImmutableArray<Entity> projectiles;
 
     //Using a component mapper is the fastest way to load entities
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -22,21 +23,23 @@ public class ProjectileSystem extends EntitySystem {
     public ProjectileSystem() {
     }
 
-    public void addedToEngine(Engine e) {//will be called automatically by the engine
-        entities = e.getEntitiesFor(Family.all(ProjectileDamageComponent.class,PositionComponent.class, VelocityComponent.class).get());
+    //will be called automatically by the engine
+    public void addedToEngine(Engine e) {
+        projectiles = e.getEntitiesFor(Family.all(ProjectileDamageComponent.class, PositionComponent.class, VelocityComponent.class).get());
     }
 
-    public void update(float deltaTime) {//will be called by the engine automatically
-        for (int i = 0; i < entities.size(); ++i) {
-            Entity entity = entities.get(i);
+    //will be called by the engine automatically
+    public void update(float deltaTime) {
+        for (int i = 0; i < projectiles.size(); ++i) {
+            Entity entity = projectiles.get(i);
             ProjectileDamageComponent damage = em.get(entity);
-            PositionComponent position=pm.get(entity);
-            VelocityComponent vel=vm.get(entity);
+            PositionComponent position = pm.get(entity);
+            VelocityComponent vel = vm.get(entity);
 
             //DO SOMETHING HERE
-            //This is just a simple demo code
-            position.position.x+=vel.velocity.x;
-            position.position.y+=vel.velocity.y;
+            //This is just a simple demo code that moves the projectile
+            position.position.x += vel.velocity.x;
+            position.position.y += vel.velocity.y;
 
         }
     }

@@ -11,6 +11,7 @@ import com.mygdx.game.ECS.components.EffectComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 
+//This system should control the PowerUps (HAS NOT BEEN IMPLEMENTED YET)
 public class PowerUpSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
 
@@ -19,11 +20,13 @@ public class PowerUpSystem extends EntitySystem {
     public PowerUpSystem() {
     }
 
-    public void addedToEngine(Engine e) {//will be called automatically by the engine
+    //will be called automatically by the engine
+    public void addedToEngine(Engine e) {
         entities = e.getEntitiesFor(Family.all(EffectComponent.class).get());
     }
 
-    public void update(float deltaTime) {//will be called by the engine automatically
+    //will be called by the engine automatically
+    public void update(float deltaTime) {
         for (int i = 0; i < entities.size(); ++i) {
             Entity entity = entities.get(i);
             EffectComponent effect = em.get(entity);

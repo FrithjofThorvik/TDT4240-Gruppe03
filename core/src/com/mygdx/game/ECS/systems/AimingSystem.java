@@ -9,9 +9,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.ECS.components.HasControlComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
@@ -20,58 +18,77 @@ import com.mygdx.game.ECS.components.TakeAimComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.screens.GameScreen;
 
+//This system should control the aiming of a projectile
+//A player gets the TakeAimComponent when it is ready to aim
+//A player with the TakeAimComponent is controlled by the AimingSystem
 public class AimingSystem extends EntitySystem {
-    private ImmutableArray<Entity> entities;
-    Vector3 touchPoint;
-    private double aimAngleInRad;
+    private ImmutableArray<Entity> playersAiming;
+    Vector3 touchPoint;//Where in the world does a touch on the screen correspond to
+    private double aimAngleInRad;//The aim angle in radians. The projectile is shot according to this angle
 
     //Using a component mapper is the fastest way to load entities
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
-    public AimingSystem(){}
-
-    public void addedToEngine(Engine e){//will be called automatically by the engine
-        entities = e.getEntitiesFor(Family.all(TakeAimComponent.class).get());
+    public AimingSystem() {
     }
 
-    public void update(float deltaTime){//will be called by the engine automatically
-        for(int i=0;i<entities.size();++i){
-            Entity player = entities.get(i);
-            PositionComponent position=pm.get(player);
+    //will be called automatically by the engine
+    public void addedToEngine(Engine e) {
+        playersAiming = e.getEntitiesFor(Family.all(TakeAimComponent.class).get());
+    }
 
-            //take aim
-            if(Gdx.input.isTouched()) {
+    //will be called by the engine automatically
+    public void update(float deltaTime) {
+        //For all players with the TakeAimComponent (should only be one at a time)
+        for (int i = 0; i < playersAiming.size(); ++i) {
+            Entity player = playersAiming.get(i);
+            PositionComponent position = pm.get(player);//Get the position component of that player
+
+            //Calculate the aim angle when the screen is touched
+            if (Gdx.input.isTouched()) {
                 //get the screen position of the touch
                 float xTouchPixels = Gdx.input.getX();
                 float yTouchPixels = Gdx.input.getY();
 
                 //convert to world position
-                touchPoint = new Vector3(xTouchPixels,yTouchPixels,0);
+                touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
                 touchPoint = GameScreen.camera.unproject(touchPoint);
 
                 //find the aim angle
-                aimAngleInRad = calculateAngle(touchPoint.x-position.position.x,touchPoint.y-position.position.y);
+                aimAngleInRad = calculateAngle(touchPoint.x - position.position.x, touchPoint.y - position.position.y);
             }
 
-            if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
-                shootProjectile(player,position);
+            //When the player presses "S" shoot the projectile
+            if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+                shootProjectile(player, position);
             }
         }
     }
 
-    private double calculateAngle(float deltaX, float deltaY){
-        return Math.atan2(deltaX,deltaY);
+    //Math for calculating the angle given difference in touch position and player position
+    private double calculateAngle(float deltaX, float deltaY) {
+        return Math.atan2(deltaX, deltaY);
     }
-    public void shootProjectile(Entity currentPlayer, PositionComponent position){
+
+    //Create a projectile and shoot said projectile according to the aim angle
+    public void shootProjectile(Entity currentPlayer, PositionComponent position) {
         Entity projectile = new Entity();
-        projectile.add(new VelocityComponent(10*(float)Math.sin(aimAngleInRad),10*(float)Math.cos(aimAngleInRad)))
+        projectile.add(new ProjectileDamageComponent(20, 20, 10));
+
+        //This is a bit redundant since the speed is given above, but it should be possible for projectiles to have different speeds
+        int projectileSpeed = projectile.getComponent(ProjectileDamageComponent.class).speed;
+        projectile.add(new VelocityComponent(projectileSpeed * (float) Math.sin(aimAngleInRad), projectileSpeed * (float) Math.cos(aimAngleInRad)))
+                //The velocity component is dependent on the aim angle
                 .add(new SpriteComponent(new Texture("badlogic.jpg"), 20f))
                 .add(new RenderableComponent())
                 .add(new PositionComponent(position.position.x,
-                        position.position.y))
-                .add(new ProjectileDamageComponent(20,20));
+                        position.position.y));
+
+        //Add the new projectile to the engine
         getEngine().addEntity(projectile);
+        //Now that the projectile has been shot -> move on to the next player
         getEngine().getSystem(GameplaySystem.class).nextPlayerTurn(currentPlayer);
+        //Now that the projectile has been shot -> remove the TakeAimComponent from the current player
         currentPlayer.remove(TakeAimComponent.class);
     }
 }
