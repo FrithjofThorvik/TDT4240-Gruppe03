@@ -20,18 +20,18 @@ public class PowerUpSystem extends EntitySystem {
     public PowerUpSystem() {
     }
 
-    //will be called automatically by the engine
+    // Will be called automatically by the engine
     public void addedToEngine(Engine e) {
         entities = e.getEntitiesFor(Family.all(EffectComponent.class).get());
     }
 
-    //will be called by the engine automatically
+    // Will be called by the engine automatically
     public void update(float deltaTime) {
         for (int i = 0; i < entities.size(); ++i) {
             Entity entity = entities.get(i);
             EffectComponent effect = em.get(entity);
 
-            //DO SOMETHING HERE
+            // DO SOMETHING HERE
         }
     }
 }

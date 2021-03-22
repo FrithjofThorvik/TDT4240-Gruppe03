@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
@@ -41,7 +42,7 @@ public class EntityManager {
         //Instantiate player entities
         Entity player1 = new Entity();
         player1.add(new VelocityComponent(0, 0))
-                .add(new SpriteComponent(new Texture("badlogic.jpg"), 50f))
+                .add(new SpriteComponent(new Texture("tank.png"), 50f))
                 .add(new RenderableComponent())
                 .add(new PositionComponent(0 + player1.getComponent(SpriteComponent.class).size,
                         Gdx.graphics.getHeight() / 2f))
@@ -50,16 +51,23 @@ public class EntityManager {
 
         Entity player2 = new Entity();
         player2.add(new VelocityComponent(0, 0))
-                .add(new SpriteComponent(new Texture("badlogic.jpg"), 50f))
+                .add(new SpriteComponent(new Texture("tank.png"), 50f))
                 .add(new RenderableComponent())
                 .add(new PositionComponent(Gdx.graphics.getWidth() - player2.getComponent(SpriteComponent.class).size,
                         Gdx.graphics.getHeight() / 2f))
                 .add(new HealthComponent(100))
                 .add(new PlayerComponent());
 
+        // Create timer entity
+        Entity timer = new Entity();
+        timer.add(new FontComponent("Time: 0.0s"))
+                .add(new RenderableComponent())
+                .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() * 0.97f));
+
         //Add entities to the engine
         engine.addEntity(player1);
         engine.addEntity(player2);
+        engine.addEntity(timer);
     }
 
     //On update, call the engines update method

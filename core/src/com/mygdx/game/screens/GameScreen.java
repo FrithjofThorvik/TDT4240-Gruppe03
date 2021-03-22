@@ -16,25 +16,21 @@ public class GameScreen extends AbstractScreen {
 
     // Camera
     public static OrthographicCamera camera;
-    private final float width;
-    private final float height;
 
     // Box2D
     public World world;
     public Box2DDebugRenderer b2dr;
 
     //ECS
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
 
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
 
         // Set camera
-        this.camera = new OrthographicCamera();
-        this.camera.setToOrtho(false, Application.V_WIDTH, Application.V_HEIGHT);
-        this.width = camera.viewportWidth;
-        this.height = camera.viewportHeight;
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Application.V_WIDTH, Application.V_HEIGHT);
 
         // Adjust app batches to the camera view (combined = viewport matrix)
         app.batch.setProjectionMatrix(camera.combined);

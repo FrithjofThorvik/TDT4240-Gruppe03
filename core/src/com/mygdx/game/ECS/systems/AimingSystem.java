@@ -92,18 +92,19 @@ public class AimingSystem extends EntitySystem {
         projectile.add(new ProjectileDamageComponent(20, 20, 10));
 
         //This is a bit redundant since the speed is given above, but it should be possible for projectiles to have different speeds
-        int projectileSpeed = projectile.getComponent(ProjectileDamageComponent.class).speed;
         projectile.add(new VelocityComponent(power * (float) Math.sin(aimAngleInRad), power * (float) Math.cos(aimAngleInRad)))
                 //The velocity component is dependent on the aim angle
-                .add(new SpriteComponent(new Texture("badlogic.jpg"), 20f))
+                .add(new SpriteComponent(new Texture("cannonball.png"), 25f))
                 .add(new RenderableComponent())
                 .add(new PositionComponent(position.position.x,
                         position.position.y));
 
         //Add the new projectile to the engine
         getEngine().addEntity(projectile);
+
         //Now that the projectile has been shot -> move on to the next player
         getEngine().getSystem(GameplaySystem.class).nextPlayerTurn(currentPlayer);
+
         //Now that the projectile has been shot -> remove the TakeAimComponent from the current player
         currentPlayer.remove(TakeAimComponent.class);
     }
