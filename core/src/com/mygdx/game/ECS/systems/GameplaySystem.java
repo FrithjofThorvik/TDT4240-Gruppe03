@@ -19,7 +19,7 @@ import com.mygdx.game.ECS.components.TakeAimComponent;
 public class GameplaySystem extends EntitySystem {
     float time = 0; // To keep track of time
     float timeBetweenRounds = 2; // How much time for players to prepare between rounds
-    float roundLength = 5; // How much time does the player have to move and shoot
+    float roundLength = 20; // How much time does the player have to move and shoot
     int playerNr = 0; // Decides which player has the turn
     boolean gameStart = false; // Is set to true when timeBetweenRounds has passed
 

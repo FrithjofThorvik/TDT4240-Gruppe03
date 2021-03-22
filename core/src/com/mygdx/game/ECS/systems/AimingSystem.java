@@ -48,7 +48,7 @@ public class AimingSystem extends EntitySystem {
             PositionComponent position = pm.get(player);//Get the position component of that player
 
             //Calculate the aim angle when the screen is touched
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.isTouched() && !choosePower) {
                 //get the screen position of the touch
                 float xTouchPixels = Gdx.input.getX();
                 float yTouchPixels = Gdx.input.getY();
