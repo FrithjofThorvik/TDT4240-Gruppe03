@@ -9,6 +9,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.ECS.components.HasControlComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
@@ -22,7 +23,7 @@ import com.mygdx.game.screens.GameScreen;
 public class AimingSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     Vector3 touchPoint;
-    int direction=1;
+    private double aimAngleInRad;
 
     //Using a component mapper is the fastest way to load entities
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -47,25 +48,30 @@ public class AimingSystem extends EntitySystem {
                 //convert to world position
                 touchPoint = new Vector3(xTouchPixels,yTouchPixels,0);
                 touchPoint = GameScreen.camera.unproject(touchPoint);
-                if(touchPoint.x>position.x){
-                    direction=1;
-                }
-                else {
-                    direction=-1;
-                }
+
+                //find the aim angle
+                aimAngleInRad = calculateAngle(touchPoint.x-position.position.x,touchPoint.y-position.position.y);
             }
 
             if(Gdx.input.isKeyJustPressed(Input.Keys.S)){
-                Entity projectile = new Entity();
-                projectile.add(new VelocityComponent(30*direction))
-                        .add(new SpriteComponent(new Texture("badlogic.jpg"), 20f))
-                        .add(new RenderableComponent())
-                        .add(new PositionComponent(position.x+direction*player.getComponent(SpriteComponent.class).size,
-                                position.y))
-                        .add(new ProjectileDamageComponent(20,20));
-                getEngine().addEntity(projectile);
-                player.remove(TakeAimComponent.class);
+                shootProjectile(player,position);
             }
         }
+    }
+
+    private double calculateAngle(float deltaX, float deltaY){
+        return Math.atan2(deltaX,deltaY);
+    }
+    public void shootProjectile(Entity currentPlayer, PositionComponent position){
+        Entity projectile = new Entity();
+        projectile.add(new VelocityComponent(10*(float)Math.sin(aimAngleInRad),10*(float)Math.cos(aimAngleInRad)))
+                .add(new SpriteComponent(new Texture("badlogic.jpg"), 20f))
+                .add(new RenderableComponent())
+                .add(new PositionComponent(position.position.x,
+                        position.position.y))
+                .add(new ProjectileDamageComponent(20,20));
+        getEngine().addEntity(projectile);
+        getEngine().getSystem(GameplaySystem.class).nextPlayerTurn(currentPlayer);
+        currentPlayer.remove(TakeAimComponent.class);
     }
 }

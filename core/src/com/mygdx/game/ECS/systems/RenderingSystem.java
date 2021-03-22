@@ -33,7 +33,7 @@ public class RenderingSystem extends EntitySystem {
             SpriteComponent scom = entity.getComponent(SpriteComponent.class);
             PositionComponent pcom = entity.getComponent(PositionComponent.class);
             //Draw the sprite, so that the center of its sprite is the position of the given entity
-            batch.draw(scom.sprite.getTexture(), (pcom.x - scom.size / 2), (pcom.y - scom.size / 2),
+            batch.draw(scom.sprite.getTexture(), (pcom.position.x - scom.size / 2), (pcom.position.y - scom.size / 2),
                     scom.size, scom.size);
         }
     }

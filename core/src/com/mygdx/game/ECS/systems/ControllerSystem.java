@@ -45,11 +45,10 @@ public class ControllerSystem extends EntitySystem {
         for(int i=0;i<entities.size();++i){
             Entity entity = entities.get(i);
             PositionComponent position=pm.get(entity);
-            VelocityComponent velocity=vm.get(entity);
+            VelocityComponent vel=vm.get(entity);
 
-            if(velocity.velocity!=0){
-                position.x+=velocity.velocity;
-            }
+            position.position.x+=vel.velocity.x;
+            position.position.y+=vel.velocity.y;
 
             if(Gdx.input.isTouched()) {
                 //get the screen position of the touch
@@ -61,8 +60,8 @@ public class ControllerSystem extends EntitySystem {
                 touchPoint = GameScreen.camera.unproject(touchPoint);
 
                 //move the entity
-                position.x=touchPoint.x;
-                position.y=touchPoint.y;
+                position.position.x=touchPoint.x;
+                position.position.y=touchPoint.y;
             }
 
             //Only the entity that has the HasControlComponent is allowed to fire a projectile

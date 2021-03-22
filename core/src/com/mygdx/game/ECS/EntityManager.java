@@ -43,7 +43,7 @@ public class EntityManager {//This class will systems and components, and takes 
 
         //Instantiate entities and add them to the engine
         Entity player1 = new Entity();
-        player1.add(new VelocityComponent(0))
+        player1.add(new VelocityComponent(0,0))
                 .add(new SpriteComponent(new Texture("badlogic.jpg"), 50f))
                 .add(new RenderableComponent())
                 .add(new PositionComponent(0+player1.getComponent(SpriteComponent.class).size,
@@ -52,7 +52,7 @@ public class EntityManager {//This class will systems and components, and takes 
                 .add(new PlayerComponent());
 
         Entity player2 = new Entity();
-        player2.add(new VelocityComponent(0))
+        player2.add(new VelocityComponent(0,0))
                 .add(new SpriteComponent(new Texture("badlogic.jpg"), 50f))
                 .add(new RenderableComponent())
                 .add(new PositionComponent(Gdx.graphics.getWidth()-player2.getComponent(SpriteComponent.class).size,

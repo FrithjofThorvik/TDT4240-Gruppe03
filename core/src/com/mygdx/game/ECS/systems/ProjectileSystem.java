@@ -31,13 +31,12 @@ public class ProjectileSystem extends EntitySystem {
             Entity entity = entities.get(i);
             ProjectileDamageComponent damage = em.get(entity);
             PositionComponent position=pm.get(entity);
-            VelocityComponent velocity=vm.get(entity);
+            VelocityComponent vel=vm.get(entity);
 
             //DO SOMETHING HERE
             //This is just a simple demo code
-            if(velocity.velocity!=0){
-                position.x+=velocity.velocity;
-            }
+            position.position.x+=vel.velocity.x;
+            position.position.y+=vel.velocity.y;
 
         }
     }
