@@ -25,6 +25,9 @@ public class AimingSystem extends EntitySystem {
     private ImmutableArray<Entity> playersAiming;
     Vector3 touchPoint;//Where in the world does a touch on the screen correspond to
     private double aimAngleInRad;//The aim angle in radians. The projectile is shot according to this angle
+    float power;
+    float maxPower = 2;
+    boolean choosePower = false;
 
     //Using a component mapper is the fastest way to load entities
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -59,8 +62,21 @@ public class AimingSystem extends EntitySystem {
             }
 
             //When the player presses "S" shoot the projectile
-            if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-                shootProjectile(player, position);
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                choosePower = true;
+            }
+
+            if (choosePower) {
+                power += deltaTime;
+                if (!Gdx.input.isKeyPressed(Input.Keys.S)) {
+                    shootProjectile(player, position, (float)Math.pow(10, power) );
+                    choosePower = false;
+                    power = 0;
+                } else if (power >= maxPower) {
+                    shootProjectile(player, position, (float)Math.pow(10, maxPower));
+                    choosePower = false;
+                    power = 0;
+                }
             }
         }
     }
@@ -71,13 +87,13 @@ public class AimingSystem extends EntitySystem {
     }
 
     //Create a projectile and shoot said projectile according to the aim angle
-    public void shootProjectile(Entity currentPlayer, PositionComponent position) {
+    public void shootProjectile(Entity currentPlayer, PositionComponent position, float power) {
         Entity projectile = new Entity();
         projectile.add(new ProjectileDamageComponent(20, 20, 10));
 
         //This is a bit redundant since the speed is given above, but it should be possible for projectiles to have different speeds
         int projectileSpeed = projectile.getComponent(ProjectileDamageComponent.class).speed;
-        projectile.add(new VelocityComponent(projectileSpeed * (float) Math.sin(aimAngleInRad), projectileSpeed * (float) Math.cos(aimAngleInRad)))
+        projectile.add(new VelocityComponent(power * (float) Math.sin(aimAngleInRad), power * (float) Math.cos(aimAngleInRad)))
                 //The velocity component is dependent on the aim angle
                 .add(new SpriteComponent(new Texture("badlogic.jpg"), 20f))
                 .add(new RenderableComponent())

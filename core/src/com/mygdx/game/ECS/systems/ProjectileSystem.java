@@ -40,6 +40,7 @@ public class ProjectileSystem extends EntitySystem {
             //This is just a simple demo code that moves the projectile
             position.position.x += vel.velocity.x;
             position.position.y += vel.velocity.y;
+            vel.velocity.y-=9.8f*deltaTime;
 
         }
     }
