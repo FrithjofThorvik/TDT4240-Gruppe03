@@ -56,8 +56,8 @@ public class RenderingSystem extends EntitySystem {
             PositionComponent pc = entity.getComponent(PositionComponent.class);
 
             // Draw the sprite, so that the center of its sprite is the position of the given entity
-            batch.draw(sc.sprite.getTexture(), (pc.position.x - sc.size / 2), (pc.position.y - sc.size / 2),
-                    sc.size, sc.size);
+            batch.draw(sc.sprite.getTexture(), (pc.position.x - sc.size.x / 2), (pc.position.y - sc.size.y / 2),
+                    sc.size.x, sc.size.y);
         }
 
         // Loop through all sprite entities, and draw screen

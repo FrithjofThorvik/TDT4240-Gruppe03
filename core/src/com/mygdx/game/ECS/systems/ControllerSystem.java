@@ -21,8 +21,8 @@ public class ControllerSystem extends EntitySystem {
     private ImmutableArray<Entity> playersInControl;
 
     //Using a component mapper is the fastest way to load entities
-    private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
+    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 
     public ControllerSystem() {
     }

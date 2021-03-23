@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.EntityManager;
@@ -23,7 +27,6 @@ public class GameScreen extends AbstractScreen {
 
     //ECS
     private final EntityManager entityManager;
-
 
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
@@ -47,11 +50,9 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-
         app.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
     }
-
     @Override
     public void update(float delta) {
         this.world.step(1f / Application.APP_FPS, 6, 2);
