@@ -47,22 +47,7 @@ public class ControllerSystem extends EntitySystem {
             VelocityComponent vel = vm.get(entity);
 
             if (Gdx.input.isTouched()) {
-                //get the screen position of the touch
-                float xTouchPixels = Gdx.input.getX();
-                float yTouchPixels = Gdx.input.getY();
-
-                //convert to world position
-                Vector3 touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
-                touchPoint = GameScreen.camera.unproject(touchPoint);
-
-                //Move the player according to its velocity
-
-                if(position.position.x<touchPoint.x){
-                    position.position.x += vel.velocity.x;
-                }
-                else if (position.position.x>touchPoint.x){
-                    position.position.x -= vel.velocity.x;
-                }
+                movePlayer(position,vel);
             }
 
             //When space is pressed -> the player moves on to take aim and loses movement control
@@ -74,6 +59,25 @@ public class ControllerSystem extends EntitySystem {
                     powerBarComp.add(new RenderableComponent());
                 }
             }
+        }
+    }
+
+    public void movePlayer(PositionComponent position, VelocityComponent vel){
+        //get the screen position of the touch
+        float xTouchPixels = Gdx.input.getX();
+        float yTouchPixels = Gdx.input.getY();
+
+        //convert to world position
+        Vector3 touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
+        touchPoint = GameScreen.camera.unproject(touchPoint);
+
+        //Move the player according to its velocity
+
+        if(position.position.x<touchPoint.x){
+            position.position.x += vel.velocity.x;
+        }
+        else if (position.position.x>touchPoint.x){
+            position.position.x -= vel.velocity.x;
         }
     }
 
