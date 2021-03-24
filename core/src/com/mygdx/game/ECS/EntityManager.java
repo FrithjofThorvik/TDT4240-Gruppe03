@@ -42,7 +42,7 @@ public class EntityManager {
 
         //Instantiate player entities
         Entity player1 = new Entity();
-        player1.add(new VelocityComponent(0, 0))
+        player1.add(new VelocityComponent(2, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(0 + player1.getComponent(SpriteComponent.class).size.x,
                         Gdx.graphics.getHeight() / 2f))
@@ -51,7 +51,7 @@ public class EntityManager {
                 .add(new PlayerComponent());
 
         Entity player2 = new Entity();
-        player2.add(new VelocityComponent(0, 0))
+        player2.add(new VelocityComponent(2, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() - 100f,
                         Gdx.graphics.getHeight() / 2f))
@@ -68,7 +68,6 @@ public class EntityManager {
         Entity powerbar = new Entity();
         powerbar.add(new SpriteComponent(new Texture("powerbar.png"), 40f, 350f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() - 50f, Gdx.graphics.getHeight() / 2f))
-                .add(new RenderableComponent())
                 .add(new PowerbarComponent());
 
         Entity powerArrow = new Entity();
@@ -76,7 +75,6 @@ public class EntityManager {
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
                         (Gdx.graphics.getHeight() - powerbar.getComponent(SpriteComponent.class).size.y) / 2f))
-                .add(new RenderableComponent())
                 .add(new PowerbarComponent());
 
         //Add entities to the engine

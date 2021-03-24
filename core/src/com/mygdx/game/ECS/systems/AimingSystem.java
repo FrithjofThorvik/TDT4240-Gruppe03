@@ -11,6 +11,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.ECS.EntityManager;
+import com.mygdx.game.ECS.States.RoundSwitch;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.PowerbarComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
@@ -95,7 +97,7 @@ public class AimingSystem extends EntitySystem {
 
                 // Shoot if S key sops being pressed
                 if (!Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    shootProjectile(player, position, (float)Math.pow(10, power) );
+                    shootProjectile(player, position, (float)Math.pow(5, power) );
                     arrowPosition.position.y = bottomHeight; // Reset power bar height
                     choosePower = false;
                     power = 0;
@@ -103,7 +105,7 @@ public class AimingSystem extends EntitySystem {
 
                 // Shoot if power reaches max power
                 else if (power >= maxPower) {
-                    shootProjectile(player, position, (float)Math.pow(10, maxPower));
+                    shootProjectile(player, position, (float)Math.pow(5, maxPower));
                     arrowPosition.position.y = bottomHeight; // Reset power bar height
                     choosePower = false;
                     power = 0;
@@ -121,6 +123,11 @@ public class AimingSystem extends EntitySystem {
 
     //Create a projectile and shoot said projectile according to the aim angle
     public void shootProjectile(Entity currentPlayer, PositionComponent position, float power) {
+        //Make powerbar not renderable after you have taken the shot
+        for (int i=0; i<powerBarEntities.size(); ++i){
+            Entity powerBarComp = powerBarEntities.get(i);
+            powerBarComp.remove(RenderableComponent.class);
+        }
         Entity projectile = new Entity();
         projectile.add(new ProjectileDamageComponent(20, 20, 10));
 
@@ -136,7 +143,7 @@ public class AimingSystem extends EntitySystem {
         getEngine().addEntity(projectile);
 
         //Now that the projectile has been shot -> move on to the next player
-        getEngine().getSystem(GameplaySystem.class).nextPlayerTurn(currentPlayer);
+        getEngine().getSystem(GameplaySystem.class).context.setState(new RoundSwitch());
 
         //Now that the projectile has been shot -> remove the TakeAimComponent from the current player
         currentPlayer.remove(TakeAimComponent.class);
