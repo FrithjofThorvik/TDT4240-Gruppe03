@@ -41,9 +41,10 @@ public class PhysicsSystem extends EntitySystem {
             Entity entity = box2DEntities.get(i);
             Box2DComponent bc = entity.getComponent(Box2DComponent.class);
             PositionComponent pc = entity.getComponent(PositionComponent.class);
+            VelocityComponent vc = entity.getComponent(VelocityComponent.class);
 
+            bc.body.applyLinearImpulse(vc.velocity, bc.body.getWorldCenter(),false);
             pc.position = new Vector2(bc.body.getPosition().x, bc.body.getPosition().y);
-
         }
     }
 }

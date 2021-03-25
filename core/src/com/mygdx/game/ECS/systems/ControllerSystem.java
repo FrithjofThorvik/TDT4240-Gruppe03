@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
@@ -46,10 +47,12 @@ public class ControllerSystem extends EntitySystem {
             //Get components
             PositionComponent position = pm.get(entity);
             VelocityComponent vel = vm.get(entity);
-            Box2DComponent b2d =b2dm.get(entity);
 
             if (Gdx.input.isTouched()) {
-                movePlayer(position,b2d,vel);
+                movePlayer(position,vel);
+            }
+            else {
+                vel.velocity = new Vector2(0,0);
             }
 
             //When space is pressed -> the player moves on to take aim and loses movement control
@@ -64,7 +67,7 @@ public class ControllerSystem extends EntitySystem {
         }
     }
 
-    public void movePlayer(PositionComponent position, Box2DComponent b2d, VelocityComponent vel){
+    public void movePlayer(PositionComponent position, VelocityComponent vel){
         //get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
         float yTouchPixels = Gdx.input.getY();
@@ -76,10 +79,10 @@ public class ControllerSystem extends EntitySystem {
         //Move the player according to its velocity
 
         if(position.position.x<touchPoint.x){
-            b2d.body.setLinearVelocity(vel.velocity.x,-98f);
+            vel.velocity.x = 1000;
         }
         else if (position.position.x>touchPoint.x){
-            b2d.body.setLinearVelocity(-vel.velocity.x,-98f);
+            vel.velocity.x=-1000;
         }
     }
 

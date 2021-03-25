@@ -35,7 +35,7 @@ public class GameScreen extends AbstractScreen {
 
         // Create world
         this.b2dr = new Box2DDebugRenderer();
-        this.world = new World(new Vector2(0f, -98f), false);
+        this.world = new World(new Vector2(0f, -0.98f), false);
 
         //Setup ECS
         Engine engine = new Engine();
