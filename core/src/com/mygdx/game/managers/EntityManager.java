@@ -2,6 +2,8 @@ package com.mygdx.game.managers;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.PowerbarComponent;
@@ -110,6 +113,24 @@ public class EntityManager {
         engine.addEntity(powerArrow);
 
         engine.addEntity(test);
+
+        // Add entity listener -> that stops the entity from moving when it loses the MovementControlComponent
+        EntityListener listener = new EntityListener() {
+            @Override
+            public void entityAdded(Entity entity) {
+                //Do nothing
+            }
+
+            @Override
+            public void entityRemoved(Entity entity) {
+                //Set the linear velocity of the entity's box2d body to 0 in x direction
+                Box2DComponent box2DComponent = entity.getComponent(Box2DComponent.class);
+                box2DComponent.body.setLinearVelocity(0,box2DComponent.body.getLinearVelocity().y);
+            }
+        };
+        // The family decides which components the entity listener should listen for
+        Family HasControl = Family.all(MovementControlComponent.class).get();
+        engine.addEntityListener(HasControl,listener);
     }
 
     //On update, call the engines update method
