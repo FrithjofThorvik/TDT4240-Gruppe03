@@ -41,7 +41,7 @@ public class EntityManager {
         ProjectileSystem ps = new ProjectileSystem();
         GameplaySystem gms = new GameplaySystem();
         AimingSystem ams = new AimingSystem();
-        PhysicsSystem phs = new PhysicsSystem(batch);
+        PhysicsSystem phs = new PhysicsSystem();
 
         engine.addSystem(cs);
         engine.addSystem(rs);
@@ -89,7 +89,7 @@ public class EntityManager {
 
         Entity test = new Entity();
         test.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
-                .add(new PositionComponent(Gdx.graphics.getWidth() / 2f,Gdx.graphics.getHeight() / 2f))
+                .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f))
                 .add(new Box2DComponent(
                         this.world,
                         test.getComponent(PositionComponent.class).position,

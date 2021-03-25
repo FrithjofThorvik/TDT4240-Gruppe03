@@ -16,22 +16,19 @@ public class PhysicsSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites
     private ImmutableArray<Entity> box2DEntities;
 
-    private final SpriteBatch batch;
-
     // PhysicsSystem constructor with Application batch instance
-    public PhysicsSystem(SpriteBatch batch) {
-        this.batch = batch;
+    public PhysicsSystem() {
     }
 
     // Get entities matching the given components, and store in respective array
     public void addedToEngine(Engine e) {
         // Store box2D entities
         box2DEntities = e.getEntitiesFor(
-            Family.all(
-                    SpriteComponent.class,
-                    Box2DComponent.class,
-                    RenderableComponent.class
-            ).get()
+                Family.all(
+                        SpriteComponent.class,
+                        Box2DComponent.class,
+                        RenderableComponent.class
+                ).get()
         );
     }
 
@@ -42,13 +39,10 @@ public class PhysicsSystem extends EntitySystem {
             // Fetch each component
             Entity entity = box2DEntities.get(i);
             Box2DComponent bc = entity.getComponent(Box2DComponent.class);
-            //SpriteComponent sc = entity.getComponent(SpriteComponent.class);
             PositionComponent pc = entity.getComponent(PositionComponent.class);
 
             pc.position = new Vector2(bc.body.getPosition().x, bc.body.getPosition().y);
 
-            // Draw the sprite, so that the center of its sprite is the position of the given entity
-            //batch.draw(sc.sprite.getTexture(), sc.sprite.getX(), sc.sprite.getY(), 40f, 40f);
         }
     }
 }
