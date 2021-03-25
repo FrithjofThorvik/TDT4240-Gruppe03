@@ -1,0 +1,34 @@
+package com.mygdx.game.ECS.components;
+
+import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+
+//Every player should have this component, indicating amount of HealthPoints
+public class Box2DComponent implements Component {
+    public Body body;
+
+    public Box2DComponent(World world, float posX, float posY, float width, float height) {
+        // Create box2D BodyDef
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(posX, posY); // Set position to given x & y value
+        body = world.createBody(bodyDef); // Create the body
+
+        // Create PolygonShape representing a box shape
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width / 2f, height / 2f); // Set shape to a box with given width & height value
+
+        // Create FixtureDef representing properties such as density, restitution, etc
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape; // Add the box shape to fixture
+        fixtureDef.density = 1f; // Add density to fixture (increases mass)
+        body.createFixture(fixtureDef); // Add FixtureDef to body
+
+        // Dispose shape
+        shape.dispose();
+    }
+}
