@@ -6,7 +6,9 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
+import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 
@@ -40,12 +42,13 @@ public class PhysicsSystem extends EntitySystem {
             // Fetch each component
             Entity entity = box2DEntities.get(i);
             Box2DComponent bc = entity.getComponent(Box2DComponent.class);
-            SpriteComponent sc = entity.getComponent(SpriteComponent.class);
+            //SpriteComponent sc = entity.getComponent(SpriteComponent.class);
+            PositionComponent pc = entity.getComponent(PositionComponent.class);
 
-            sc.sprite.setPosition(bc.body.getPosition().x, bc.body.getPosition().y);
+            pc.position = new Vector2(bc.body.getPosition().x, bc.body.getPosition().y);
 
             // Draw the sprite, so that the center of its sprite is the position of the given entity
-            batch.draw(sc.sprite.getTexture(), sc.sprite.getX(), sc.sprite.getY(), 40f, 40f);
+            //batch.draw(sc.sprite.getTexture(), sc.sprite.getX(), sc.sprite.getY(), 40f, 40f);
         }
     }
 }

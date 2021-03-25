@@ -89,10 +89,10 @@ public class EntityManager {
 
         Entity test = new Entity();
         test.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
+                .add(new PositionComponent(Gdx.graphics.getWidth() / 2f,Gdx.graphics.getHeight() / 2f))
                 .add(new Box2DComponent(
                         this.world,
-                        Gdx.graphics.getWidth() / 2f,
-                        Gdx.graphics.getHeight() / 2f,
+                        test.getComponent(PositionComponent.class).position,
                         40f,
                         40f))
                 .add(new RenderableComponent());
