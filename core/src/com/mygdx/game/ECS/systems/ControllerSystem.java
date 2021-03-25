@@ -56,7 +56,6 @@ public class ControllerSystem extends EntitySystem {
             //When space is pressed -> the player moves on to take aim and loses movement control
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 entity.add(new TakeAimComponent());
-                b2d.body.setLinearVelocity(0,b2d.body.getLinearVelocity().y);
                 entity.remove(MovementControlComponent.class);
                 for (int j = 0; j < powerBar.size(); ++j){
                     Entity powerBarComp = powerBar.get(j);
@@ -75,8 +74,7 @@ public class ControllerSystem extends EntitySystem {
         Vector3 touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
         touchPoint = GameScreen.camera.unproject(touchPoint);
 
-        //Move the player according to its velocity
-
+        // Apply force to the players box2D body according to its velocity component
         if(position.position.x<touchPoint.x){
             b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(),false);
         }
