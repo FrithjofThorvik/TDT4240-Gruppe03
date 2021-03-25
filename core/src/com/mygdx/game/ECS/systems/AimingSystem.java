@@ -9,8 +9,11 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.mygdx.game.ECS.States.RoundSwitch;
+import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.PowerbarComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
@@ -95,7 +98,7 @@ public class AimingSystem extends EntitySystem {
 
                 // Shoot if S key sops being pressed
                 if (!Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    shootProjectile(player, position, (float)Math.pow(5, power) );
+                    shootProjectile(player, position, (float)Math.pow(500, power) );
                     arrowPosition.position.y = bottomHeight; // Reset power bar height
                     choosePower = false;
                     power = 0;
@@ -103,7 +106,7 @@ public class AimingSystem extends EntitySystem {
 
                 // Shoot if power reaches max power
                 else if (power >= maxPower) {
-                    shootProjectile(player, position, (float)Math.pow(5, maxPower));
+                    shootProjectile(player, position, (float)Math.pow(500, maxPower));
                     arrowPosition.position.y = bottomHeight; // Reset power bar height
                     choosePower = false;
                     power = 0;
@@ -130,12 +133,22 @@ public class AimingSystem extends EntitySystem {
         projectile.add(new ProjectileDamageComponent(20, 20, 10));
 
         //This is a bit redundant since the speed is given above, but it should be possible for projectiles to have different speeds
-        projectile.add(new VelocityComponent(power * (float) Math.sin(aimAngleInRad), power * (float) Math.cos(aimAngleInRad)))
+        projectile.add(new VelocityComponent(0, 0))
                 //The velocity component is dependent on the aim angle
                 .add(new SpriteComponent(new Texture("cannonball.png"), 25f, 25f))
-                .add(new RenderableComponent())
                 .add(new PositionComponent(position.position.x,
-                        position.position.y));
+                        position.position.y))
+                .add(new Box2DComponent(
+                        projectile.getComponent(PositionComponent.class).position,
+                        projectile.getComponent(SpriteComponent.class).size))
+                .add(new RenderableComponent());
+
+        Box2DComponent b2d = projectile.getComponent(Box2DComponent.class);
+        // Create projectile impulse
+        Vector2 vel = new Vector2(power * (float) Math.sin(aimAngleInRad),
+                power * (float) Math.cos(aimAngleInRad));
+
+        b2d.body.applyLinearImpulse(vel, b2d.body.getWorldCenter(),false);
 
         //Add the new projectile to the engine
         getEngine().addEntity(projectile);

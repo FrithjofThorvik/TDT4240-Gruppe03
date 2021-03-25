@@ -27,13 +27,11 @@ import javax.swing.Box;
 //This class will systems and components, and takes in an engine
 public class EntityManager {
     private final Engine engine;
-    private final World world;
 
     //Takes in an engine from Ashley (instantiate engine in GameScreen)
     //Takes in batch because the rendering system will draw to screen
-    public EntityManager(Engine engine, SpriteBatch batch, World world) {
+    public EntityManager(Engine engine, SpriteBatch batch) {
         this.engine = engine;
-        this.world = world;
 
         //Instantiate systems and add them to engine
         ControllerSystem cs = new ControllerSystem();
@@ -60,7 +58,6 @@ public class EntityManager {
                 .add(new RenderableComponent())
                 .add(new PlayerComponent())
                 .add(new Box2DComponent(
-                        this.world,
                         player1.getComponent(PositionComponent.class).position,
                         player1.getComponent(SpriteComponent.class).size));
 
@@ -73,7 +70,6 @@ public class EntityManager {
                 .add(new RenderableComponent())
                 .add(new PlayerComponent())
                 .add(new Box2DComponent(
-                        this.world,
                         player2.getComponent(PositionComponent.class).position,
                         player2.getComponent(SpriteComponent.class).size));
 
@@ -100,7 +96,6 @@ public class EntityManager {
                 .add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f))
                 .add(new Box2DComponent(
-                        this.world,
                         test.getComponent(PositionComponent.class).position,
                         test.getComponent(SpriteComponent.class).size))
                 .add(new RenderableComponent());

@@ -77,10 +77,10 @@ public class ControllerSystem extends EntitySystem {
 
         //Move the player according to its velocity
 
-        if(position.position.x<touchPoint.x){
+        if(position.position.x < touchPoint.x){
             b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(),false);
         }
-        else if (position.position.x>touchPoint.x){
+        else if (position.position.x > touchPoint.x){
             Vector2 negativeImpulse = new Vector2(-vel.velocity.x,vel.velocity.y);
             b2d.body.applyLinearImpulse(negativeImpulse, b2d.body.getWorldCenter(),false);
         }

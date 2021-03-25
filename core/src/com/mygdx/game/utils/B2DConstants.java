@@ -9,8 +9,7 @@ public final class B2DConstants {
     public static float PPM = 32f;
 
     // Each bit represents a respective object type. These bits are used when creating the Body
-    public static final short BIT_BALL = 2;
-    public static final short BIT_PADDLE = 4;
-    public static final short BIT_GOAL = 8;
-    public static final short BIT_WALL = 16;
+    public static final short BIT_GROUND = 2;
+    public static final short BIT_PLAYER = 4;
+    public static final short BIT_PROJECTILE = 8;
 }

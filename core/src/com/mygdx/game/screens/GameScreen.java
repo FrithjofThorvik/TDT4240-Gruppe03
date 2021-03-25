@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.EntityManager;
+import com.mygdx.game.utils.B2DContactListener;
 
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
@@ -16,7 +17,7 @@ public class GameScreen extends AbstractScreen {
     public static OrthographicCamera camera;
 
     // Box2D
-    public World world;
+    public static World world;
     public Box2DDebugRenderer b2dr;
 
     //ECS
@@ -33,13 +34,16 @@ public class GameScreen extends AbstractScreen {
         app.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
 
+        //Setup ECS engine
+        Engine engine = new Engine();
+
         // Create world
         this.b2dr = new Box2DDebugRenderer();
-        this.world = new World(new Vector2(0f, -0.98f), false);
+        world = new World(new Vector2(0f, 0), false);
+        world.setContactListener(new B2DContactListener(engine));
 
-        //Setup ECS
-        Engine engine = new Engine();
-        entityManager = new EntityManager(engine, app.batch, this.world);
+        // Setup ECS entityManager
+        entityManager = new EntityManager(engine, app.batch);
     }
 
     @Override
@@ -49,13 +53,13 @@ public class GameScreen extends AbstractScreen {
     }
     @Override
     public void update(float delta) {
-        this.world.step(1f / Application.APP_FPS, 6, 2);
+        world.step(1f / Application.APP_FPS, 6, 2);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        this.b2dr.render(this.world, camera.combined.cpy().scl(PPM));
+        this.b2dr.render(world, camera.combined.cpy().scl(PPM));
 
         //Begin the batch and let the entityManager handle the rest :)
         app.batch.begin();
