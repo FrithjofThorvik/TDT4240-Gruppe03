@@ -9,7 +9,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.ECS.EntityManager;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;

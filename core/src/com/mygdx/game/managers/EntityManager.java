@@ -1,10 +1,12 @@
-package com.mygdx.game.ECS;
+package com.mygdx.game.managers;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
@@ -16,29 +18,37 @@ import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.ControllerSystem;
 import com.mygdx.game.ECS.systems.GameplaySystem;
+import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 
+import javax.swing.Box;
+
 //This class will systems and components, and takes in an engine
 public class EntityManager {
-    private Engine engine;
+    private final Engine engine;
+    private final World world;
 
-    //Takes in an engine from Ashley (instantiate engine in Gamescreen)
+    //Takes in an engine from Ashley (instantiate engine in GameScreen)
     //Takes in batch because the rendering system will draw to screen
-    public EntityManager(Engine e, SpriteBatch batch) {
-        engine = e;
+    public EntityManager(Engine engine, SpriteBatch batch, World world) {
+        this.engine = engine;
+        this.world = world;
 
         //Instantiate systems and add them to engine
         ControllerSystem cs = new ControllerSystem();
-        engine.addSystem(cs);
         RenderingSystem rs = new RenderingSystem(batch);
-        engine.addSystem(rs);
         ProjectileSystem ps = new ProjectileSystem();
-        engine.addSystem(ps);
         GameplaySystem gms = new GameplaySystem();
-        engine.addSystem(gms);
         AimingSystem ams = new AimingSystem();
+        PhysicsSystem phs = new PhysicsSystem(batch);
+
+        engine.addSystem(cs);
+        engine.addSystem(rs);
+        engine.addSystem(ps);
+        engine.addSystem(gms);
         engine.addSystem(ams);
+        engine.addSystem(phs);
 
         //Instantiate player entities
         Entity player1 = new Entity();
@@ -77,6 +87,16 @@ public class EntityManager {
                         (Gdx.graphics.getHeight() - powerbar.getComponent(SpriteComponent.class).size.y) / 2f))
                 .add(new PowerbarComponent());
 
+        Entity test = new Entity();
+        test.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
+                .add(new Box2DComponent(
+                        this.world,
+                        Gdx.graphics.getWidth() / 2f,
+                        Gdx.graphics.getHeight() / 2f,
+                        40f,
+                        40f))
+                .add(new RenderableComponent());
+
         //Add entities to the engine
         engine.addEntity(player1);
         engine.addEntity(player2);
@@ -85,6 +105,8 @@ public class EntityManager {
 
         engine.addEntity(powerbar);
         engine.addEntity(powerArrow);
+
+        engine.addEntity(test);
     }
 
     //On update, call the engines update method

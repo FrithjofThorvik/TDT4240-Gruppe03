@@ -1,18 +1,12 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.EntityManager;
+import com.mygdx.game.managers.EntityManager;
 
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
@@ -41,11 +35,11 @@ public class GameScreen extends AbstractScreen {
 
         // Create world
         this.b2dr = new Box2DDebugRenderer();
-        this.world = new World(new Vector2(0f, 0f), false);
+        this.world = new World(new Vector2(0f, -98f), false);
 
         //Setup ECS
         Engine engine = new Engine();
-        entityManager = new EntityManager(engine, app.batch);
+        entityManager = new EntityManager(engine, app.batch, this.world);
     }
 
     @Override
