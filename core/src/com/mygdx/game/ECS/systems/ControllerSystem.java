@@ -47,17 +47,16 @@ public class ControllerSystem extends EntitySystem {
             //Get components
             PositionComponent position = pm.get(entity);
             VelocityComponent vel = vm.get(entity);
+            Box2DComponent b2d = b2dm.get(entity);
 
             if (Gdx.input.isTouched()) {
-                movePlayer(position,vel);
-            }
-            else {
-                vel.velocity = new Vector2(0,0);
+                movePlayer(position,vel, b2d);
             }
 
             //When space is pressed -> the player moves on to take aim and loses movement control
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 entity.add(new TakeAimComponent());
+                b2d.body.setLinearVelocity(0,b2d.body.getLinearVelocity().y);
                 entity.remove(MovementControlComponent.class);
                 for (int j = 0; j < powerBar.size(); ++j){
                     Entity powerBarComp = powerBar.get(j);
@@ -67,7 +66,7 @@ public class ControllerSystem extends EntitySystem {
         }
     }
 
-    public void movePlayer(PositionComponent position, VelocityComponent vel){
+    public void movePlayer(PositionComponent position, VelocityComponent vel, Box2DComponent b2d){
         //get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
         float yTouchPixels = Gdx.input.getY();
@@ -79,10 +78,11 @@ public class ControllerSystem extends EntitySystem {
         //Move the player according to its velocity
 
         if(position.position.x<touchPoint.x){
-            vel.velocity.x = 1000;
+            b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(),false);
         }
         else if (position.position.x>touchPoint.x){
-            vel.velocity.x=-1000;
+            Vector2 negativeImpulse = new Vector2(-vel.velocity.x,vel.velocity.y);
+            b2d.body.applyLinearImpulse(negativeImpulse, b2d.body.getWorldCenter(),false);
         }
     }
 

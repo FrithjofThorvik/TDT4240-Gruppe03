@@ -52,7 +52,7 @@ public class EntityManager {
 
         //Instantiate player entities
         Entity player1 = new Entity();
-        player1.add(new VelocityComponent(0, 0))
+        player1.add(new VelocityComponent(1000, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(0 + player1.getComponent(SpriteComponent.class).size.x,
                         Gdx.graphics.getHeight() / 2f))
@@ -65,7 +65,7 @@ public class EntityManager {
                         player1.getComponent(SpriteComponent.class).size));
 
         Entity player2 = new Entity();
-        player2.add(new VelocityComponent(0, 0))
+        player2.add(new VelocityComponent(1000, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() - 100f,
                         Gdx.graphics.getHeight() / 2f))
