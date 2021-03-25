@@ -11,6 +11,7 @@ import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.VelocityComponent;
 
 public class PhysicsSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites

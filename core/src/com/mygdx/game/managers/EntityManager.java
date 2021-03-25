@@ -52,22 +52,30 @@ public class EntityManager {
 
         //Instantiate player entities
         Entity player1 = new Entity();
-        player1.add(new VelocityComponent(2, 0))
+        player1.add(new VelocityComponent(200, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(0 + player1.getComponent(SpriteComponent.class).size.x,
                         Gdx.graphics.getHeight() / 2f))
                 .add(new HealthComponent(100))
                 .add(new RenderableComponent())
-                .add(new PlayerComponent());
+                .add(new PlayerComponent())
+                .add(new Box2DComponent(
+                        this.world,
+                        player1.getComponent(PositionComponent.class).position,
+                        player1.getComponent(SpriteComponent.class).size));
 
         Entity player2 = new Entity();
-        player2.add(new VelocityComponent(2, 0))
+        player2.add(new VelocityComponent(200, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() - 100f,
                         Gdx.graphics.getHeight() / 2f))
                 .add(new HealthComponent(100))
                 .add(new RenderableComponent())
-                .add(new PlayerComponent());
+                .add(new PlayerComponent())
+                .add(new Box2DComponent(
+                        this.world,
+                        player2.getComponent(PositionComponent.class).position,
+                        player2.getComponent(SpriteComponent.class).size));
 
         // Create timer entity
         Entity timer = new Entity();
@@ -88,13 +96,13 @@ public class EntityManager {
                 .add(new PowerbarComponent());
 
         Entity test = new Entity();
-        test.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
+        test.add(new VelocityComponent(200, 0))
+                .add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f))
                 .add(new Box2DComponent(
                         this.world,
                         test.getComponent(PositionComponent.class).position,
-                        40f,
-                        40f))
+                        test.getComponent(SpriteComponent.class).size))
                 .add(new RenderableComponent());
 
         //Add entities to the engine

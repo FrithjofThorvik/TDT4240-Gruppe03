@@ -9,6 +9,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
@@ -27,6 +28,7 @@ public class ControllerSystem extends EntitySystem {
     //Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
+    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     public ControllerSystem() {
     }
@@ -44,9 +46,10 @@ public class ControllerSystem extends EntitySystem {
             //Get components
             PositionComponent position = pm.get(entity);
             VelocityComponent vel = vm.get(entity);
+            Box2DComponent b2d =b2dm.get(entity);
 
             if (Gdx.input.isTouched()) {
-                movePlayer(position,vel);
+                movePlayer(position,b2d,vel);
             }
 
             //When space is pressed -> the player moves on to take aim and loses movement control
@@ -61,7 +64,7 @@ public class ControllerSystem extends EntitySystem {
         }
     }
 
-    public void movePlayer(PositionComponent position, VelocityComponent vel){
+    public void movePlayer(PositionComponent position, Box2DComponent b2d, VelocityComponent vel){
         //get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
         float yTouchPixels = Gdx.input.getY();
@@ -73,10 +76,10 @@ public class ControllerSystem extends EntitySystem {
         //Move the player according to its velocity
 
         if(position.position.x<touchPoint.x){
-            position.position.x += vel.velocity.x;
+            b2d.body.setLinearVelocity(vel.velocity.x,-98f);
         }
         else if (position.position.x>touchPoint.x){
-            position.position.x -= vel.velocity.x;
+            b2d.body.setLinearVelocity(-vel.velocity.x,-98f);
         }
     }
 

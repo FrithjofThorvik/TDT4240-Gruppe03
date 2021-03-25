@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Box2DComponent implements Component {
     public Body body;
 
-    public Box2DComponent(World world, Vector2 pos, float width, float height) {
+    public Box2DComponent(World world, Vector2 pos, Vector2 spriteSize) {
         // Create box2D BodyDef
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -21,7 +21,7 @@ public class Box2DComponent implements Component {
 
         // Create PolygonShape representing a box shape
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2f, height / 2f); // Set shape to a box with given width & height value
+        shape.setAsBox(spriteSize.x / 2f, spriteSize.y / 2f); // Set shape to a box with given width & height value
 
         // Create FixtureDef representing properties such as density, restitution, etc
         FixtureDef fixtureDef = new FixtureDef();
