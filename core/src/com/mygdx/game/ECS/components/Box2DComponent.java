@@ -32,6 +32,7 @@ public class Box2DComponent implements Component {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape; // Add the box shape to fixture
         fixtureDef.density = 0.1f; // Add density to fixture (increases mass)
+        fixtureDef.friction = 0.5f;
         this.fixture = body.createFixture(fixtureDef); // Add FixtureDef and id to body
 
         // Dispose shape

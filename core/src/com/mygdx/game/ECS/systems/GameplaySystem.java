@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.mygdx.game.ECS.components.AimComponent;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
@@ -23,7 +24,8 @@ public class GameplaySystem extends EntitySystem {
         // Arrays of entities that this system act on
         ImmutableArray<Entity> players = e.getEntitiesFor(Family.all(PlayerComponent.class).get()); // Get all entities that are players
         ImmutableArray<Entity> timers = e.getEntitiesFor(Family.all(FontComponent.class).get()); // Get all entities that are fonts
-        this.gameStateManager = new GameStateManager(players, timers); // Create game state manager, and pass in entities
+        ImmutableArray<Entity> aims = e.getEntitiesFor(Family.all(AimComponent.class).get()); // Get all entities that are fonts
+        this.gameStateManager = new GameStateManager(players, timers, aims); // Create game state manager, and pass in entities
     }
 
     // Update function for GameplaySystem
