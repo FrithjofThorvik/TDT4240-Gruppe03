@@ -1,4 +1,4 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.states.screens;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -39,11 +39,11 @@ public class GameScreen extends AbstractScreen {
 
         // Create world
         this.b2dr = new Box2DDebugRenderer();
-        world = new World(new Vector2(0f, 0), false);
+        world = new World(new Vector2(0f, -98f), false);
         world.setContactListener(new B2DContactListener(engine));
 
         // Setup ECS entityManager
-        entityManager = new EntityManager(engine, app.batch);
+        this.entityManager = new EntityManager(engine, app.batch);
     }
 
     @Override
@@ -51,14 +51,15 @@ public class GameScreen extends AbstractScreen {
         app.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
     }
+
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         world.step(1f / Application.APP_FPS, 6, 2);
     }
 
     @Override
-    public void render(float delta) {
-        super.render(delta);
+    public void render(float dt) {
+        super.render(dt);
         this.b2dr.render(world, camera.combined.cpy().scl(PPM));
 
         //Begin the batch and let the entityManager handle the rest :)

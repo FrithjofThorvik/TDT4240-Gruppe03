@@ -11,73 +11,58 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.mygdx.game.ECS.States.RoundSwitch;
+import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.PowerbarComponent;
+import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.TakeAimComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
-import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.states.screens.GameScreen;
 
 /**
  * This system should control the aiming of a projectile
  * A player gets the TakeAimComponent when it is ready to aim
  * A player with the TakeAimComponent is controlled by the AimingSystem
+ * TODO: Implement better shooting mechanics for projectiles
  * */
 public class AimingSystem extends EntitySystem {
-    float power;
-    float maxPower = 2;
-    boolean choosePower = false;
+    private float power; // Represents the player's current shooting power
+    float maxPower = 2; // Represents maximum shooting power
+    private boolean choosePower = false; // Represents whether the player is changing shooting power or not
     private double aimAngleInRad; // The aim angle in radians. The projectile is shot according to this angle
-    Vector3 touchPoint; // Where in the world does a touch on the screen correspond to
 
-    private ImmutableArray<Entity> playersAiming;
-    private ImmutableArray<Entity> powerBarEntities;
+    private ImmutableArray<Entity> playersAiming; // Array for all player entities that are aiming
+    private ImmutableArray<Entity> powerBarEntities; // Array for all power bars
 
     //Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
 
-    public AimingSystem() {
-    }
+    // AimingSystem constructor
+    public AimingSystem() {}
 
-    //will be called automatically by the engine
+    // Add entities to arrays
     public void addedToEngine(Engine e) {
-        // Store all entities that can take aim
         playersAiming = e.getEntitiesFor(Family.all(TakeAimComponent.class).get());
-
-        // Store all entities that has a powerbar component
-        powerBarEntities = e.getEntitiesFor(Family.all(PowerbarComponent.class).get());
+        powerBarEntities = e.getEntitiesFor(Family.all(PowerBarComponent.class).get());
     }
 
-    //will be called by the engine automatically
+    // Will be called by the engine automatically
     public void update(float deltaTime) {
-        // For all players with the TakeAimComponent (should only be one at a time)
-        for (int i = 0; i < playersAiming.size(); ++i) {
-            Entity player = playersAiming.get(i);
+        if (playersAiming.size() > 0) {
+            Entity player = playersAiming.get(0); // Get current player entity
             PositionComponent position = pm.get(player); // Get the position component of that player
 
-            // Calculate the aim angle when the screen is touched
-            if (Gdx.input.isTouched() && !choosePower) {
-                //get the screen position of the touch
-                float xTouchPixels = Gdx.input.getX();
-                float yTouchPixels = Gdx.input.getY();
+            // Handle events before choosing shooting power
+            if (!choosePower) {
+                // Calculate the aim angle when the screen is touched
+                if (Gdx.input.isTouched()) aimAngleInRad = calculateAimAngle(position);
 
-                // convert to world position
-                touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
-                touchPoint = GameScreen.camera.unproject(touchPoint);
-
-                // Find the aim angle
-                aimAngleInRad = calculateAngle(touchPoint.x - position.position.x, touchPoint.y - position.position.y);
-            }
-
-            // When the player presses "S" shoot the projectile
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                choosePower = true;
+                // When the player presses "S" activate shooting power functionality
+                if (Gdx.input.isKeyPressed(Input.Keys.S)) choosePower = true;
             }
 
             // Start shoot power handling when S key is pressed
@@ -93,70 +78,95 @@ public class AimingSystem extends EntitySystem {
                 PositionComponent arrowPosition = pm.get(powerBarArrow);
                 SpriteComponent powerBarSprite = sm.get(powerBar);
 
+                // Calculate and apply height of power bar arrow
                 float bottomHeight = (Gdx.graphics.getHeight() - powerBarSprite.size.y) / 2f;
                 arrowPosition.position.y = bottomHeight + (powerBarSprite.size.y * (power / maxPower));
 
-                // Shoot if S key sops being pressed
+                // Shoot if S key stops being pressed
                 if (!Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    shootProjectile(player, position, (float)Math.pow(500, power) );
-                    arrowPosition.position.y = bottomHeight; // Reset power bar height
-                    choosePower = false;
-                    power = 0;
-                }
+                    // Shoot projectile
+                    shootProjectile(player);
 
-                // Shoot if power reaches max power
-                else if (power >= maxPower) {
-                    shootProjectile(player, position, (float)Math.pow(500, maxPower));
-                    arrowPosition.position.y = bottomHeight; // Reset power bar height
-                    choosePower = false;
+                    // Reset values
                     power = 0;
+                    choosePower = false;
+                    arrowPosition.position.y = bottomHeight; // Reset power bar height
+
+                } else if (power >= maxPower) {
+                    shootProjectile(player);
+
+                    // Reset values
+                    power = 0;
+                    choosePower = false;
+                    arrowPosition.position.y = bottomHeight; // Reset power bar height
                 }
             }
-
-            // Interface for shot power control
         }
     }
 
-    //Math for calculating the angle given difference in touch position and player position
-    private double calculateAngle(float deltaX, float deltaY) {
-        return Math.atan2(deltaX, deltaY);
-    }
+    // Create a projectile and shoot said projectile according to the aim angle
+    public void shootProjectile(Entity player) {
+        // Get player components
+        PositionComponent playerPosition = pm.get(player); // Get the position component of that player
+        SpriteComponent playerSprite = sm.get(player); // Get the sprite component of that player
 
-    //Create a projectile and shoot said projectile according to the aim angle
-    public void shootProjectile(Entity currentPlayer, PositionComponent position, float power) {
-        //Make powerbar not renderable after you have taken the shot
-        for (int i=0; i<powerBarEntities.size(); ++i){
+        // Remove all power bar entities after shooting
+        for (int i = 0; i < powerBarEntities.size(); ++i){
             Entity powerBarComp = powerBarEntities.get(i);
             powerBarComp.remove(RenderableComponent.class);
         }
-        Entity projectile = new Entity();
-        projectile.add(new ProjectileDamageComponent(20, 20, 10));
 
-        //This is a bit redundant since the speed is given above, but it should be possible for projectiles to have different speeds
-        projectile.add(new VelocityComponent(0, 0))
-                //The velocity component is dependent on the aim angle
+        // Create projectile entity
+        Entity projectile = new Entity();
+        projectile.add(new ProjectileDamageComponent(20, 20, 10))
+                .add(new VelocityComponent(1000, 1000))
                 .add(new SpriteComponent(new Texture("cannonball.png"), 25f, 25f))
-                .add(new PositionComponent(position.position.x,
-                        position.position.y))
+                .add(new PositionComponent(
+                        playerPosition.position.x + 0f,
+                        playerPosition.position.y + playerSprite.size.y / 1.5f)
+                )
                 .add(new Box2DComponent(
                         projectile.getComponent(PositionComponent.class).position,
-                        projectile.getComponent(SpriteComponent.class).size))
+                        projectile.getComponent(SpriteComponent.class).size,
+                        false)
+                )
                 .add(new RenderableComponent());
 
+        // Create projectile impulse to shoot projectile
         Box2DComponent b2d = projectile.getComponent(Box2DComponent.class);
-        // Create projectile impulse
-        Vector2 vel = new Vector2(power * (float) Math.sin(aimAngleInRad),
-                power * (float) Math.cos(aimAngleInRad));
+        Vector2 vel = calculateAngleVelocity(projectile.getComponent(VelocityComponent.class).velocity);
 
-        b2d.body.applyLinearImpulse(vel, b2d.body.getWorldCenter(),false);
+        b2d.body.applyLinearImpulse(vel, b2d.body.getWorldCenter(),false); // Apply impulse to body
 
-        //Add the new projectile to the engine
+        // Add the new projectile to the engine
         getEngine().addEntity(projectile);
 
-        //Now that the projectile has been shot -> move on to the next player
-        getEngine().getSystem(GameplaySystem.class).context.setState(new RoundSwitch());
+        // Switch rounds in GameStateManager
+        getEngine().getSystem(GameplaySystem.class).gameStateManager.setGameState(GameStateManager.STATE.SWITCH_ROUND);
 
-        //Now that the projectile has been shot -> remove the TakeAimComponent from the current player
-        currentPlayer.remove(TakeAimComponent.class);
+        // Remove the TakeAimComponent from the current player after shot
+        player.remove(TakeAimComponent.class);
+    }
+
+    // Calculate angle of click relative to player position
+    private double calculateAimAngle(PositionComponent position) {
+        // Get the screen position of touch/click
+        float xTouchPixels = Gdx.input.getX();
+        float yTouchPixels = Gdx.input.getY();
+
+        // Convert touch/click to world position
+        Vector3 touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
+        touchPoint = GameScreen.camera.unproject(touchPoint);
+
+        // Find the aim angle in radians
+        return Math.atan2(touchPoint.x - position.position.x, touchPoint.y - position.position.y);
+    }
+
+    // Calculate velocity vector with angle
+    private Vector2 calculateAngleVelocity(Vector2 vel) {
+        return new Vector2(
+                (float) Math.pow(vel.x, power) * (float) Math.sin(aimAngleInRad),
+                (float) Math.pow(vel.y, power) * (float) Math.cos(aimAngleInRad)
+        );
     }
 }

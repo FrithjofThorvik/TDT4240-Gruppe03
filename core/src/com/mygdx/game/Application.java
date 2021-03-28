@@ -5,11 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.mygdx.game.managers.GameScreenManager;
+import com.mygdx.game.managers.ScreenManager;
 
 
 public class Application extends Game {
-
 	// Application Globals
 	public static String APP_TITLE = "Projectile Wars";
 	public static int APP_DESKTOP_WIDTH = 720; 	// Scaled
@@ -21,7 +20,7 @@ public class Application extends Game {
 	public static  int V_HEIGHT = 420;	// Core
 
 	// Managers
-	public GameScreenManager gsm;
+	public ScreenManager screenManager;
 
 	//Batches
 	public SpriteBatch batch;
@@ -36,7 +35,7 @@ public class Application extends Game {
 		shapeBatch = new ShapeRenderer();
 
 		// Setup managers
-		gsm = GameScreenManager.getGameScreenManager(this);
+		screenManager = ScreenManager.getScreenManager(this);
 	}
 
 	@Override
@@ -55,6 +54,6 @@ public class Application extends Game {
 		// Dispose this class's objects (Remember order of disposing)
 		batch.dispose();
 		shapeBatch.dispose();
-		gsm.dispose();
+		screenManager.dispose();
 	}
 }

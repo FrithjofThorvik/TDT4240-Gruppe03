@@ -7,14 +7,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.PowerbarComponent;
+import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
@@ -25,18 +24,26 @@ import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 
-import javax.swing.Box;
-
-//This class will systems and components, and takes in an engine
+// This class will systems and components, and takes in an engine
 public class EntityManager {
     private final Engine engine;
+    private final SpriteBatch batch;
 
-    //Takes in an engine from Ashley (instantiate engine in GameScreen)
-    //Takes in batch because the rendering system will draw to screen
+    // Takes in an engine from Ashley (instantiate engine in GameScreen)
+    // Takes in batch because the rendering system will draw to screen
     public EntityManager(Engine engine, SpriteBatch batch) {
         this.engine = engine;
+        this.batch = batch;
 
-        //Instantiate systems and add them to engine
+        // Create and add ECS systems and entities
+        addSystems();
+        createEntities();
+        createEntityListeners();
+    }
+
+    // Add all ECS systems
+    private void addSystems() {
+        // Instantiate all ECS systems
         ControllerSystem cs = new ControllerSystem();
         RenderingSystem rs = new RenderingSystem(batch);
         ProjectileSystem ps = new ProjectileSystem();
@@ -44,15 +51,28 @@ public class EntityManager {
         AimingSystem ams = new AimingSystem();
         PhysicsSystem phs = new PhysicsSystem();
 
+
+
+        // Add all ECS systems to the engine
         engine.addSystem(cs);
         engine.addSystem(rs);
         engine.addSystem(ps);
         engine.addSystem(gms);
         engine.addSystem(ams);
         engine.addSystem(phs);
+    }
 
-        //Instantiate player entities
+    // Create entities with ECS components
+    private void createEntities() {
+        // Instantiate all ECS entities
         Entity player1 = new Entity();
+        Entity player2 = new Entity();
+        Entity timer = new Entity();
+        Entity powerBar = new Entity();
+        Entity powerArrow = new Entity();
+        Entity ground = new Entity();
+
+        // Instantiate player entities
         player1.add(new VelocityComponent(1000, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(0 + player1.getComponent(SpriteComponent.class).size.x,
@@ -62,9 +82,9 @@ public class EntityManager {
                 .add(new PlayerComponent())
                 .add(new Box2DComponent(
                         player1.getComponent(PositionComponent.class).position,
-                        player1.getComponent(SpriteComponent.class).size));
+                        player1.getComponent(SpriteComponent.class).size,
+                        false));
 
-        Entity player2 = new Entity();
         player2.add(new VelocityComponent(1000, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() - 100f,
@@ -74,66 +94,67 @@ public class EntityManager {
                 .add(new PlayerComponent())
                 .add(new Box2DComponent(
                         player2.getComponent(PositionComponent.class).position,
-                        player2.getComponent(SpriteComponent.class).size));
+                        player2.getComponent(SpriteComponent.class).size,
+                        false));
 
-        // Create timer entity
-        Entity timer = new Entity();
         timer.add(new FontComponent("Time: 0.0s"))
                 .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() * 0.97f))
                 .add(new RenderableComponent());
 
-        Entity powerbar = new Entity();
-        powerbar.add(new SpriteComponent(new Texture("powerbar.png"), 40f, 350f))
+        powerBar.add(new SpriteComponent(new Texture("powerbar.png"), 40f, 350f))
                 .add(new PositionComponent(Gdx.graphics.getWidth() - 50f, Gdx.graphics.getHeight() / 2f))
-                .add(new PowerbarComponent());
+                .add(new PowerBarComponent());
 
-        Entity powerArrow = new Entity();
         powerArrow.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
-                        (Gdx.graphics.getHeight() - powerbar.getComponent(SpriteComponent.class).size.y) / 2f))
-                .add(new PowerbarComponent());
+                        (Gdx.graphics.getHeight() - powerBar.getComponent(SpriteComponent.class).size.y) / 2f))
+                .add(new PowerBarComponent());
 
-        Entity test = new Entity();
-        test.add(new VelocityComponent(0, 0))
-                .add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
-                .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f))
+        ground.add(new SpriteComponent(
+                    new Texture("tank.png"),
+                Gdx.graphics.getWidth() * 2f,
+                10f))
+                .add(new PositionComponent(
+                        Gdx.graphics.getWidth() / 2f,
+                        Gdx.graphics.getHeight() / 2f)
+                )
                 .add(new Box2DComponent(
-                        test.getComponent(PositionComponent.class).position,
-                        test.getComponent(SpriteComponent.class).size))
+                        ground.getComponent(PositionComponent.class).position,
+                        ground.getComponent(SpriteComponent.class).size,
+                        true))
                 .add(new RenderableComponent());
 
-        //Add entities to the engine
+        // Add all ECS entities to the engine
         engine.addEntity(player1);
         engine.addEntity(player2);
-
         engine.addEntity(timer);
-
-        engine.addEntity(powerbar);
+        engine.addEntity(powerBar);
         engine.addEntity(powerArrow);
-
-        engine.addEntity(test);
-
-        // Add entity listener -> that stops the entity from moving when it loses the MovementControlComponent
-        EntityListener listener = new EntityListener() {
-            @Override
-            public void entityAdded(Entity entity) {
-                //Do nothing
-            }
-
-            @Override
-            public void entityRemoved(Entity entity) {
-                //Set the linear velocity of the entity's box2d body to 0 in x direction
-                Box2DComponent box2DComponent = entity.getComponent(Box2DComponent.class);
-                box2DComponent.body.setLinearVelocity(0,box2DComponent.body.getLinearVelocity().y);
-            }
-        };
-        // The family decides which components the entity listener should listen for
-        Family HasControl = Family.all(MovementControlComponent.class).get();
-        engine.addEntityListener(HasControl,listener);
+        engine.addEntity(ground);
     }
 
-    //On update, call the engines update method
+    // Add entity listeners for observe & listen to when adding and removing entities
+    private void createEntityListeners() {
+        // Stops the entity from moving when it loses the MovementControlComponent
+        EntityListener listener = new EntityListener() {
+            @Override
+            public void entityRemoved(Entity entity) {
+                // Set the linear velocity of the entity's box2d body to 0 in x direction
+                Box2DComponent box2DComponent = entity.getComponent(Box2DComponent.class);
+                box2DComponent.body.setLinearVelocity(0, box2DComponent.body.getLinearVelocity().y);
+            }
+
+            @Override
+            public void entityAdded(Entity entity) {}
+        };
+
+        // The family decides which components the entity listener should listen for
+        Family HasControl = Family.all(MovementControlComponent.class).get();
+        engine.addEntityListener(HasControl, listener);
+    }
+
+    // On update, call the engines update method
     public void update() {
         engine.update(Gdx.graphics.getDeltaTime());
     }

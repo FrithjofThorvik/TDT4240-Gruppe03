@@ -6,32 +6,37 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.mygdx.game.ECS.components.EffectComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.VelocityComponent;
 
-//This system should control the PowerUps (HAS NOT BEEN IMPLEMENTED YET)
+/**
+ * This system should control the PowerUps
+ * TODO: Has not been implemented yet
+ **/
 public class PowerUpSystem extends EntitySystem {
-    private ImmutableArray<Entity> entities;
+    // Prepare entity arrays
+    private ImmutableArray<Entity> effects;
 
-    private ComponentMapper<EffectComponent> em = ComponentMapper.getFor(EffectComponent.class);
+    // Prepare component mappers
+    private final ComponentMapper<EffectComponent> em = ComponentMapper.getFor(EffectComponent.class);
 
-    public PowerUpSystem() {
-    }
+    // PowerUpSystem constructor
+    public PowerUpSystem() {}
 
-    // Will be called automatically by the engine
+    // Store entities into arrays
     public void addedToEngine(Engine e) {
-        entities = e.getEntitiesFor(Family.all(EffectComponent.class).get());
+        effects = e.getEntitiesFor(Family.all(EffectComponent.class).get());
     }
 
     // Will be called by the engine automatically
     public void update(float deltaTime) {
-        for (int i = 0; i < entities.size(); ++i) {
-            Entity entity = entities.get(i);
-            EffectComponent effect = em.get(entity);
+        // Loop through all effect entities
+        for (int i = 0; i < effects.size(); ++i) {
+            // Get entity
+            Entity entity = effects.get(i);
 
-            // DO SOMETHING HERE
+            // Get entity components
+            EffectComponent effect = em.get(entity);
+            // TODO: Do something here
         }
     }
 }

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
-//Attach to entity to give it a font
+// Attach to entity to give it a font
 public class FontComponent implements Component {
 
     public BitmapFont font;

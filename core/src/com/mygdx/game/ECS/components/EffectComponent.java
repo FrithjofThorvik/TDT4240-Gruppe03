@@ -2,14 +2,13 @@ package com.mygdx.game.ECS.components;
 
 import com.badlogic.ashley.core.Component;
 
-//This component should be added to a player when he picks up a powerup
+// This component should be added to a player when he picks up a power-up
 public class EffectComponent implements Component {
-    //PowerUpEffect effect; //this is commented out because the class PowerUpEffect does not exist yet
+    // TODO: PowerUpEffect effect;
     int duration;
 
-    public EffectComponent(//PowerUpEffect effect
-                           int duration) {
-        //this.effect=effect;
+    public EffectComponent(int duration) {
+        // TODO: this.effect = effect;
         this.duration = duration;
     }
 }

@@ -2,10 +2,10 @@ package com.mygdx.game.ECS.components;
 
 import com.badlogic.ashley.core.Component;
 
-//Add this component to projectiles, to indicate damage and blast radius
+// Add this component to projectiles, to indicate damage and blast radius
 public class ProjectileDamageComponent implements Component {
     public int damage;
-    public int speed;//How fast the projectile moves
+    public int speed; // How fast the projectile moves
     public int blast_radius;
 
     public ProjectileDamageComponent(int damage, int blast_radius, int speed) {

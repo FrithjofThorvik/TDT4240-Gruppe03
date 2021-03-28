@@ -1,11 +1,9 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.states.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.Application;
-import com.mygdx.game.managers.GameScreenManager;
-
-import static com.mygdx.game.utils.B2DConstants.PPM;
+import com.mygdx.game.managers.ScreenManager;
 
 public class MainMenuScreen extends AbstractScreen {
 
@@ -21,7 +19,7 @@ public class MainMenuScreen extends AbstractScreen {
 
     private void handleInput() {
         if (Gdx.input.isTouched())
-            app.gsm.setScreen(GameScreenManager.STATE.PLAY);
+            app.screenManager.setScreen(ScreenManager.STATE.PLAY);
     }
 
     @Override
@@ -36,7 +34,11 @@ public class MainMenuScreen extends AbstractScreen {
 
         // Draw Play Button in the middle of the screen
         this.app.batch.begin();
-        this.app.batch.draw(this.playBtn, (Application.V_WIDTH / 2) - (playBtn.getWidth() / 2), (Application.V_HEIGHT / 2) - (playBtn.getHeight() / 2));
+        this.app.batch.draw(
+                this.playBtn,
+                (Application.V_WIDTH / 2f) - (playBtn.getWidth() / 2f),
+                (Application.V_HEIGHT / 2f) - (playBtn.getHeight() / 2f)
+        );
         this.app.batch.end();
     }
 
@@ -47,6 +49,5 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 }

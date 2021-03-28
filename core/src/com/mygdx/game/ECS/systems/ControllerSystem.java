@@ -14,63 +14,69 @@ import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.PowerbarComponent;
+import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.TakeAimComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
-import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.states.screens.GameScreen;
 
-//This system is responsible for moving the player when it is that players turn
+/**
+ * This system is responsible for moving the player when it is that players turn
+ **/
 public class ControllerSystem extends EntitySystem {
-    private ImmutableArray<Entity> playersInControl;
+    // Prepare arrays for entities
+    private ImmutableArray<Entity> players;
     private ImmutableArray<Entity> powerBar;
 
-
-    //Using a component mapper is the fastest way to load entities
+    // Prepare component mappers
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
-    public ControllerSystem() {
-    }
+    // ControllerSystem constructor
+    public ControllerSystem() {}
 
-    //will be called automatically by the engine
+    // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
-        playersInControl = e.getEntitiesFor(Family.all(PlayerComponent.class, MovementControlComponent.class).get());
-        powerBar = e.getEntitiesFor(Family.all(PowerbarComponent.class).get());
+        players = e.getEntitiesFor(Family.all(PlayerComponent.class, MovementControlComponent.class).get());
+        powerBar = e.getEntitiesFor(Family.all(PowerBarComponent.class).get());
     }
 
-    //will be called by the engine automatically
+    // Will be called by the engine automatically
     public void update(float deltaTime) {
-        for (int i = 0; i < playersInControl.size(); ++i) {
-            Entity entity = playersInControl.get(i);
-            //Get components
-            PositionComponent position = pm.get(entity);
-            VelocityComponent vel = vm.get(entity);
-            Box2DComponent b2d = b2dm.get(entity);
+        // Loop through all player entities
+        for (int i = 0; i < players.size(); ++i) {
+            // Get player entity with controller component
+            Entity player = players.get(i);
 
-            if (Gdx.input.isTouched()) {
-                movePlayer(position,vel, b2d);
-            }
+            // Get entity components
+            PositionComponent pos = pm.get(player);
+            VelocityComponent vel = vm.get(player);
+            Box2DComponent b2d = b2dm.get(player);
 
-            //When space is pressed -> the player moves on to take aim and loses movement control
+            // Move player when screen is touched
+            if (Gdx.input.isTouched()) movePlayer(pos, vel, b2d);
+
+            // When space is pressed -> the player moves on to take aim and loses movement control
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                entity.add(new TakeAimComponent());
-                entity.remove(MovementControlComponent.class);
-                for (int j = 0; j < powerBar.size(); ++j){
-                    Entity powerBarComp = powerBar.get(j);
-                    powerBarComp.add(new RenderableComponent());
+                // Modify player components
+                player.add(new TakeAimComponent()); // Add aim component to player
+                player.remove(MovementControlComponent.class); // Remove movement component from player
+
+                // Add render component to power bar entities
+                for (int j = 0; j < powerBar.size(); j++) {
+                    powerBar.get(j).add(new RenderableComponent());
                 }
             }
         }
     }
 
     public void movePlayer(PositionComponent position, VelocityComponent vel, Box2DComponent b2d){
-        //get the screen position of the touch
+        // Get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
         float yTouchPixels = Gdx.input.getY();
 
-        //convert to world position
+        // Convert to world position
         Vector3 touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
         touchPoint = GameScreen.camera.unproject(touchPoint);
 
@@ -79,7 +85,7 @@ public class ControllerSystem extends EntitySystem {
             b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(),false);
         }
         else if (position.position.x > touchPoint.x){
-            Vector2 negativeImpulse = new Vector2(-vel.velocity.x,vel.velocity.y);
+            Vector2 negativeImpulse = new Vector2(-vel.velocity.x, vel.velocity.y);
             b2d.body.applyLinearImpulse(negativeImpulse, b2d.body.getWorldCenter(),false);
         }
     }
