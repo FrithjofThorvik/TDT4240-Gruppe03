@@ -1,6 +1,10 @@
 package com.mygdx.game.states.game;
 
+import com.badlogic.ashley.core.ComponentMapper;
+import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
+import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.SpriteComponent;
 
 import static com.mygdx.game.managers.GameStateManager.*;
 

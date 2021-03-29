@@ -1,5 +1,6 @@
 package com.mygdx.game.managers;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -7,6 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.mygdx.game.ECS.components.AimComponent;
 import com.mygdx.game.ECS.components.FontComponent;
+import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.states.game.AbstractGameState;
@@ -40,6 +42,7 @@ public class GameStateManager {
     public AbstractGameState gameState; // Represents the current game state
 
     public ImmutableArray<Entity> players; // List of players
+    public ImmutableArray<Entity> fonts; // List of players // TODO: Separate timer font, and health font!
 
     public DecimalFormat df = new DecimalFormat("0.0"); // Format timer that displays on the time on the screen
 
@@ -66,17 +69,18 @@ public class GameStateManager {
         // Get all entities
         ImmutableArray<Entity> players =  engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
         ImmutableArray<Entity> aims =  engine.getEntitiesFor(Family.all(AimComponent.class).get());
-        ImmutableArray<Entity> timers =  engine.getEntitiesFor(Family.all(FontComponent.class).get());
+        ImmutableArray<Entity> fonts =  engine.getEntitiesFor(Family.all(FontComponent.class).get());
         ImmutableArray<Entity> powerBars =  engine.getEntitiesFor(Family.all(PowerBarComponent.class).get());
 
         // Store entities
         this.players = players;
+        this.fonts = fonts;
         this.player = players.get(currentPlayer);
 
         this.powerBar = powerBars.get(0);
         this.powerBarArrow = powerBars.get(1);
 
-        this.timer = timers.get(0);
+        this.timer = fonts.get(0);
         this.aim = aims.get(0);
     }
 

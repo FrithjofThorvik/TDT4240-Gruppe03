@@ -70,6 +70,8 @@ public class EntityManager {
         // Instantiate all ECS entities
         Entity player1 = new Entity();
         Entity player2 = new Entity();
+        Entity health1 = new Entity();
+        Entity health2 = new Entity();
         Entity aim = new Entity();
         Entity timer = new Entity();
         Entity powerBar = new Entity();
@@ -151,6 +153,26 @@ public class EntityManager {
                 .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() * 0.97f))
                 .add(new RenderableComponent());
 
+        health1
+                .add(new FontComponent(
+                        player1.getComponent(HealthComponent.class).hp + " hp")
+                )
+                .add(new PositionComponent(
+                        50f,
+                        Gdx.graphics.getHeight() - 20f
+                ))
+                .add(new RenderableComponent());
+
+        health2
+                .add(new FontComponent(
+                        player2.getComponent(HealthComponent.class).hp + " hp")
+                )
+                .add(new PositionComponent(
+                        Gdx.graphics.getWidth() - 50f,
+                        Gdx.graphics.getHeight() - 20f
+                ))
+                .add(new RenderableComponent());
+
         powerBar
                 .add(new PositionComponent(
                     Gdx.graphics.getWidth() - 50f,
@@ -180,9 +202,11 @@ public class EntityManager {
         // Add all ECS entities to the engine
         engine.addEntity(player1);
         engine.addEntity(player2);
+        engine.addEntity(timer);
+        engine.addEntity(health1);
+        engine.addEntity(health2);
         engine.addEntity(ground);
         engine.addEntity(aim);
-        engine.addEntity(timer);
         engine.addEntity(powerBar);
         engine.addEntity(powerArrow);
     }
