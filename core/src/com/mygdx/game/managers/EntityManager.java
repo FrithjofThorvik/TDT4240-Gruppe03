@@ -7,10 +7,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.AimComponent;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.FontComponent;
+import com.mygdx.game.ECS.components.GroundComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
@@ -19,7 +19,7 @@ import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
-import com.mygdx.game.ECS.systems.AimingSystem;
+import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.ControllerSystem;
 import com.mygdx.game.ECS.systems.GameplaySystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
@@ -41,6 +41,9 @@ public class EntityManager {
         addSystems();
         createEntities();
         createEntityListeners();
+
+        // This Static manager, will handle all game states
+        new GameStateManager(engine);
     }
 
     // Add all ECS systems
@@ -50,7 +53,7 @@ public class EntityManager {
         RenderingSystem rs = new RenderingSystem(batch);
         ProjectileSystem ps = new ProjectileSystem();
         GameplaySystem gms = new GameplaySystem();
-        AimingSystem ams = new AimingSystem();
+        ShootingSystem ams = new ShootingSystem();
         PhysicsSystem phs = new PhysicsSystem();
 
         // Add all ECS systems to the engine
@@ -130,6 +133,7 @@ public class EntityManager {
                         ground.getComponent(PositionComponent.class).position,
                         ground.getComponent(SpriteComponent.class).size,
                         true))
+                .add(new GroundComponent())
                 .add(new RenderableComponent());
 
         aim

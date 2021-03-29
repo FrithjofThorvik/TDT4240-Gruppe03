@@ -57,7 +57,7 @@ public class RenderingSystem extends EntitySystem {
     }
 
     // Update function for
-    public void update(float deltaTime) {
+    public void update(float dt) {
         // Loop through all sprite entities, and draw screen
         for (int i = 0; i < spriteEntities.size(); i++) {
             // Fetch each component
