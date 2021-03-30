@@ -22,6 +22,8 @@ import com.mygdx.game.ECS.components.TakeAimComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.states.screens.GameScreen;
 
+import static com.mygdx.game.managers.GameStateManager.GSM;
+
 /**
  * This system should control the aiming of a projectile
  * A player gets the TakeAimComponent when it is ready to aim
@@ -142,7 +144,7 @@ public class AimingSystem extends EntitySystem {
         getEngine().addEntity(projectile);
 
         // Switch rounds in GameStateManager
-        getEngine().getSystem(GameplaySystem.class).gameStateManager.setGameState(GameStateManager.STATE.SWITCH_ROUND);
+        GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
 
         // Remove the TakeAimComponent from the current player after shot
         player.remove(TakeAimComponent.class);

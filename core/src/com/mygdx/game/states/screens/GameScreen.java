@@ -7,8 +7,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.EntityManager;
+import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.utils.B2DContactListener;
 
+import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
 public class GameScreen extends AbstractScreen {
@@ -44,6 +46,9 @@ public class GameScreen extends AbstractScreen {
 
         // Setup ECS entityManager
         this.entityManager = new EntityManager(engine, app.batch);
+
+        // This Static manager, will handle all game states
+        new GameStateManager();
     }
 
     @Override
@@ -54,7 +59,11 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void update(float dt) {
+
         world.step(1f / Application.APP_FPS, 6, 2);
+
+        // Update the Game State Manager
+        GSM.update(dt);
     }
 
     @Override

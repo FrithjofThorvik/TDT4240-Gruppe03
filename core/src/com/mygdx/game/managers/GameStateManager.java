@@ -4,11 +4,9 @@ import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.PlayerAim;
 import com.mygdx.game.states.game.StartRound;
 import com.mygdx.game.states.game.SwitchRound;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
-import static com.mygdx.game.utils.GameConstants.TIME_BETWEEN_ROUNDS;
 
 /**
  * This manages game states
