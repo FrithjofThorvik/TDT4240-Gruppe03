@@ -25,7 +25,8 @@ public class PhysicsSystem extends EntitySystem {
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // PhysicsSystem constructor
-    public PhysicsSystem() {}
+    public PhysicsSystem() {
+    }
 
     // Get entities matching the given components, and store in respective array
     public void addedToEngine(Engine e) {

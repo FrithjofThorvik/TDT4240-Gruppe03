@@ -7,10 +7,11 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.ECS.components.MovementControlComponent;
+import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
-import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.PowerBarComponent;
@@ -23,6 +24,7 @@ import com.mygdx.game.ECS.systems.GameplaySystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
+import com.mygdx.game.ECS.systems.ShootingSystem;
 
 // This class will systems and components, and takes in an engine
 public class EntityManager {
@@ -50,7 +52,7 @@ public class EntityManager {
         GameplaySystem gms = new GameplaySystem();
         AimingSystem ams = new AimingSystem();
         PhysicsSystem phs = new PhysicsSystem();
-
+        ShootingSystem ss = new ShootingSystem();
 
 
         // Add all ECS systems to the engine
@@ -60,6 +62,7 @@ public class EntityManager {
         engine.addSystem(gms);
         engine.addSystem(ams);
         engine.addSystem(phs);
+        engine.addSystem(ss);
     }
 
     // Create entities with ECS components
@@ -80,10 +83,11 @@ public class EntityManager {
                 .add(new HealthComponent(100))
                 .add(new RenderableComponent())
                 .add(new PlayerComponent())
+                .add(new ShootingComponent(0, 0))
                 .add(new Box2DComponent(
                         player1.getComponent(PositionComponent.class).position,
                         player1.getComponent(SpriteComponent.class).size,
-                        false));
+                        false, 100f));
 
         player2.add(new VelocityComponent(1000, 0))
                 .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
@@ -92,10 +96,11 @@ public class EntityManager {
                 .add(new HealthComponent(100))
                 .add(new RenderableComponent())
                 .add(new PlayerComponent())
+                .add(new ShootingComponent(0, 0))
                 .add(new Box2DComponent(
                         player2.getComponent(PositionComponent.class).position,
                         player2.getComponent(SpriteComponent.class).size,
-                        false));
+                        false, 100f));
 
         timer.add(new FontComponent("Time: 0.0s"))
                 .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() * 0.97f))
@@ -112,7 +117,7 @@ public class EntityManager {
                 .add(new PowerBarComponent());
 
         ground.add(new SpriteComponent(
-                    new Texture("tank.png"),
+                new Texture("tank.png"),
                 Gdx.graphics.getWidth() * 2f,
                 10f))
                 .add(new PositionComponent(
@@ -122,7 +127,7 @@ public class EntityManager {
                 .add(new Box2DComponent(
                         ground.getComponent(PositionComponent.class).position,
                         ground.getComponent(SpriteComponent.class).size,
-                        true))
+                        true, 1000000))
                 .add(new RenderableComponent());
 
         // Add all ECS entities to the engine
@@ -146,7 +151,8 @@ public class EntityManager {
             }
 
             @Override
-            public void entityAdded(Entity entity) {}
+            public void entityAdded(Entity entity) {
+            }
         };
 
         // The family decides which components the entity listener should listen for

@@ -11,7 +11,6 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
-import com.mygdx.game.ECS.components.TakeAimComponent;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.PlayerComponent;
 
@@ -53,19 +52,29 @@ public class GameplaySystem extends EntitySystem {
         GSM.numberOfPlayers = players.size();
 
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
-            player.remove(TakeAimComponent.class); // Remove TakeAim component
-            player.remove(MovementControlComponent.class); // Disable player movement
-
             powerBar.remove(RenderableComponent.class); // Remove render of power bar
             powerBarArrow.remove(RenderableComponent.class); // Remove render of power bar arrow
-        } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_ROUND)) {
-            player.add(new MovementControlComponent()); // Enable new player to move
-        } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_AIM)) {
-            player.add(new TakeAimComponent()); // Add aim component to player
-            player.remove(MovementControlComponent.class); // Disable player movement
 
+            getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+            getEngine().getSystem(ControllerSystem.class).setProcessing(false);
+        } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_ROUND)) {
+            player.add(new MovementControlComponent());
+
+            getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+            getEngine().getSystem(ControllerSystem.class).setProcessing(true);
+        } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_AIM)) {
+            player.remove(MovementControlComponent.class);
+
+            getEngine().getSystem(AimingSystem.class).setProcessing(true);
+            getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+            getEngine().getSystem(ControllerSystem.class).setProcessing(false);
+        } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_SHOOT)) {
             powerBar.add(new RenderableComponent()); // Render power bar
             powerBarArrow.add(new RenderableComponent()); // Render power bar arrow
+
+            getEngine().getSystem(ShootingSystem.class).setProcessing(true);
+            getEngine().getSystem(AimingSystem.class).setProcessing(false);
+            getEngine().getSystem(ControllerSystem.class).setProcessing(false);
         }
     }
 }

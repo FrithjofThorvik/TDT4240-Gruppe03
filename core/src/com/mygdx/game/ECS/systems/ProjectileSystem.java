@@ -25,7 +25,8 @@ public class ProjectileSystem extends EntitySystem {
     private final ComponentMapper<ProjectileDamageComponent> em = ComponentMapper.getFor(ProjectileDamageComponent.class);
 
     // ProjectileSystem constructor
-    public ProjectileSystem() {}
+    public ProjectileSystem() {
+    }
 
     // Will be called automatically by the engine
     public void addedToEngine(Engine e) {
@@ -43,11 +44,6 @@ public class ProjectileSystem extends EntitySystem {
             ProjectileDamageComponent damage = em.get(entity);
             PositionComponent pos = pm.get(entity);
             VelocityComponent vel = vm.get(entity);
-
-            //This is just a simple demo code that moves the projectile
-            pos.position.x += vel.velocity.x;
-            pos.position.y += vel.velocity.y;
-            vel.velocity.y -= 9.8f * deltaTime;
 
             // TODO: Implement projectile damage functionality
         }

@@ -15,10 +15,11 @@ import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.PowerBarComponent;
-import com.mygdx.game.ECS.components.RenderableComponent;
-import com.mygdx.game.ECS.components.TakeAimComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.states.screens.GameScreen;
+
+import static com.mygdx.game.managers.GameStateManager.GSM;
 
 /**
  * This system is responsible for moving the player when it is that players turn
@@ -34,7 +35,8 @@ public class ControllerSystem extends EntitySystem {
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // ControllerSystem constructor
-    public ControllerSystem() {}
+    public ControllerSystem() {
+    }
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
@@ -57,21 +59,14 @@ public class ControllerSystem extends EntitySystem {
             // Move player when screen is touched
             if (Gdx.input.isTouched()) movePlayer(pos, vel, b2d);
 
-            // When space is pressed -> the player moves on to take aim and loses movement control
+            // When space is pressed -> change state to aiming
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                // Modify player components
-                player.add(new TakeAimComponent()); // Add aim component to player
-                player.remove(MovementControlComponent.class); // Remove movement component from player
-
-                // Add render component to power bar entities
-                for (int j = 0; j < powerBar.size(); j++) {
-                    powerBar.get(j).add(new RenderableComponent());
-                }
+                GSM.setGameState(GameStateManager.STATE.PLAYER_AIM);
             }
         }
     }
 
-    public void movePlayer(PositionComponent position, VelocityComponent vel, Box2DComponent b2d){
+    public void movePlayer(PositionComponent position, VelocityComponent vel, Box2DComponent b2d) {
         // Get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
         float yTouchPixels = Gdx.input.getY();
@@ -81,12 +76,11 @@ public class ControllerSystem extends EntitySystem {
         touchPoint = GameScreen.camera.unproject(touchPoint);
 
         // Apply force to the players box2D body according to its velocity component
-        if(position.position.x < touchPoint.x){
-            b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(),false);
-        }
-        else if (position.position.x > touchPoint.x){
+        if (position.position.x < touchPoint.x) {
+            b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(), false);
+        } else if (position.position.x > touchPoint.x) {
             Vector2 negativeImpulse = new Vector2(-vel.velocity.x, vel.velocity.y);
-            b2d.body.applyLinearImpulse(negativeImpulse, b2d.body.getWorldCenter(),false);
+            b2d.body.applyLinearImpulse(negativeImpulse, b2d.body.getWorldCenter(), false);
         }
     }
 

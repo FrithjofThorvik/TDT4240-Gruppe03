@@ -2,8 +2,10 @@ package com.mygdx.game.managers;
 
 import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.PlayerAim;
+import com.mygdx.game.states.game.PlayerShoot;
 import com.mygdx.game.states.game.StartRound;
 import com.mygdx.game.states.game.SwitchRound;
+
 import java.util.HashMap;
 
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
@@ -12,7 +14,7 @@ import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
  * This manages game states
  * Will be used to set different states
  **/
-public class GameStateManager{
+public class GameStateManager {
     public static GameStateManager GSM; // Makes the GameStateManager accessed globally
 
     public float time = 0; // To keep track of time
@@ -24,7 +26,8 @@ public class GameStateManager{
     public enum STATE {
         START_ROUND,
         SWITCH_ROUND,
-        PLAYER_AIM
+        PLAYER_AIM,
+        PLAYER_SHOOT
     }
 
     // Store game states in HashMap
@@ -40,7 +43,6 @@ public class GameStateManager{
     public void update(float dt) {
         gameState.update(dt); // Run update functions for all AbstractGameState()
         GSM.time += dt; // The time variable keeps control of the time spent in this state
-        System.out.println(gameState);
 
         if (GSM.time > ROUND_TIME)
             GSM.setGameState(STATE.SWITCH_ROUND); // Switch state
@@ -53,6 +55,7 @@ public class GameStateManager{
         this.gameStates.put(STATE.START_ROUND, new StartRound());
         this.gameStates.put(STATE.SWITCH_ROUND, new SwitchRound());
         this.gameStates.put(STATE.PLAYER_AIM, new PlayerAim());
+        this.gameStates.put(STATE.PLAYER_SHOOT, new PlayerShoot());
 
         // Set current game state
         this.gameState = gameStates.get(STATE.SWITCH_ROUND);
@@ -67,7 +70,7 @@ public class GameStateManager{
     }
 
     // Get a game state from the hash map
-    public AbstractGameState getGameState(STATE gameState){
+    public AbstractGameState getGameState(STATE gameState) {
         return gameStates.get(gameState);
     }
 }

@@ -14,7 +14,7 @@ public class Box2DComponent implements Component {
     public Body body;
     public Fixture fixture;
 
-    public Box2DComponent(Vector2 pos, Vector2 spriteSize, Boolean staticBody) {
+    public Box2DComponent(Vector2 pos, Vector2 spriteSize, Boolean staticBody, float mass) {
         // Create box2D BodyDef
         BodyDef bodyDef = new BodyDef();
 
@@ -22,6 +22,7 @@ public class Box2DComponent implements Component {
         else bodyDef.type = BodyDef.BodyType.DynamicBody;
 
         bodyDef.position.set(pos.x, pos.y); // Set position to given x & y value
+        bodyDef.fixedRotation = true; // Should this body be prevented from rotating?
         this.body = GameScreen.world.createBody(bodyDef); // Create the body
 
         // Create PolygonShape representing a box shape
@@ -31,7 +32,7 @@ public class Box2DComponent implements Component {
         // Create FixtureDef representing properties such as density, restitution, etc
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape; // Add the box shape to fixture
-        fixtureDef.density = 0.1f; // Add density to fixture (increases mass)
+        fixtureDef.density = mass / 1000; // Add density to fixture (increases mass)
         this.fixture = body.createFixture(fixtureDef); // Add FixtureDef and id to body
 
         // Dispose shape
