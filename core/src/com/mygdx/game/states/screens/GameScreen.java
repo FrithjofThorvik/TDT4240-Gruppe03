@@ -6,13 +6,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Application;
+import com.mygdx.game.ECS.CollisionHandler;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
-//import com.mygdx.game.utils.B2DContactListener;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
+
+/**
+ * This screen is used for running the Projectile Wars game
+ **/
 public class GameScreen extends AbstractScreen {
 
     // Camera
@@ -21,9 +26,6 @@ public class GameScreen extends AbstractScreen {
     // Box2D
     public static World world;
     public Box2DDebugRenderer b2dr;
-
-    //ECS
-    private final EntityManager entityManager;
 
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
@@ -42,13 +44,10 @@ public class GameScreen extends AbstractScreen {
         // Create world
         this.b2dr = new Box2DDebugRenderer();
         world = new World(new Vector2(0f, -98f), false);
-        //world.setContactListener(new B2DContactListener(engine));
 
-        // Setup ECS entityManager
-        this.entityManager = new EntityManager(engine, app.batch);
-
-        // This Static manager, will handle all game states
-        new GameStateManager();
+        new EntityManager(engine, app.batch); // Manager for generating all ECS functions
+        new GameStateManager(); // Manager for handling all game states
+        world.setContactListener(new CollisionHandler(engine)); // Set contact listener for world
     }
 
     @Override
@@ -59,11 +58,7 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void update(float dt) {
-
         world.step(1f / Application.APP_FPS, 6, 2);
-
-        // Update the Game State Manager
-        GSM.update(dt);
     }
 
     @Override
@@ -73,17 +68,19 @@ public class GameScreen extends AbstractScreen {
 
         //Begin the batch and let the entityManager handle the rest :)
         app.batch.begin();
-        entityManager.update();
+        GSM.update(dt);
+        EM.update(dt);
         app.batch.end();
     }
 
     @Override
-    public void resize(int width, int height) {
-    }
+    public void resize(int width, int height) {}
 
     @Override
     public void dispose() {
         super.dispose();
         world.dispose();
+        // TODO: Add dispose function for entityManager()
+        // TODO: Add dispose for GameStateManager()
     }
 }

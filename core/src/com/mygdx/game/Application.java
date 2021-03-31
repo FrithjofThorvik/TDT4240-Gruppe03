@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.managers.ScreenManager;
 
+import static com.mygdx.game.managers.ScreenManager.SM;
+
 
 /**
  * This is used for initializing all core mechanics for starting an application
@@ -22,9 +24,6 @@ public class Application extends Game {
 	public static int V_WIDTH = 720;	// Core
 	public static  int V_HEIGHT = 420;	// Core
 
-	// Managers
-	public ScreenManager screenManager;
-
 	//Batches
 	public SpriteBatch batch;
 	public ShapeRenderer shapeBatch;
@@ -37,8 +36,7 @@ public class Application extends Game {
 		this.batch = new SpriteBatch();
 		this.shapeBatch = new ShapeRenderer();
 
-		// Setup managers
-		this.screenManager = ScreenManager.getScreenManager(this);
+		new ScreenManager(this); // Create ScreenManager
 	}
 
 	@Override
@@ -57,6 +55,6 @@ public class Application extends Game {
 		// Dispose this class's objects (Remember order of disposing)
 		this.batch.dispose();
 		this.shapeBatch.dispose();
-		this.screenManager.dispose();
+		SM.dispose();
 	}
 }

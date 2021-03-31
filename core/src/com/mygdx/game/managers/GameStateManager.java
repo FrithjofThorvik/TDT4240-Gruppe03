@@ -1,6 +1,7 @@
 package com.mygdx.game.managers;
 
 import com.mygdx.game.states.game.AbstractGameState;
+import com.mygdx.game.states.game.EndGame;
 import com.mygdx.game.states.game.PlayerAim;
 import com.mygdx.game.states.game.PlayerShoot;
 import com.mygdx.game.states.game.StartRound;
@@ -28,7 +29,8 @@ public class GameStateManager {
         START_ROUND,
         SWITCH_ROUND,
         PLAYER_AIM,
-        PLAYER_SHOOT
+        PLAYER_SHOOT,
+        END_GAME
     }
 
     // Store game states in HashMap
@@ -57,6 +59,7 @@ public class GameStateManager {
         this.gameStates.put(STATE.SWITCH_ROUND, new SwitchRound());
         this.gameStates.put(STATE.PLAYER_AIM, new PlayerAim());
         this.gameStates.put(STATE.PLAYER_SHOOT, new PlayerShoot());
+        this.gameStates.put(STATE.END_GAME, new EndGame());
 
         this.gameState = gameStates.get(STATE.SWITCH_ROUND); // Set new STATE
         this.gameState.startGameState(); // Start current STATE

@@ -5,6 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.ScreenManager;
 
+import static com.mygdx.game.managers.ScreenManager.SM;
+
+
+/**
+ *
+ **/
 public class MainMenuScreen extends AbstractScreen {
 
     // Texture
@@ -19,18 +25,18 @@ public class MainMenuScreen extends AbstractScreen {
 
     private void handleInput() {
         if (Gdx.input.isTouched())
-            app.screenManager.setScreen(ScreenManager.STATE.PLAY);
+            SM.setScreen(ScreenManager.STATE.PLAY);
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float dt) {
         this.handleInput();
     }
 
     @Override
-    public void render(float delta) {
+    public void render(float dt) {
         // Super.render(delta) sets BG_Color and calls update(float delta)
-        super.render(delta);
+        super.render(dt);
 
         // Draw Play Button in the middle of the screen
         this.app.batch.begin();

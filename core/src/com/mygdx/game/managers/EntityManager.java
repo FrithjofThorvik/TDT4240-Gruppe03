@@ -32,6 +32,7 @@ import com.mygdx.game.ECS.systems.UISystem;
  * This class will systems and components, and takes in an engine
  **/
 public class EntityManager {
+    public static EntityManager EM;
     private final Engine engine;
     private final SpriteBatch batch;
 
@@ -53,6 +54,7 @@ public class EntityManager {
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
     public EntityManager(Engine engine, SpriteBatch batch) {
+        EM = this;
         this.engine = engine;
         this.batch = batch;
 
@@ -256,7 +258,7 @@ public class EntityManager {
     }
 
     // On update, call the engines update method
-    public void update() {
-        engine.update(Gdx.graphics.getDeltaTime());
+    public void update(float dt) {
+        engine.update(dt);
     }
 }
