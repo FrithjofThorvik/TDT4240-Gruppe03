@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.managers.ScreenManager;
 
 
+/**
+ * This is used for initializing all core mechanics for starting an application
+ **/
 public class Application extends Game {
 	// Application Globals
 	public static String APP_TITLE = "Projectile Wars";
@@ -31,11 +34,11 @@ public class Application extends Game {
 	public void create() {
 
 		// Setup batches
-		batch = new SpriteBatch();
-		shapeBatch = new ShapeRenderer();
+		this.batch = new SpriteBatch();
+		this.shapeBatch = new ShapeRenderer();
 
 		// Setup managers
-		screenManager = ScreenManager.getScreenManager(this);
+		this.screenManager = ScreenManager.getScreenManager(this);
 	}
 
 	@Override
@@ -52,8 +55,8 @@ public class Application extends Game {
 		super.dispose();
 
 		// Dispose this class's objects (Remember order of disposing)
-		batch.dispose();
-		shapeBatch.dispose();
-		screenManager.dispose();
+		this.batch.dispose();
+		this.shapeBatch.dispose();
+		this.screenManager.dispose();
 	}
 }

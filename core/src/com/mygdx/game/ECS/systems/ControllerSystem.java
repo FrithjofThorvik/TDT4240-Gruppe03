@@ -21,6 +21,7 @@ import com.mygdx.game.states.screens.GameScreen;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
+
 /**
  * This system is responsible for moving the player when it is that players turn
  **/
@@ -34,38 +35,37 @@ public class ControllerSystem extends EntitySystem {
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
-    // ControllerSystem constructor
-    public ControllerSystem() {
-    }
-
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
-        players = e.getEntitiesFor(Family.all(PlayerComponent.class, MovementControlComponent.class).get());
+        this.players = e.getEntitiesFor(Family.all(PlayerComponent.class, MovementControlComponent.class).get());
     }
 
     // Will be called by the engine automatically
-    public void update(float deltaTime) {
-        // Loop through all player entities
-        for (int i = 0; i < players.size(); ++i) {
-            // Get player entity with controller component
-            Entity player = players.get(i);
+    public void update(float dt) {
+        if (this.players.size() > 0) {
+            // Loop through all player entities
+            for (int i = 0; i < this.players.size(); ++i) {
+                // Get player entity with controller component
+                Entity player = this.players.get(i);
 
-            // Move player when screen is touched
-            if (Gdx.input.isTouched()) movePlayer(player);
+                // Move player when screen is touched
+                if (Gdx.input.isTouched())
+                    movePlayer(player);
 
-            // When space is pressed -> change state to aiming
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                GSM.setGameState(GameStateManager.STATE.PLAYER_AIM);
+                // When space is pressed -> change state to aiming
+                if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+                    GSM.setGameState(GameStateManager.STATE.PLAYER_AIM);
             }
         }
     }
 
+    // Move player with Box2D impulses
     public void movePlayer(Entity player) {
         // Get entity components
-        PositionComponent pos = pm.get(player);
-        VelocityComponent vel = vm.get(player);
-        Box2DComponent b2d = b2dm.get(player);
-        SpriteComponent sc = sm.get(player);
+        PositionComponent playerPosition = this.pm.get(player);
+        VelocityComponent playerVelocity = this.vm.get(player);
+        Box2DComponent playerBox2D = this.b2dm.get(player);
+        SpriteComponent playerSprite = this.sm.get(player);
 
         // Get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
@@ -76,22 +76,21 @@ public class ControllerSystem extends EntitySystem {
         touchPoint = GameScreen.camera.unproject(touchPoint);
 
         // Apply force to the players box2D body according to its velocity component
-        if (pos.position.x < touchPoint.x) {
-            b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(), false);
+        if (playerPosition.position.x < touchPoint.x) {
+            playerBox2D.body.applyLinearImpulse(playerVelocity.velocity, playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is already flipped from it's original state
-            if (sc.sprite.isFlipX()) {
-                sc.sprite.flip(true, false);
-            }
-        } else if (pos.position.x > touchPoint.x) {
-            Vector2 negativeImpulse = new Vector2(-vel.velocity.x, vel.velocity.y);
-            b2d.body.applyLinearImpulse(negativeImpulse, b2d.body.getWorldCenter(), false);
+            if (playerSprite.sprite.isFlipX())
+                playerSprite.sprite.flip(true, false);
+
+        } else if (playerPosition.position.x > touchPoint.x) {
+            Vector2 negativeImpulse = new Vector2(- playerVelocity.velocity.x, playerVelocity.velocity.y);
+            playerBox2D.body.applyLinearImpulse(negativeImpulse, playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is not flipped from it's initial state
-            if (!sc.sprite.isFlipX()) {
-                sc.sprite.flip(true, false);
-            }
+            if (!playerSprite.sprite.isFlipX())
+                playerSprite.sprite.flip(true, false);
+
         }
     }
-
 }

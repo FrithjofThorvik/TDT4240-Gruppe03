@@ -9,7 +9,12 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.states.screens.GameScreen;
 
-//Every player should have this component, indicating amount of HealthPoints
+
+/**
+ * Every entity that should answer to physics, should have this component
+ * The body property will be used to apply impulses and decide velocity
+ * The fixture property will be used in the CollisionSystem class
+ **/
 public class Box2DComponent implements Component {
     public Body body;
     public Fixture fixture;

@@ -11,19 +11,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
-import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.states.screens.GameScreen;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
+
 /**
  * This system should control the aiming of a projectile
  * A player gets the TakeAimComponent when it is ready to aim
  * A player with the TakeAimComponent is controlled by the AimingSystem
- * TODO: Implement better shooting mechanics for projectiles
  */
 public class AimingSystem extends EntitySystem {
 
@@ -31,29 +29,25 @@ public class AimingSystem extends EntitySystem {
 
     //Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-
-    // AimingSystem constructor
-    public AimingSystem() {
-    }
+    private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
 
     // Add entities to arrays
     public void addedToEngine(Engine e) {
-        players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
     }
 
     // Will be called by the engine automatically
     public void update(float deltaTime) {
         // Check first if there are any players aiming
-        if (players.size() > 0) {
-            Entity player = players.get(GSM.currentPlayer); // Get current player entity
-            PositionComponent position = pm.get(player); // Get the position component of that player
-
+        if (this.players.size() > 0) {
             // Calculate the aim angle when the screen is touched
             if (Gdx.input.isTouched()) {
-                double aimAngleInRad = calculateAimAngle(position);
+                Entity player = this.players.get(GSM.currentPlayer); // Get current player entity
+                PositionComponent playerPosition = this.pm.get(player); // Get the position component of that player
+                ShootingComponent playerShot = this.sm.get(player);
 
                 // Update angle in the players ShootingComponent
-                player.getComponent(ShootingComponent.class).angle = aimAngleInRad;
+                playerShot.angle = calculateAimAngle(playerPosition);
             }
 
             // When the player presses "S" change state to shooting

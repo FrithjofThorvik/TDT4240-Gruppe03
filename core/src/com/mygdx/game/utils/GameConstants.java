@@ -1,5 +1,9 @@
 package com.mygdx.game.utils;
 
+
+/**
+ * This is used for storing the game's constants
+ **/
 public final class GameConstants {
     private GameConstants() {}
 

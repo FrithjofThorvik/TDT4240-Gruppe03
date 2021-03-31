@@ -1,5 +1,6 @@
 package com.mygdx.game.managers;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
@@ -14,7 +15,7 @@ import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.RenderableComponent;
+import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.ECS.systems.AimingSystem;
@@ -26,7 +27,10 @@ import com.mygdx.game.ECS.systems.RenderingSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.UISystem;
 
-// This class will systems and components, and takes in an engine
+
+/**
+ * This class will systems and components, and takes in an engine
+ **/
 public class EntityManager {
     private final Engine engine;
     private final SpriteBatch batch;
@@ -40,23 +44,29 @@ public class EntityManager {
     public static Entity health2;
     public static Entity ground;
 
+    // Preparing component mappers
+    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
+    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
+    private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
+
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
-    // Takes in batch because the rendering system will draw to screen
+    // Takes in batch because the RenderSystem will draw to screen
     public EntityManager(Engine engine, SpriteBatch batch) {
         this.engine = engine;
         this.batch = batch;
 
         // Create and add ECS systems and entities
-        addSystems();
-        createEntities();
-        createEntityListeners();
+        this.addSystems();
+        this.createEntities();
+        this.createEntityListeners();
     }
 
     // Add all ECS systems
     private void addSystems() {
         // Instantiate all ECS systems
         ControllerSystem cs = new ControllerSystem();
-        RenderingSystem rs = new RenderingSystem(batch);
+        RenderingSystem rs = new RenderingSystem(this.batch);
         ProjectileSystem ps = new ProjectileSystem();
         GameplaySystem gms = new GameplaySystem();
         AimingSystem ams = new AimingSystem();
@@ -66,14 +76,14 @@ public class EntityManager {
 
 
         // Add all ECS systems to the engine
-        engine.addSystem(cs);
-        engine.addSystem(rs);
-        engine.addSystem(ps);
-        engine.addSystem(gms);
-        engine.addSystem(ams);
-        engine.addSystem(phs);
-        engine.addSystem(ss);
-        engine.addSystem(us);
+        this.engine.addSystem(cs);
+        this.engine.addSystem(rs);
+        this.engine.addSystem(ps);
+        this.engine.addSystem(gms);
+        this.engine.addSystem(ams);
+        this.engine.addSystem(phs);
+        this.engine.addSystem(ss);
+        this.engine.addSystem(us);
     }
 
     // Create entities with ECS components
@@ -89,97 +99,140 @@ public class EntityManager {
         health1 = new Entity();
         health2 = new Entity();
 
+        // Textures
+        Texture tankTexture = new Texture("tank.png");
+        Texture powerBarTexture = new Texture("powerbar.png");
+        Texture rightArrowTexture = new Texture("right-arrow.png");
+
         // Instantiate player entities
-        player1.add(new VelocityComponent(1000, 0))
-                .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
-                .add(new PositionComponent(0 + player1.getComponent(SpriteComponent.class).size.x,
-                        Gdx.graphics.getHeight() / 2f))
-                .add(new HealthComponent(100))
-                .add(new RenderableComponent())
-                .add(new PlayerComponent())
-                .add(new ShootingComponent(0, 0))
+        player1.add(new SpriteComponent(
+                        tankTexture,
+                        50f,
+                        50f)
+                )
+                .add(new PositionComponent(
+                        sm.get(player1).size.x,
+                        Gdx.graphics.getHeight() / 2f)
+                )
                 .add(new Box2DComponent(
-                        player1.getComponent(PositionComponent.class).position,
-                        player1.getComponent(SpriteComponent.class).size,
-                        false, 100f));
-
-        player2.add(new VelocityComponent(1000, 0))
-                .add(new SpriteComponent(new Texture("tank.png"), 50f, 50f))
-                .add(new PositionComponent(Gdx.graphics.getWidth() - 100f,
-                        Gdx.graphics.getHeight() / 2f))
+                        pm.get(player1).position,
+                        sm.get(player1).size,
+                        false,
+                        100f)
+                )
+                .add(new VelocityComponent(1000, 0))
                 .add(new HealthComponent(100))
-                .add(new RenderableComponent())
-                .add(new PlayerComponent())
                 .add(new ShootingComponent(0, 0))
+                .add(new RenderComponent())
+                .add(new PlayerComponent());
+
+        player2.add(new SpriteComponent(
+                        tankTexture,
+                        50f,
+                        50f)
+                )
+                .add(new PositionComponent(
+                        Gdx.graphics.getWidth() - 100f,
+                        Gdx.graphics.getHeight() / 2f)
+                )
                 .add(new Box2DComponent(
-                        player2.getComponent(PositionComponent.class).position,
-                        player2.getComponent(SpriteComponent.class).size,
-                        false, 100f));
+                        pm.get(player2).position,
+                        sm.get(player2).size,
+                        false,
+                        100f)
+                )
+                .add(new VelocityComponent(1000, 0))
+                .add(new HealthComponent(100))
+                .add(new ShootingComponent(0, 0))
+                .add(new RenderComponent())
+                .add(new PlayerComponent());
 
-        timer.add(new FontComponent("Time: 0.0s"))
-                .add(new PositionComponent(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() * 0.97f))
-                .add(new RenderableComponent());
+        timer.add(new PositionComponent(
+                        Gdx.graphics.getWidth() / 2f,
+                        Gdx.graphics.getHeight() * 0.97f)
+                )
+                .add(new FontComponent("Time: 0.0s"))
+                .add(new RenderComponent());
 
-        powerBar.add(new SpriteComponent(new Texture("powerbar.png"), 40f, 350f))
-                .add(new PositionComponent(Gdx.graphics.getWidth() - 50f, Gdx.graphics.getHeight() / 2f));
+        powerBar.add(new SpriteComponent(
+                        powerBarTexture,
+                        40f,
+                        350f)
+                )
+                .add(new PositionComponent(
+                        Gdx.graphics.getWidth() - 50f,
+                        Gdx.graphics.getHeight() / 2f)
+                );
 
-        powerBarArrow.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
+        powerBarArrow.add(new SpriteComponent(
+                    rightArrowTexture,
+                    40f,
+                    40f)
+                )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
-                        (Gdx.graphics.getHeight() - powerBar.getComponent(SpriteComponent.class).size.y) / 2f));
+                        (Gdx.graphics.getHeight() - sm.get(powerBar).size.y) / 2f)
+                );
 
         ground.add(new SpriteComponent(
-                new Texture("tank.png"),
-                Gdx.graphics.getWidth() * 2f,
-                10f))
+                    tankTexture,
+                    Gdx.graphics.getWidth() * 2f,
+                    10f)
+                )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 2f)
                 )
                 .add(new Box2DComponent(
-                        ground.getComponent(PositionComponent.class).position,
-                        ground.getComponent(SpriteComponent.class).size,
-                        true, 1000000))
-                .add(new RenderableComponent());
+                        pm.get(ground).position,
+                        sm.get(ground).size,
+                        true,
+                        1000000)
+                )
+                .add(new RenderComponent());
 
         aimArrow
-                .add(new PositionComponent(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2))
-                .add(new SpriteComponent(
-                        new Texture("right-arrow.png"),
-                        10f, 10f)
+                .add(new PositionComponent(
+                        Gdx.graphics.getWidth() / 2f,
+                        Gdx.graphics.getHeight() / 2f)
                 )
-                .add(new RenderableComponent());
+                .add(new SpriteComponent(
+                        rightArrowTexture,
+                        10f,
+                        10f)
+                )
+                .add(new RenderComponent());
 
         health1
                 .add(new FontComponent(
-                        player1.getComponent(HealthComponent.class).hp + " hp")
+                        hm.get(player1).hp + " hp")
                 )
                 .add(new PositionComponent(
                         50f,
                         Gdx.graphics.getHeight() - 20f
                 ))
-                .add(new RenderableComponent());
+                .add(new RenderComponent());
 
         health2
                 .add(new FontComponent(
-                        player2.getComponent(HealthComponent.class).hp + " hp")
+                        hm.get(player2).hp + " hp")
                 )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 50f,
                         Gdx.graphics.getHeight() - 20f
                 ))
-                .add(new RenderableComponent());
+                .add(new RenderComponent());
 
         // Add all ECS entities to the engine
-        engine.addEntity(player1);
-        engine.addEntity(player2);
-        engine.addEntity(timer);
-        engine.addEntity(powerBar);
-        engine.addEntity(powerBarArrow);
-        engine.addEntity(ground);
-        engine.addEntity(aimArrow);
-        engine.addEntity(health1);
-        engine.addEntity(health2);
+        this.engine.addEntity(player1);
+        this.engine.addEntity(player2);
+        this.engine.addEntity(timer);
+        this.engine.addEntity(powerBar);
+        this.engine.addEntity(powerBarArrow);
+        this.engine.addEntity(ground);
+        this.engine.addEntity(aimArrow);
+        this.engine.addEntity(health1);
+        this.engine.addEntity(health2);
     }
 
     // Add entity listeners for observe & listen to when adding and removing entities
@@ -189,18 +242,17 @@ public class EntityManager {
             @Override
             public void entityRemoved(Entity entity) {
                 // Set the linear velocity of the entity's box2d body to 0 in x direction
-                Box2DComponent box2DComponent = entity.getComponent(Box2DComponent.class);
+                Box2DComponent box2DComponent = b2dm.get(entity);
                 box2DComponent.body.setLinearVelocity(0, box2DComponent.body.getLinearVelocity().y);
             }
 
             @Override
-            public void entityAdded(Entity entity) {
-            }
+            public void entityAdded(Entity entity) {}
         };
 
         // The family decides which components the entity listener should listen for
         Family HasControl = Family.all(MovementControlComponent.class).get();
-        engine.addEntityListener(HasControl, listener);
+        this.engine.addEntityListener(HasControl, listener);
     }
 
     // On update, call the engines update method

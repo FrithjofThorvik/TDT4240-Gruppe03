@@ -6,10 +6,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.mygdx.game.ECS.components.EffectComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
+
 
 /**
  * This system should control a projectile after it has been created/fired
@@ -24,28 +24,26 @@ public class ProjectileSystem extends EntitySystem {
     private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
     private final ComponentMapper<ProjectileDamageComponent> em = ComponentMapper.getFor(ProjectileDamageComponent.class);
 
-    // ProjectileSystem constructor
-    public ProjectileSystem() {
-    }
-
     // Will be called automatically by the engine
     public void addedToEngine(Engine e) {
-        projectiles = e.getEntitiesFor(Family.all(ProjectileDamageComponent.class, PositionComponent.class, VelocityComponent.class).get());
+        this.projectiles = e.getEntitiesFor(Family.all(ProjectileDamageComponent.class, PositionComponent.class, VelocityComponent.class).get());
     }
 
     // Update function for ProjectileSystem
     public void update(float deltaTime) {
-        // Loop through projectile entities
-        for (int i = 0; i < projectiles.size(); ++i) {
-            // Get projectile
-            Entity entity = projectiles.get(i);
+        if (this.projectiles.size() > 0) {
+            // Loop through projectile entities
+            for (int i = 0; i < this.projectiles.size(); ++i) {
+                // Get projectile
+                Entity entity = this.projectiles.get(i);
 
-            // Get projectile components
-            ProjectileDamageComponent damage = em.get(entity);
-            PositionComponent pos = pm.get(entity);
-            VelocityComponent vel = vm.get(entity);
+                // Get projectile components
+                ProjectileDamageComponent projectileDamage = this.em.get(entity);
+                PositionComponent projectilePosition = this.pm.get(entity);
+                VelocityComponent projectileVelocity = this.vm.get(entity);
 
-            // TODO: Implement projectile damage functionality
+                // TODO: Implement projectile damage functionality
+            }
         }
     }
 }

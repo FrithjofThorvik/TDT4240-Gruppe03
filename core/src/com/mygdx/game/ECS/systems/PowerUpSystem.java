@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.ECS.components.EffectComponent;
 
+
 /**
  * This system should control the PowerUps
  * TODO: Has not been implemented yet
@@ -19,10 +20,6 @@ public class PowerUpSystem extends EntitySystem {
     // Prepare component mappers
     private final ComponentMapper<EffectComponent> em = ComponentMapper.getFor(EffectComponent.class);
 
-    // PowerUpSystem constructor
-    public PowerUpSystem() {
-    }
-
     // Store entities into arrays
     public void addedToEngine(Engine e) {
         effects = e.getEntitiesFor(Family.all(EffectComponent.class).get());
@@ -30,14 +27,16 @@ public class PowerUpSystem extends EntitySystem {
 
     // Will be called by the engine automatically
     public void update(float deltaTime) {
-        // Loop through all effect entities
-        for (int i = 0; i < effects.size(); ++i) {
-            // Get entity
-            Entity entity = effects.get(i);
+        if (this.effects.size() > 0) {
+            // Loop through all effect entities
+            for (int i = 0; i < this.effects.size(); ++i) {
+                // Get entity
+                Entity entity = this.effects.get(i);
 
-            // Get entity components
-            EffectComponent effect = em.get(entity);
-            // TODO: Do something here
+                // Get entity components
+                EffectComponent effect = this.em.get(entity);
+                // TODO: Do something here
+            }
         }
     }
 }

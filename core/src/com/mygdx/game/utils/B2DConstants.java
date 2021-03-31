@@ -1,5 +1,9 @@
 package com.mygdx.game.utils;
 
+
+/**
+ * This is used for storing Box2D constants
+ **/
 public final class B2DConstants {
 
     private B2DConstants() {

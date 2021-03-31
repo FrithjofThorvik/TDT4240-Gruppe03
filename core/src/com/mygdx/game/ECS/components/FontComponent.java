@@ -5,7 +5,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
-// Attach to entity to give it a font
+
+/**
+ * Attach to entity to give it a font
+ * The font property is almost the same as a sprite, and will be used to draw the font
+ * The text property is used for directly changing or getting the text
+ * The layout property is used to calculate the width and height of the text (used for centering)
+ **/
 public class FontComponent implements Component {
 
     public BitmapFont font;

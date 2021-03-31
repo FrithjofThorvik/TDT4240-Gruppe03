@@ -9,12 +9,12 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.RenderableComponent;
+import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
+
 
 /**
  * This system is for processing Box2D physics
- * TODO: Improve gravity system
  **/
 public class PhysicsSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites
@@ -24,35 +24,33 @@ public class PhysicsSystem extends EntitySystem {
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
-    // PhysicsSystem constructor
-    public PhysicsSystem() {
-    }
-
     // Get entities matching the given components, and store in respective array
     public void addedToEngine(Engine e) {
         // Store box2D entities
-        box2DEntities = e.getEntitiesFor(
+        this.box2DEntities = e.getEntitiesFor(
                 Family.all(
                         SpriteComponent.class,
                         Box2DComponent.class,
-                        RenderableComponent.class
+                        RenderComponent.class
                 ).get()
         );
     }
 
     // Update function for PhysicsSystem
-    public void update(float deltaTime) {
-        // Loop through all sprite entities, and draw screen
-        for (int i = 0; i < box2DEntities.size(); ++i) {
-            // Fetch each entity
-            Entity entity = box2DEntities.get(i);
+    public void update(float dt) {
+        if (this.box2DEntities.size() > 0) {
+            // Loop through all sprite entities, and draw screen
+            for (int i = 0; i < this.box2DEntities.size(); ++i) {
+                // Fetch each entity
+                Entity entity = this.box2DEntities.get(i);
 
-            // Fetch entity component
-            PositionComponent pc = pm.get(entity);
-            Box2DComponent b2dc = b2dm.get(entity);
+                // Fetch entity component
+                PositionComponent entityPosition = this.pm.get(entity);
+                Box2DComponent entityBox2D = this.b2dm.get(entity);
 
-            // Synchronise position component with body position
-            pc.position = new Vector2(b2dc.body.getPosition().x, b2dc.body.getPosition().y);
+                // Synchronise position component with body position
+                entityPosition.position = new Vector2(entityBox2D.body.getPosition().x, entityBox2D.body.getPosition().y);
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 
+
 /**
  * This manages game states
  * Will be used to set different states
@@ -36,16 +37,16 @@ public class GameStateManager {
     // GameStateManager constructor
     public GameStateManager() {
         GSM = this;
-        initGameStates();
+        this.initGameStates();
     }
 
     // Get game state
     public void update(float dt) {
-        gameState.update(dt); // Run update functions for all AbstractGameState()
-        GSM.time += dt; // The time variable keeps control of the time spent in this state
+        this.gameState.update(dt); // Run update functions for all AbstractGameState()
+        this.time += dt; // The time variable keeps control of the time spent in this state
 
-        if (GSM.time > ROUND_TIME)
-            GSM.setGameState(STATE.SWITCH_ROUND); // Switch state
+        if (this.time > ROUND_TIME)
+            this.setGameState(STATE.SWITCH_ROUND); // Switch state
     }
 
     // Initialise and map all STATEs to respective GameState
@@ -57,9 +58,8 @@ public class GameStateManager {
         this.gameStates.put(STATE.PLAYER_AIM, new PlayerAim());
         this.gameStates.put(STATE.PLAYER_SHOOT, new PlayerShoot());
 
-        // Set current game state
-        this.gameState = gameStates.get(STATE.SWITCH_ROUND);
-        this.gameState.startGameState();
+        this.gameState = gameStates.get(STATE.SWITCH_ROUND); // Set new STATE
+        this.gameState.startGameState(); // Start current STATE
     }
 
     // Set game state and reset timer
@@ -71,6 +71,6 @@ public class GameStateManager {
 
     // Get a game state from the hash map
     public AbstractGameState getGameState(STATE gameState) {
-        return gameStates.get(gameState);
+        return this.gameStates.get(gameState);
     }
 }

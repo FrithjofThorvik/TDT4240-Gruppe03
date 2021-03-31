@@ -5,9 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
-import com.mygdx.game.ECS.components.RenderableComponent;
+import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
+
 
 public class ProjectileCreator {
     // Creates a projectile
@@ -30,7 +31,7 @@ public class ProjectileCreator {
                         projectile.getComponent(SpriteComponent.class).size,
                         false, 1f)
                 )
-                .add(new RenderableComponent());
+                .add(new RenderComponent());
 
         return projectile;
     }

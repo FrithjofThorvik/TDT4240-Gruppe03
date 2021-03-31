@@ -22,31 +22,33 @@ import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 import static com.mygdx.game.utils.GameConstants.TIME_BETWEEN_ROUNDS;
 
+
 /**
  * This system is responsible for updating information regarding UI component
  **/
 public class UISystem extends EntitySystem {
     public DecimalFormat df = new DecimalFormat("0.0"); // Format timer that displays on the time on the screen
 
-    private ImmutableArray<Entity> players; // Array for all player entities that are aiming
+    // Array for all player entities that are aiming
+    private ImmutableArray<Entity> players;
 
     //Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
-        players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
     }
 
     // Will be called by the engine automatically
     public void update(float deltaTime) {
-        printTimer(); // Print information about how much time is left in a round, etc...
-
         // If there are any players initialised
-        if (players.size() > 1) {
+        if (this.players.size() > 1) {
+            this.printTimer(); // Print information about how much time is left in a round, etc...
+
             // Get the player who's turn it is and get its position component
-            Entity currentPlayer = players.get(GSM.currentPlayer);
-            PositionComponent position = pm.get(currentPlayer);
+            Entity currentPlayer = this.players.get(GSM.currentPlayer);
+            PositionComponent position = this.pm.get(currentPlayer);
 
             // Calculate the startingPosition of an arrow (this is done here so that if the screen is resized the arrowPosition is updated)
             float startPositionArrow = EntityManager.powerBar.getComponent(PositionComponent.class).position.y -

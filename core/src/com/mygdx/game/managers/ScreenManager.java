@@ -7,17 +7,15 @@ import com.mygdx.game.states.screens.MainMenuScreen;
 
 import java.util.HashMap;
 
+
 /**
  * This is a manager for screens
  * This will initialize and be used to set the existing screens
  * TODO: Implement Tutorial screen
  **/
 public class ScreenManager {
-    // Singleton instance of GameScreenManager
-    static ScreenManager screenManager;
-
-    // Pass through application
-    public final Application app;
+    static ScreenManager screenManager; // Singleton instance of GameScreenManager
+    public final Application app; // Pass through application
 
     // Create defined screen states
     public enum STATE {
@@ -32,9 +30,8 @@ public class ScreenManager {
     // Passes the single instance of the app
     private ScreenManager(final Application app) {
         this.app = app;
-
-        initScreen();
-        setScreen(STATE.MAIN_MENU);
+        this.initScreen();
+        this.setScreen(STATE.MAIN_MENU);
     }
 
     // Create singleton instance
@@ -54,12 +51,12 @@ public class ScreenManager {
 
     // Set predefined screen
     public void setScreen(STATE nextScreen) {
-        app.setScreen(screens.get(nextScreen));
+        this.app.setScreen(this.screens.get(nextScreen));
     }
 
     // Run dispose() on all screens
     public void dispose() {
-        for (AbstractScreen screen : screens.values()) {
+        for (AbstractScreen screen : this.screens.values()) {
             if (screen != null)
                 screen.dispose();
         }
