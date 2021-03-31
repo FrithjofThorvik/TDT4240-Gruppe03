@@ -10,7 +10,7 @@ public class ProjectileDamageComponent implements Component {
 
     public ProjectileDamageComponent(int damage, int blast_radius, int speed) {
         this.damage = damage;
-        this.speed = Math.pow(speed, 2);
+        this.speed = speed;
         this.blast_radius = blast_radius;
     }
 }

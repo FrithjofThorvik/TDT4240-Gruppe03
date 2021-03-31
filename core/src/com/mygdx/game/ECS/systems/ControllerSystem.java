@@ -14,6 +14,7 @@ import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.states.screens.GameScreen;
@@ -30,6 +31,7 @@ public class ControllerSystem extends EntitySystem {
     // Prepare component mappers
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
+    private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // ControllerSystem constructor
@@ -48,13 +50,8 @@ public class ControllerSystem extends EntitySystem {
             // Get player entity with controller component
             Entity player = players.get(i);
 
-            // Get entity components
-            PositionComponent pos = pm.get(player);
-            VelocityComponent vel = vm.get(player);
-            Box2DComponent b2d = b2dm.get(player);
-
             // Move player when screen is touched
-            if (Gdx.input.isTouched()) movePlayer(pos, vel, b2d);
+            if (Gdx.input.isTouched()) movePlayer(player);
 
             // When space is pressed -> change state to aiming
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
@@ -63,7 +60,13 @@ public class ControllerSystem extends EntitySystem {
         }
     }
 
-    public void movePlayer(PositionComponent position, VelocityComponent vel, Box2DComponent b2d) {
+    public void movePlayer(Entity player) {
+        // Get entity components
+        PositionComponent pos = pm.get(player);
+        VelocityComponent vel = vm.get(player);
+        Box2DComponent b2d = b2dm.get(player);
+        SpriteComponent sc = sm.get(player);
+
         // Get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
         float yTouchPixels = Gdx.input.getY();
@@ -73,11 +76,21 @@ public class ControllerSystem extends EntitySystem {
         touchPoint = GameScreen.camera.unproject(touchPoint);
 
         // Apply force to the players box2D body according to its velocity component
-        if (position.position.x < touchPoint.x) {
+        if (pos.position.x < touchPoint.x) {
             b2d.body.applyLinearImpulse(vel.velocity, b2d.body.getWorldCenter(), false);
-        } else if (position.position.x > touchPoint.x) {
+
+            // Flip sprite if it is already flipped from it's original state
+            if (sc.sprite.isFlipX()) {
+                sc.sprite.flip(true, false);
+            }
+        } else if (pos.position.x > touchPoint.x) {
             Vector2 negativeImpulse = new Vector2(-vel.velocity.x, vel.velocity.y);
             b2d.body.applyLinearImpulse(negativeImpulse, b2d.body.getWorldCenter(), false);
+
+            // Flip sprite if it is not flipped from it's initial state
+            if (!sc.sprite.isFlipX()) {
+                sc.sprite.flip(true, false);
+            }
         }
     }
 
