@@ -34,6 +34,7 @@ public class EntityManager {
     public static Entity aimArrow;
     public static Entity powerBar;
     public static Entity powerArrow;
+    public static Entity timer;
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the rendering system will draw to screen
@@ -76,7 +77,7 @@ public class EntityManager {
         // Instantiate all ECS entities
         Entity player1 = new Entity();
         Entity player2 = new Entity();
-        Entity timer = new Entity();
+        timer = new Entity();
         powerBar = new Entity();
         powerArrow = new Entity();
         Entity ground = new Entity();
