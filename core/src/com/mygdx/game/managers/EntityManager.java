@@ -14,7 +14,6 @@ import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
@@ -33,7 +32,7 @@ public class EntityManager {
     private final SpriteBatch batch;
     public static Entity aimArrow;
     public static Entity powerBar;
-    public static Entity powerArrow;
+    public static Entity powerBarArrow;
     public static Entity timer;
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
@@ -79,7 +78,7 @@ public class EntityManager {
         Entity player2 = new Entity();
         timer = new Entity();
         powerBar = new Entity();
-        powerArrow = new Entity();
+        powerBarArrow = new Entity();
         Entity ground = new Entity();
         aimArrow = new Entity();
 
@@ -115,14 +114,12 @@ public class EntityManager {
                 .add(new RenderableComponent());
 
         powerBar.add(new SpriteComponent(new Texture("powerbar.png"), 40f, 350f))
-                .add(new PositionComponent(Gdx.graphics.getWidth() - 50f, Gdx.graphics.getHeight() / 2f))
-                .add(new PowerBarComponent());
+                .add(new PositionComponent(Gdx.graphics.getWidth() - 50f, Gdx.graphics.getHeight() / 2f));
 
-        powerArrow.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
+        powerBarArrow.add(new SpriteComponent(new Texture("right-arrow.png"), 40f, 40f))
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
-                        (Gdx.graphics.getHeight() - powerBar.getComponent(SpriteComponent.class).size.y) / 2f))
-                .add(new PowerBarComponent());
+                        (Gdx.graphics.getHeight() - powerBar.getComponent(SpriteComponent.class).size.y) / 2f));
 
         ground.add(new SpriteComponent(
                 new Texture("tank.png"),
@@ -151,7 +148,7 @@ public class EntityManager {
         engine.addEntity(player2);
         engine.addEntity(timer);
         engine.addEntity(powerBar);
-        engine.addEntity(powerArrow);
+        engine.addEntity(powerBarArrow);
         engine.addEntity(ground);
         engine.addEntity(aimArrow);
     }

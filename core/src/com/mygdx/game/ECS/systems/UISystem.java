@@ -6,13 +6,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.mygdx.game.ECS.components.FontComponent;
-import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.managers.EntityManager;
@@ -55,7 +52,7 @@ public class UISystem extends EntitySystem {
             EntityManager.aimArrow.getComponent(PositionComponent.class).position.y = position.position.y + 25;
 
             //Set position of powerBarArrow
-            EntityManager.powerArrow.getComponent(PositionComponent.class).position.y =
+            EntityManager.powerBarArrow.getComponent(PositionComponent.class).position.y =
                     startPositionArrow + (EntityManager.powerBar.getComponent(SpriteComponent.class).size.y * (power / MAX_SHOOTING_POWER));
         }
     }

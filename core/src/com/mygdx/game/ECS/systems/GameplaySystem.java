@@ -8,7 +8,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.managers.EntityManager;
@@ -28,8 +27,6 @@ public class GameplaySystem extends EntitySystem {
 
     // Single entities
     public Entity player; // Current player entity
-    public Entity powerBar; // Power bar sprite (green -> red)
-    public Entity powerBarArrow; // Arrow displaying current shot power
 
     ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
@@ -39,22 +36,19 @@ public class GameplaySystem extends EntitySystem {
     public void addedToEngine(Engine e) {
         // Get entities
         this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
-        this.powerBars = e.getEntitiesFor(Family.all(PowerBarComponent.class).get());
     }
 
     // Update function for GameplaySystem (calls automatically by engine)
     public void update(float deltaTime) {
         // Update entities
         this.player = players.get(GSM.currentPlayer);
-        this.powerBar = powerBars.get(0);
-        this.powerBarArrow = powerBars.get(1);
 
         // Tell the state manager how many players are in the game
         GSM.numberOfPlayers = players.size();
 
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
-            powerBar.remove(RenderableComponent.class); // Remove render of power bar
-            powerBarArrow.remove(RenderableComponent.class); // Remove render of power bar arrow
+            EntityManager.powerBar.remove(RenderableComponent.class); // Remove render of power bar
+            EntityManager.powerBarArrow.remove(RenderableComponent.class); // Remove render of power bar arrow
             EntityManager.aimArrow.remove(RenderableComponent.class);
 
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
@@ -72,8 +66,8 @@ public class GameplaySystem extends EntitySystem {
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(false);
         } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_SHOOT)) {
-            powerBar.add(new RenderableComponent()); // Render power bar
-            powerBarArrow.add(new RenderableComponent()); // Render power bar arrow
+            EntityManager.powerBar.add(new RenderableComponent()); // Render power bar
+            EntityManager.powerBarArrow.add(new RenderableComponent()); // Render power bar arrow
 
             getEngine().getSystem(ShootingSystem.class).setProcessing(true);
             getEngine().getSystem(AimingSystem.class).setProcessing(false);

@@ -14,7 +14,6 @@ import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.states.screens.GameScreen;
@@ -27,7 +26,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class ControllerSystem extends EntitySystem {
     // Prepare arrays for entities
     private ImmutableArray<Entity> players;
-    private ImmutableArray<Entity> powerBar;
 
     // Prepare component mappers
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -41,7 +39,6 @@ public class ControllerSystem extends EntitySystem {
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
         players = e.getEntitiesFor(Family.all(PlayerComponent.class, MovementControlComponent.class).get());
-        powerBar = e.getEntitiesFor(Family.all(PowerBarComponent.class).get());
     }
 
     // Will be called by the engine automatically
