@@ -36,6 +36,9 @@ public class EntityManager {
     public static Entity powerBar;
     public static Entity powerBarArrow;
     public static Entity timer;
+    public static Entity health1;
+    public static Entity health2;
+    public static Entity ground;
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the rendering system will draw to screen
@@ -81,8 +84,10 @@ public class EntityManager {
         timer = new Entity();
         powerBar = new Entity();
         powerBarArrow = new Entity();
-        Entity ground = new Entity();
+        ground = new Entity();
         aimArrow = new Entity();
+        health1 = new Entity();
+        health2 = new Entity();
 
         // Instantiate player entities
         player1.add(new VelocityComponent(1000, 0))
@@ -145,6 +150,26 @@ public class EntityManager {
                 )
                 .add(new RenderableComponent());
 
+        health1
+                .add(new FontComponent(
+                        player1.getComponent(HealthComponent.class).hp + " hp")
+                )
+                .add(new PositionComponent(
+                        50f,
+                        Gdx.graphics.getHeight() - 20f
+                ))
+                .add(new RenderableComponent());
+
+        health2
+                .add(new FontComponent(
+                        player2.getComponent(HealthComponent.class).hp + " hp")
+                )
+                .add(new PositionComponent(
+                        Gdx.graphics.getWidth() - 50f,
+                        Gdx.graphics.getHeight() - 20f
+                ))
+                .add(new RenderableComponent());
+
         // Add all ECS entities to the engine
         engine.addEntity(player1);
         engine.addEntity(player2);
@@ -153,6 +178,8 @@ public class EntityManager {
         engine.addEntity(powerBarArrow);
         engine.addEntity(ground);
         engine.addEntity(aimArrow);
+        engine.addEntity(health1);
+        engine.addEntity(health2);
     }
 
     // Add entity listeners for observe & listen to when adding and removing entities

@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
-import com.mygdx.game.utils.B2DContactListener;
+//import com.mygdx.game.utils.B2DContactListener;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.PPM;
@@ -42,7 +42,7 @@ public class GameScreen extends AbstractScreen {
         // Create world
         this.b2dr = new Box2DDebugRenderer();
         world = new World(new Vector2(0f, -98f), false);
-        world.setContactListener(new B2DContactListener(engine));
+        //world.setContactListener(new B2DContactListener(engine));
 
         // Setup ECS entityManager
         this.entityManager = new EntityManager(engine, app.batch);
