@@ -18,6 +18,7 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 
 /**
  * This system is responsible for removing and adding components between rounds
+ * This system is also responsible for stopping and starting systems between rounds
  * TODO: Improve state functionality
  **/
 public class GameplaySystem extends EntitySystem {
@@ -28,47 +29,52 @@ public class GameplaySystem extends EntitySystem {
     // Single entities
     public Entity player; // Current player entity
 
-    ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
-
-
     // Get entities
     public void addedToEngine(Engine e) {
-        // Get entities
+        // Get player entities
         this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
     }
 
     // Update function for GameplaySystem (calls automatically by engine)
     public void update(float deltaTime) {
-        // Update entities
+        // Get current player (the player who's turn it is)
         this.player = players.get(GSM.currentPlayer);
 
         // Tell the state manager how many players are in the game
         GSM.numberOfPlayers = players.size();
 
+        // Check which gameState the system is in -> Remove or add component, start or stop systems
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
+            // Remove or add components to entities
             EntityManager.powerBar.remove(RenderableComponent.class); // Remove render of power bar
             EntityManager.powerBarArrow.remove(RenderableComponent.class); // Remove render of power bar arrow
-            EntityManager.aimArrow.remove(RenderableComponent.class);
+            EntityManager.aimArrow.remove(RenderableComponent.class); // Remove render of aim arrow
 
+            // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(false);
         } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_ROUND)) {
+            // Remove or add components to entities
             player.add(new MovementControlComponent());
 
+            // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(true);
         } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_AIM)) {
-            player.remove(MovementControlComponent.class);
-            EntityManager.aimArrow.add(new RenderableComponent());
+            // Remove or add components to entities
+            player.remove(MovementControlComponent.class); // The player should loose ability to move whilst aiming
+            EntityManager.aimArrow.add(new RenderableComponent()); // Render the aim arrow
 
+            // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(AimingSystem.class).setProcessing(true);
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(false);
         } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_SHOOT)) {
+            // Remove or add components to entities
             EntityManager.powerBar.add(new RenderableComponent()); // Render power bar
             EntityManager.powerBarArrow.add(new RenderableComponent()); // Render power bar arrow
 
+            // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(ShootingSystem.class).setProcessing(true);
             getEngine().getSystem(AimingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(false);

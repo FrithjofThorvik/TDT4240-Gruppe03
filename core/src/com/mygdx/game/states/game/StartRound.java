@@ -7,6 +7,7 @@ public class StartRound extends AbstractGameState {
 
     @Override
     public void startGameState() {
+        // Reset the timer when a round starts
         GSM.time = 0;
     }
 
@@ -15,5 +16,6 @@ public class StartRound extends AbstractGameState {
     }
 
     @Override
-    public void update(float dt) {}
+    public void update(float dt) {
+    }
 }

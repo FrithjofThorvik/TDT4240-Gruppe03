@@ -51,6 +51,8 @@ public class AimingSystem extends EntitySystem {
             // Calculate the aim angle when the screen is touched
             if (Gdx.input.isTouched()) {
                 double aimAngleInRad = calculateAimAngle(position);
+
+                // Update angle in the players ShootingComponent
                 player.getComponent(ShootingComponent.class).angle = aimAngleInRad;
             }
 

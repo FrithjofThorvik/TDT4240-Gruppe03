@@ -20,7 +20,8 @@ public class PowerUpSystem extends EntitySystem {
     private final ComponentMapper<EffectComponent> em = ComponentMapper.getFor(EffectComponent.class);
 
     // PowerUpSystem constructor
-    public PowerUpSystem() {}
+    public PowerUpSystem() {
+    }
 
     // Store entities into arrays
     public void addedToEngine(Engine e) {

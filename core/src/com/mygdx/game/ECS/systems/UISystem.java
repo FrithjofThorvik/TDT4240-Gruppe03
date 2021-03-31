@@ -22,6 +22,9 @@ import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 import static com.mygdx.game.utils.GameConstants.TIME_BETWEEN_ROUNDS;
 
+/**
+ * This system is responsible for updating information regarding UI component
+ **/
 public class UISystem extends EntitySystem {
     public DecimalFormat df = new DecimalFormat("0.0"); // Format timer that displays on the time on the screen
 
@@ -37,26 +40,34 @@ public class UISystem extends EntitySystem {
 
     // Will be called by the engine automatically
     public void update(float deltaTime) {
-        printTimer();
+        printTimer(); // Print information about how much time is left in a round, etc...
+
+        // If there are any players initialised
         if (players.size() > 1) {
+            // Get the player who's turn it is and get its position component
             Entity currentPlayer = players.get(GSM.currentPlayer);
             PositionComponent position = pm.get(currentPlayer);
+
+            // Calculate the startingPosition of an arrow (this is done here so that if the screen is resized the arrowPosition is updated)
             float startPositionArrow = EntityManager.powerBar.getComponent(PositionComponent.class).position.y -
-                    EntityManager.powerBar.getComponent(SpriteComponent.class).size.y/2;
+                    EntityManager.powerBar.getComponent(SpriteComponent.class).size.y / 2;
+
+            // Get the angle (in degrees) and power of the currentPlayer's shootingComponent
             double aimAngleInDegrees = 90f - (float) currentPlayer.getComponent(ShootingComponent.class).angle / (float) Math.PI * 180f;
             float power = currentPlayer.getComponent(ShootingComponent.class).power;
 
-            //Set rotation and position of AimArrow
+            //Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
             EntityManager.aimArrow.getComponent(SpriteComponent.class).sprite.setRotation((float) aimAngleInDegrees);
             EntityManager.aimArrow.getComponent(PositionComponent.class).position.x = position.position.x;
             EntityManager.aimArrow.getComponent(PositionComponent.class).position.y = position.position.y + 25;
 
-            //Set position of powerBarArrow
+            //Set position of powerBarArrow -> given the power of the shootingComponent
             EntityManager.powerBarArrow.getComponent(PositionComponent.class).position.y =
                     startPositionArrow + (EntityManager.powerBar.getComponent(SpriteComponent.class).size.y * (power / MAX_SHOOTING_POWER));
         }
     }
 
+    // Print information about how much time is left in a round, etc...
     private void printTimer() {
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
             FontComponent timerFont = EntityManager.timer.getComponent(FontComponent.class);

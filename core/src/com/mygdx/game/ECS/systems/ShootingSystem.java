@@ -25,6 +25,9 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 
+/**
+ * For charging power to a shot and then shooting the projectile
+ **/
 public class ShootingSystem extends EntitySystem {
     private ImmutableArray<Entity> players; // Array for all player entities that are aiming
 
@@ -40,14 +43,17 @@ public class ShootingSystem extends EntitySystem {
     public void update(float deltaTime) {
         // Check first if there are any players shooting
         if (players.size() > 0) {
+            // Get the the player whose turn it is and get its shootingComponent
             Entity player = players.get(GSM.currentPlayer);
             ShootingComponent shootingComponent = sc.get(player);
+
+            // Increase the power -> since we are now charging power for the shot
             shootingComponent.power += deltaTime;
 
             // Shoot if S key stops being pressed, power reaches max, or round time is reached
             if (!Gdx.input.isKeyPressed(Input.Keys.S) || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
                 GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND); // Switch game state
-                shootProjectile();
+                shootProjectile(); // Create projectile and shoot it
                 shootingComponent.power = 0; // Reset the power after you have shot
             }
         }
@@ -70,12 +76,15 @@ public class ShootingSystem extends EntitySystem {
 
     // Calculate velocity vector with angle
     private Vector2 calculateAngleVelocity(double speed) {
+        // Get the the player whose turn it is and get its shootingComponent
         Entity player = players.get(GSM.currentPlayer);
         ShootingComponent shootingComponent = sc.get(player);
-        float impulse = (float) (speed * Math.pow(shootingComponent.power, 2));
-        System.out.println("x:" + impulse * (float) Math.sin(shootingComponent.angle));
-        System.out.println("y:" + impulse * (float) Math.cos(shootingComponent.angle));
 
+        // Calculate how much impulse should be given to the projectile
+        // -> given by projectile speed and shootingComponent power
+        float impulse = (float) (speed * Math.pow(shootingComponent.power, 2));
+
+        // Return a vector that decomposes the impulse in x and y component depending on shootingComponent angle
         return new Vector2(
                 impulse * (float) Math.sin(shootingComponent.angle),
                 impulse * (float) Math.cos(shootingComponent.angle)

@@ -30,6 +30,8 @@ import com.mygdx.game.ECS.systems.UISystem;
 public class EntityManager {
     private final Engine engine;
     private final SpriteBatch batch;
+
+    // These entities are UI elements and are static in order to be accessible everywhere
     public static Entity aimArrow;
     public static Entity powerBar;
     public static Entity powerBarArrow;
@@ -136,7 +138,7 @@ public class EntityManager {
                 .add(new RenderableComponent());
 
         aimArrow
-                .add(new PositionComponent(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2))
+                .add(new PositionComponent(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2))
                 .add(new SpriteComponent(
                         new Texture("right-arrow.png"),
                         10f, 10f)

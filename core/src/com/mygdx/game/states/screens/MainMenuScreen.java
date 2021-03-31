@@ -49,5 +49,6 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 }

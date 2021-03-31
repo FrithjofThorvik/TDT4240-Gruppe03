@@ -68,7 +68,7 @@ public class RenderingSystem extends EntitySystem {
             // Draw the sprite, so that the center of its sprite is the position of the given entity
             sc.sprite.setSize(sc.size.x, sc.size.y);
             sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2);
-            sc.sprite.setOrigin(sc.size.x / 2,sc.size.y / 2);
+            sc.sprite.setOrigin(sc.size.x / 2, sc.size.y / 2);
             sc.sprite.draw(batch);
         }
 
