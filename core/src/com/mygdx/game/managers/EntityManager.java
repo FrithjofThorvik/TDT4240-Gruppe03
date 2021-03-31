@@ -25,11 +25,15 @@ import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
+import com.mygdx.game.ECS.systems.UISystem;
 
 // This class will systems and components, and takes in an engine
 public class EntityManager {
     private final Engine engine;
     private final SpriteBatch batch;
+    public static Entity aimArrow;
+    public static Entity powerBar;
+    public static Entity powerArrow;
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the rendering system will draw to screen
@@ -53,6 +57,7 @@ public class EntityManager {
         AimingSystem ams = new AimingSystem();
         PhysicsSystem phs = new PhysicsSystem();
         ShootingSystem ss = new ShootingSystem();
+        UISystem us = new UISystem();
 
 
         // Add all ECS systems to the engine
@@ -63,6 +68,7 @@ public class EntityManager {
         engine.addSystem(ams);
         engine.addSystem(phs);
         engine.addSystem(ss);
+        engine.addSystem(us);
     }
 
     // Create entities with ECS components
@@ -71,9 +77,10 @@ public class EntityManager {
         Entity player1 = new Entity();
         Entity player2 = new Entity();
         Entity timer = new Entity();
-        Entity powerBar = new Entity();
-        Entity powerArrow = new Entity();
+        powerBar = new Entity();
+        powerArrow = new Entity();
         Entity ground = new Entity();
+        aimArrow = new Entity();
 
         // Instantiate player entities
         player1.add(new VelocityComponent(1000, 0))
@@ -130,6 +137,14 @@ public class EntityManager {
                         true, 1000000))
                 .add(new RenderableComponent());
 
+        aimArrow
+                .add(new PositionComponent(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2))
+                .add(new SpriteComponent(
+                        new Texture("right-arrow.png"),
+                        10f, 10f)
+                )
+                .add(new RenderableComponent());
+
         // Add all ECS entities to the engine
         engine.addEntity(player1);
         engine.addEntity(player2);
@@ -137,6 +152,7 @@ public class EntityManager {
         engine.addEntity(powerBar);
         engine.addEntity(powerArrow);
         engine.addEntity(ground);
+        engine.addEntity(aimArrow);
     }
 
     // Add entity listeners for observe & listen to when adding and removing entities

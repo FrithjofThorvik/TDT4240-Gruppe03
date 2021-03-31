@@ -11,6 +11,7 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.PowerBarComponent;
 import com.mygdx.game.ECS.components.RenderableComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.PlayerComponent;
 
@@ -54,6 +55,7 @@ public class GameplaySystem extends EntitySystem {
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
             powerBar.remove(RenderableComponent.class); // Remove render of power bar
             powerBarArrow.remove(RenderableComponent.class); // Remove render of power bar arrow
+            EntityManager.aimArrow.remove(RenderableComponent.class);
 
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(false);
@@ -64,6 +66,7 @@ public class GameplaySystem extends EntitySystem {
             getEngine().getSystem(ControllerSystem.class).setProcessing(true);
         } else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_AIM)) {
             player.remove(MovementControlComponent.class);
+            EntityManager.aimArrow.add(new RenderableComponent());
 
             getEngine().getSystem(AimingSystem.class).setProcessing(true);
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);

@@ -11,6 +11,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
+import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.states.screens.GameScreen;
@@ -48,7 +50,8 @@ public class AimingSystem extends EntitySystem {
 
             // Calculate the aim angle when the screen is touched
             if (Gdx.input.isTouched()) {
-                calculateAimAngle(position, player);
+                double aimAngleInRad = calculateAimAngle(position);
+                player.getComponent(ShootingComponent.class).angle = aimAngleInRad;
             }
 
             // When the player presses "S" change state to shooting
@@ -58,7 +61,7 @@ public class AimingSystem extends EntitySystem {
     }
 
     // Calculate angle of click relative to player position
-    private void calculateAimAngle(PositionComponent position, Entity player) {
+    private double calculateAimAngle(PositionComponent position) {
         // Get the screen position of touch/click
         float xTouchPixels = Gdx.input.getX();
         float yTouchPixels = Gdx.input.getY();
@@ -68,6 +71,6 @@ public class AimingSystem extends EntitySystem {
         touchPoint = GameScreen.camera.unproject(touchPoint);
 
         // Find the aim angle in radians
-        player.getComponent(ShootingComponent.class).angle = Math.atan2(touchPoint.x - position.position.x, touchPoint.y - position.position.y);
+        return Math.atan2(touchPoint.x - position.position.x, touchPoint.y - position.position.y);
     }
 }
