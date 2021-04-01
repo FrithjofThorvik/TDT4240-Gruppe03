@@ -46,6 +46,13 @@ public class GameScreen extends AbstractScreen {
         // Create world
         this.b2dr = new Box2DDebugRenderer();
         world = new World(new Vector2(0f, -98f), false);
+<<<<<<< HEAD
+=======
+
+        new EntityManager(engine, app.batch); // Manager for generating all ECS functions
+        new GameStateManager(); // Manager for handling all game states
+        world.setContactListener(new CollisionHandler()); // Set contact listener for world
+>>>>>>> master
     }
 
     @Override
@@ -76,7 +83,8 @@ public class GameScreen extends AbstractScreen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+    }
 
     @Override
     public void dispose() {

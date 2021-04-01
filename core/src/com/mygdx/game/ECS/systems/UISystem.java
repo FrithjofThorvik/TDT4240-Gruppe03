@@ -8,6 +8,8 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.mygdx.game.ECS.components.FontComponent;
+import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
@@ -28,7 +30,7 @@ import static com.mygdx.game.utils.GameConstants.TIME_BETWEEN_ROUNDS;
  * This system is responsible for updating information regarding UI component
  **/
 public class UISystem extends EntitySystem {
-    private DecimalFormat df = new DecimalFormat("0.0"); // Format timer that displays on the time on the screen
+    private final DecimalFormat df = new DecimalFormat("0.0"); // Format timer that displays on the time on the screen
 
     // Array for all player entities that are aiming
     private ImmutableArray<Entity> players;
@@ -36,6 +38,8 @@ public class UISystem extends EntitySystem {
     //Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
+    private final ComponentMapper<FontComponent> fm = ComponentMapper.getFor(FontComponent.class);
+    private final ComponentMapper<ParentComponent> pam = ComponentMapper.getFor(ParentComponent.class);
     private final ComponentMapper<ShootingComponent> shm = ComponentMapper.getFor(ShootingComponent.class);
 
     // Store all entities with respective components to entity arrays
@@ -60,13 +64,17 @@ public class UISystem extends EntitySystem {
             double aimAngleInDegrees = 90f - (float) shm.get(currentPlayer).angle / (float) Math.PI * 180f;
             float power = shm.get(currentPlayer).power;
 
-            //Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
+            // Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
             sm.get(EntityManager.aimArrow).sprite.setRotation((float) aimAngleInDegrees);
             pm.get(EntityManager.aimArrow).position.x = position.position.x;
             pm.get(EntityManager.aimArrow).position.y = position.position.y + 25;
 
             //Set position of powerBarArrow -> given the power of the shootingComponent
             pm.get(EntityManager.powerBarArrow).position.y = startPositionArrow + (sm.get(EntityManager.powerBar).size.y * (power / MAX_SHOOTING_POWER));
+
+            // Update health displays
+            fm.get(EntityManager.health1).text = pam.get(EntityManager.health1).parent.getComponent(HealthComponent.class).hp + " hp";
+            fm.get(EntityManager.health2).text = pam.get(EntityManager.health2).parent.getComponent(HealthComponent.class).hp + " hp";
         }
     }
 
