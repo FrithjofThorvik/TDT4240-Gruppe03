@@ -7,14 +7,15 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
+import com.mygdx.game.managers.GameStateManager;
 
-import java.util.HashMap;
+import static com.mygdx.game.managers.GameStateManager.GSM;
+
 
 /**
  * This system should determine behavior of entities colliding -> depending on what collides with what
@@ -50,9 +51,13 @@ public class CollisionSystem extends EntitySystem {
             Body body = b2dm.get(projectile).body;
             body.getWorld().destroyBody(body);
             projectile.removeAll();
+
+            // On last projectile, switch GameState
+            if (i + 1 == collidingProjectiles.size())
+                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
+
             // TODO: The projectile might want to do something when it collides, like exploding/splitting into pieces
         }
-
     }
 
     public void checkProjectilePlayerCollision() {
