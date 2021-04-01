@@ -103,7 +103,7 @@ public class GamePlaySystem extends EntitySystem {
             this.resetPlayers(); // Reset all players
 
             // Handle input
-            if (Gdx.input.isTouched()) {
+            if (Gdx.input.justTouched()) {
                 int x = Gdx.input.getX();
                 int y = Gdx.graphics.getHeight() - Gdx.input.getY(); // Input y is inverted compared to position y
 

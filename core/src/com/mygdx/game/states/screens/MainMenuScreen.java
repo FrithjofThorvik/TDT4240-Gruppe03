@@ -24,7 +24,7 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     private void handleInput() {
-        if (Gdx.input.isTouched())
+        if (Gdx.input.justTouched())
             SM.setScreen(ScreenManager.STATE.PLAY);
     }
 
