@@ -27,7 +27,7 @@ public class GameScreen extends AbstractScreen {
     public static World world;
     public Box2DDebugRenderer b2dr;
 
-    private Engine engine;
+    private final Engine engine;
 
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
@@ -46,20 +46,13 @@ public class GameScreen extends AbstractScreen {
         // Create world
         this.b2dr = new Box2DDebugRenderer();
         world = new World(new Vector2(0f, -98f), false);
-<<<<<<< HEAD
-=======
-
-        new EntityManager(engine, app.batch); // Manager for generating all ECS functions
-        new GameStateManager(); // Manager for handling all game states
-        world.setContactListener(new CollisionHandler()); // Set contact listener for world
->>>>>>> master
     }
 
     @Override
     public void show() {
         new EntityManager(this.engine, this.app.batch); // Manager for generating all ECS functions
         new GameStateManager(); // Manager for handling all game states
-        world.setContactListener(new CollisionHandler(this.engine)); // Set contact listener for world
+        world.setContactListener(new CollisionHandler()); // Set contact listener for world
 
         app.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
