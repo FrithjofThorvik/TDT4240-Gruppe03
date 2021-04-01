@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.ECS.components.CollisionComponent;
 
-
 import static com.mygdx.game.managers.EntityManager.entityFixtureHashMap;
 
 
@@ -15,10 +14,6 @@ import static com.mygdx.game.managers.EntityManager.entityFixtureHashMap;
  * This system should add and remove a collision component to colliding entities
  **/
 public class CollisionHandler implements ContactListener {
-
-    public CollisionHandler() {
-    }
-
 
     @Override
     public void beginContact(Contact contact) {

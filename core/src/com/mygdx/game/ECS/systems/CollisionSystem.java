@@ -39,7 +39,7 @@ public class CollisionSystem extends EntitySystem {
     }
 
     // Will be called by the engine automatically
-    public void update(float deltaTime) {
+    public void update(float dt) {
 
         // Check if projectile collides with a player and update health accordingly
         checkProjectilePlayerCollision();
@@ -60,6 +60,7 @@ public class CollisionSystem extends EntitySystem {
         for (int i = 0; i < this.collidingPlayers.size(); i++) {
             Entity player = collidingPlayers.get(i); // Get the entity
             Entity collisionEntity = cm.get(player).collisionEntity; // Get the colliding entity
+
             // If player collides with projectile -> update health and destroy projectile
             if (projectiles.contains(collisionEntity, true)) {
                 hm.get(player).hp -= pdm.get(collisionEntity).damage;
