@@ -27,6 +27,8 @@ public class GameScreen extends AbstractScreen {
     public static World world;
     public Box2DDebugRenderer b2dr;
 
+    private Engine engine;
+
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
 
@@ -38,20 +40,20 @@ public class GameScreen extends AbstractScreen {
         app.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
 
-        //Setup ECS engine
-        Engine engine = new Engine();
+        // Setup ECS engine
+        this.engine = new Engine();
 
         // Create world
         this.b2dr = new Box2DDebugRenderer();
         world = new World(new Vector2(0f, -98f), false);
-
-        new EntityManager(engine, app.batch); // Manager for generating all ECS functions
-        new GameStateManager(); // Manager for handling all game states
-        world.setContactListener(new CollisionHandler(engine)); // Set contact listener for world
     }
 
     @Override
     public void show() {
+        new EntityManager(this.engine, this.app.batch); // Manager for generating all ECS functions
+        new GameStateManager(); // Manager for handling all game states
+        world.setContactListener(new CollisionHandler(this.engine)); // Set contact listener for world
+
         app.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
     }
@@ -79,8 +81,8 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void dispose() {
         super.dispose();
+        EM.dispose();
+        GSM.dispose();
         world.dispose();
-        // TODO: Add dispose function for entityManager()
-        // TODO: Add dispose for GameStateManager()
     }
 }

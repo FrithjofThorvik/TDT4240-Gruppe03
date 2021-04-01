@@ -20,14 +20,13 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 
 /**
  * This system should control the aiming of a projectile
- * A player gets the TakeAimComponent when it is ready to aim
- * A player with the TakeAimComponent is controlled by the AimingSystem
+ * The system is paused & resumed in GamePlaySystem
  */
 public class AimingSystem extends EntitySystem {
 
     private ImmutableArray<Entity> players; // Array for all player entities that are aiming
 
-    //Using a component mapper is the fastest way to load entities
+    // Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
 
@@ -37,7 +36,7 @@ public class AimingSystem extends EntitySystem {
     }
 
     // Will be called by the engine automatically
-    public void update(float deltaTime) {
+    public void update(float dt) {
         // Check first if there are any players aiming
         if (this.players.size() > 0) {
             // Calculate the aim angle when the screen is touched

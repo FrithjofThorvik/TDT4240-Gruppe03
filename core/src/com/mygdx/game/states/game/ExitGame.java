@@ -2,10 +2,10 @@ package com.mygdx.game.states.game;
 
 
 /**
- * In this state the player is shooting (charging power for the shot)
+ * This state is for removing everything within the gameplay session
+ * This state will also change the screen to MAIN_MENU in ScreenManager
  **/
-public class PlayerShoot extends AbstractGameState {
-
+public class ExitGame extends AbstractGameState {
     @Override
     public void startGameState() {}
 

@@ -2,10 +2,10 @@ package com.mygdx.game.states.game;
 
 
 /**
- * In this state the player is shooting (charging power for the shot)
+ * This state is for restarting the game session
+ * Health, positions, etc
  **/
-public class PlayerShoot extends AbstractGameState {
-
+public class RestartGame extends AbstractGameState {
     @Override
     public void startGameState() {}
 

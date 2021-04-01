@@ -40,18 +40,19 @@ public class ShootingSystem extends EntitySystem {
     public void update(float dt) {
         // Check first if there are any players shooting
         if (this.players.size() > 0) {
-            // Get the the player whose turn it is and get its shootingComponent
-            Entity player = this.players.get(GSM.currentPlayer);
-            ShootingComponent shootingComponent = this.sm.get(player);
+            if (!GSM.pauseTimer) {
+                // Get the the player whose turn it is and get its shootingComponent
+                Entity player = this.players.get(GSM.currentPlayer);
+                ShootingComponent shootingComponent = this.sm.get(player);
 
-            // Increase the power -> since we are now charging power for the shot
-            shootingComponent.power += dt;
+                // Increase the power -> since we are now charging power for the shot
+                shootingComponent.power += dt; // Reset in GamePlaySystem (SWITCH_ROUND)
 
-            // Shoot if S key stops being pressed, power reaches max, or round time is reached
-            if (!Gdx.input.isKeyPressed(Input.Keys.S) || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
-                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND); // Switch game state
-                shootProjectile(); // Create projectile and shoot it
-                shootingComponent.power = 0; // Reset the power after you have shot
+                // Shoot if S key stops being pressed, power reaches max, or round time is reached
+                if (!Gdx.input.isKeyPressed(Input.Keys.S) || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
+                    shootProjectile(); // Create projectile and shoot it (deleted on collision)
+                    GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // GSM.time paused on start() and resumed on end()
+                }
             }
         }
     }

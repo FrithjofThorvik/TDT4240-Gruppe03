@@ -18,6 +18,7 @@ import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ProjectileDamageComponent;
 import com.mygdx.game.managers.EntityManager;
+import com.mygdx.game.managers.GameStateManager;
 
 import static  com.mygdx.game.managers.GameStateManager.GSM;
 
@@ -139,7 +140,7 @@ public class CollisionHandler implements ContactListener {
             playerFont.layout = new GlyphLayout(playerFont.font, playerFont.text);
             enemyFont.layout = new GlyphLayout(enemyFont.font, enemyFont.text);
 
-            projectile.removeAll(); // Remove projectile
+            this.removeProjectile(projectile); // Remove projectile, resume timer, change state
         }
 
         // Check if projectile hits ground entity
@@ -147,8 +148,14 @@ public class CollisionHandler implements ContactListener {
                 groundFixtures.containsAny(collisionFixtures, true)) {
 
             Entity projectile = this.projectiles.get(0); // Get projectile
-            projectile.removeAll(); // Remove projectile
+            this.removeProjectile(projectile); // Remove projectile, resume timer, change state
         }
+    }
+
+    // Remove all projectile components, resume timer, change game state
+    private void removeProjectile(Entity projectile) {
+        projectile.removeAll(); // Remove projectile
+        GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND); // Switch game state
     }
 
     @Override
