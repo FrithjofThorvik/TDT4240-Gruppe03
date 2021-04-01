@@ -9,10 +9,12 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.ECS.ProjectileCreator;
+import com.mygdx.game.ECS.Projectiles.StandardProjectile;
+import com.mygdx.game.ECS.Projectiles.ProjectileCreator;
+import com.mygdx.game.ECS.Projectiles.SpeedyProjectile;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
-import com.mygdx.game.ECS.components.ProjectileDamageComponent;
+import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.managers.GameStateManager;
 
@@ -25,7 +27,10 @@ import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
  * For charging power to a shot and then shooting the projectile
  **/
 public class ShootingSystem extends EntitySystem {
+    int temp=0;
+
     private ImmutableArray<Entity> players; // Array for all player entities that are aiming
+    ProjectileCreator projectileCreator; // This class handles making different projectiles
 
     // Using a component mapper is the fastest way to load entities
     private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
@@ -60,8 +65,14 @@ public class ShootingSystem extends EntitySystem {
     private void shootProjectile() {
         Entity player = this.players.get(GSM.currentPlayer);
         ShootingComponent playerShot = this.sm.get(player);
-        ProjectileCreator projectileCreator = new ProjectileCreator();
 
+        if(temp==0){
+            projectileCreator=new StandardProjectile();
+            temp+=1;
+        }else{
+            projectileCreator = new SpeedyProjectile();
+            temp=0;
+        }
         // Create and add entities to engine
         Entity projectile = projectileCreator.createProjectile(player, playerShot); // Create projectile
         getEngine().addEntity(projectile); // Add the new projectile to the engine

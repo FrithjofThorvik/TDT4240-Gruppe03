@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.ProjectileDamageComponent;
+import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 
 
