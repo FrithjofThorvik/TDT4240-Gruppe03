@@ -47,7 +47,7 @@ public class GameScreen extends AbstractScreen {
 
         new EntityManager(engine, app.batch); // Manager for generating all ECS functions
         new GameStateManager(); // Manager for handling all game states
-        world.setContactListener(new CollisionHandler(engine)); // Set contact listener for world
+        world.setContactListener(new CollisionHandler()); // Set contact listener for world
     }
 
     @Override
@@ -74,7 +74,8 @@ public class GameScreen extends AbstractScreen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+    }
 
     @Override
     public void dispose() {

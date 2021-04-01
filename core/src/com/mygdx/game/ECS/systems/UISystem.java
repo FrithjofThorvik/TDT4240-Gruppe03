@@ -8,6 +8,8 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.mygdx.game.ECS.components.FontComponent;
+import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
@@ -66,6 +68,10 @@ public class UISystem extends EntitySystem {
             //Set position of powerBarArrow -> given the power of the shootingComponent
             EntityManager.powerBarArrow.getComponent(PositionComponent.class).position.y =
                     startPositionArrow + (EntityManager.powerBar.getComponent(SpriteComponent.class).size.y * (power / MAX_SHOOTING_POWER));
+
+            // Update health displays
+            EntityManager.health1.getComponent(FontComponent.class).text = EntityManager.health1.getComponent(ParentComponent.class).parent.getComponent(HealthComponent.class).hp + " hp";
+            EntityManager.health2.getComponent(FontComponent.class).text = EntityManager.health2.getComponent(ParentComponent.class).parent.getComponent(HealthComponent.class).hp + " hp";
         }
     }
 

@@ -8,7 +8,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.ECS.components.MovementControlComponent;
+import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.FontComponent;
@@ -19,6 +21,7 @@ import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.ECS.systems.AimingSystem;
+import com.mygdx.game.ECS.systems.CollisionSystem;
 import com.mygdx.game.ECS.systems.ControllerSystem;
 import com.mygdx.game.ECS.systems.GameplaySystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
@@ -26,6 +29,8 @@ import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.UISystem;
+
+import java.util.HashMap;
 
 
 /**
@@ -51,6 +56,9 @@ public class EntityManager {
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
 
+    //Tuple for storing entity/fixture pair
+    public static HashMap<Fixture, Entity> entityFixtureHashMap = new HashMap<Fixture, Entity>();
+
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
     public EntityManager(Engine engine, SpriteBatch batch) {
@@ -58,10 +66,12 @@ public class EntityManager {
         this.engine = engine;
         this.batch = batch;
 
+        // Create ECS entity listeners -> has to be done before createEntities to function correctly
+        this.createEntityListeners();
+
         // Create and add ECS systems and entities
         this.addSystems();
         this.createEntities();
-        this.createEntityListeners();
     }
 
     // Add all ECS systems
@@ -75,6 +85,7 @@ public class EntityManager {
         PhysicsSystem phs = new PhysicsSystem();
         ShootingSystem ss = new ShootingSystem();
         UISystem us = new UISystem();
+        CollisionSystem colSys = new CollisionSystem();
 
 
         // Add all ECS systems to the engine
@@ -86,6 +97,7 @@ public class EntityManager {
         this.engine.addSystem(phs);
         this.engine.addSystem(ss);
         this.engine.addSystem(us);
+        this.engine.addSystem(colSys);
     }
 
     // Create entities with ECS components
@@ -108,10 +120,10 @@ public class EntityManager {
 
         // Instantiate player entities
         player1.add(new SpriteComponent(
-                        tankTexture,
-                        50f,
-                        50f)
-                )
+                tankTexture,
+                50f,
+                50f)
+        )
                 .add(new PositionComponent(
                         sm.get(player1).size.x,
                         Gdx.graphics.getHeight() / 2f)
@@ -129,10 +141,10 @@ public class EntityManager {
                 .add(new PlayerComponent());
 
         player2.add(new SpriteComponent(
-                        tankTexture,
-                        50f,
-                        50f)
-                )
+                tankTexture,
+                50f,
+                50f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 100f,
                         Gdx.graphics.getHeight() / 2f)
@@ -150,37 +162,37 @@ public class EntityManager {
                 .add(new PlayerComponent());
 
         timer.add(new PositionComponent(
-                        Gdx.graphics.getWidth() / 2f,
-                        Gdx.graphics.getHeight() * 0.97f)
-                )
+                Gdx.graphics.getWidth() / 2f,
+                Gdx.graphics.getHeight() * 0.97f)
+        )
                 .add(new FontComponent("Time: 0.0s"))
                 .add(new RenderComponent());
 
         powerBar.add(new SpriteComponent(
-                        powerBarTexture,
-                        40f,
-                        350f)
-                )
+                powerBarTexture,
+                40f,
+                350f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 50f,
                         Gdx.graphics.getHeight() / 2f)
                 );
 
         powerBarArrow.add(new SpriteComponent(
-                    rightArrowTexture,
-                    40f,
-                    40f)
-                )
+                rightArrowTexture,
+                40f,
+                40f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
                         (Gdx.graphics.getHeight() - sm.get(powerBar).size.y) / 2f)
                 );
 
         ground.add(new SpriteComponent(
-                    tankTexture,
-                    Gdx.graphics.getWidth() * 2f,
-                    10f)
-                )
+                tankTexture,
+                Gdx.graphics.getWidth() * 2f,
+                10f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 2f)
@@ -206,8 +218,9 @@ public class EntityManager {
                 .add(new RenderComponent());
 
         health1
+                .add(new ParentComponent(player1))
                 .add(new FontComponent(
-                        hm.get(player1).hp + " hp")
+                        health1.getComponent(ParentComponent.class).parent.getComponent(HealthComponent.class).hp + " hp")
                 )
                 .add(new PositionComponent(
                         50f,
@@ -216,8 +229,9 @@ public class EntityManager {
                 .add(new RenderComponent());
 
         health2
+                .add(new ParentComponent(player2))
                 .add(new FontComponent(
-                        hm.get(player2).hp + " hp")
+                        health1.getComponent(ParentComponent.class).parent.getComponent(HealthComponent.class).hp + " hp")
                 )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 50f,
@@ -240,7 +254,7 @@ public class EntityManager {
     // Add entity listeners for observe & listen to when adding and removing entities
     private void createEntityListeners() {
         // Stops the entity from moving when it loses the MovementControlComponent
-        EntityListener listener = new EntityListener() {
+        EntityListener movementControlListener = new EntityListener() {
             @Override
             public void entityRemoved(Entity entity) {
                 // Set the linear velocity of the entity's box2d body to 0 in x direction
@@ -249,12 +263,33 @@ public class EntityManager {
             }
 
             @Override
-            public void entityAdded(Entity entity) {}
+            public void entityAdded(Entity entity) {
+            }
         };
 
         // The family decides which components the entity listener should listen for
         Family HasControl = Family.all(MovementControlComponent.class).get();
-        this.engine.addEntityListener(HasControl, listener);
+        this.engine.addEntityListener(HasControl, movementControlListener);
+
+        // Stops add the entity to the entityFixtureHashMap
+        EntityListener box2DComponentListener = new EntityListener() {
+            @Override
+            public void entityRemoved(Entity entity) {
+                // Remove from hashmap
+                entityFixtureHashMap.remove(entity);
+            }
+
+            @Override
+            public void entityAdded(Entity entity) {
+                Fixture fixture = b2dm.get(entity).fixture; // Get the fixture of the entity
+                // Add to hashmap
+                entityFixtureHashMap.put(fixture, entity);
+            }
+        };
+
+        // The family decides which components the entity listener should listen for
+        Family Box2D = Family.all(Box2DComponent.class).get();
+        this.engine.addEntityListener(Box2D, box2DComponentListener);
     }
 
     // On update, call the engines update method
