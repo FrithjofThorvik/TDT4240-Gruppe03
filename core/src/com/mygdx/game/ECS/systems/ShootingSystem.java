@@ -51,6 +51,7 @@ public class ShootingSystem extends EntitySystem {
                 // Shoot if S key stops being pressed, power reaches max, or round time is reached
                 if (!Gdx.input.isKeyPressed(Input.Keys.S) || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
                     shootProjectile(); // Create projectile and shoot it (deleted on collision)
+                    shootingComponent.power = 0; // Reset the power when the shot has been taken
                     GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // GSM.time paused on start() and resumed on end()
                 }
             }
