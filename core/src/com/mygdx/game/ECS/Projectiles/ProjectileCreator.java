@@ -1,8 +1,11 @@
 package com.mygdx.game.ECS.Projectiles;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileDamageComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
@@ -20,8 +23,11 @@ public abstract class ProjectileCreator {
     // Adds basic universal components to the projectile
     public Entity createProjectile(Entity player, ShootingComponent shootingComponent) {
         {
-            addVariableComponents();
             projectile
+                    .add(new SpriteComponent(
+                            new Texture("cannonball.png"),
+                            15f, 15f)
+                    )
                     .add(new ShootingComponent(shootingComponent.angle, shootingComponent.power))
                     .add(new PositionComponent(
                             player.getComponent(PositionComponent.class).position.x,
@@ -33,8 +39,33 @@ public abstract class ProjectileCreator {
                             false, 1f)
                     )
                     .add(new RenderComponent());
+            addVariableComponents();
             return projectile;
         }
+    }
+
+    // Adds basic universal components to the projectile
+    public Entity createChildProjectile(Entity parentProjectile) {
+        {
+            Entity childProjectile = new Entity();
+            childProjectile.add(new ProjectileDamageComponent(5, 5))
+                    .add(new SpriteComponent(
+                            new Texture("cannonball.png"),
+                            15f, 15f)
+                    )
+                    .add(new PositionComponent(
+                            parentProjectile.getComponent(PositionComponent.class).position.x,
+                            parentProjectile.getComponent(PositionComponent.class).position.y)
+                    )
+                    .add(new Box2DComponent(
+                            parentProjectile.getComponent(PositionComponent.class).position,
+                            parentProjectile.getComponent(SpriteComponent.class).size,
+                            false, 1f)
+                    )
+                    .add(new RenderComponent());
+            return childProjectile;
+        }
+
     }
 
     // Abstract function for adding variable components

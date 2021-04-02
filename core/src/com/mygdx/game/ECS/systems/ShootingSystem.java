@@ -9,6 +9,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.ECS.Projectiles.BouncyProjectile;
+import com.mygdx.game.ECS.Projectiles.SplitterProjectile;
 import com.mygdx.game.ECS.Projectiles.StandardProjectile;
 import com.mygdx.game.ECS.Projectiles.ProjectileCreator;
 import com.mygdx.game.ECS.Projectiles.SpeedyProjectile;
@@ -27,7 +29,7 @@ import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
  * For charging power to a shot and then shooting the projectile
  **/
 public class ShootingSystem extends EntitySystem {
-    int temp=0;
+    int temp = 0;
 
     private ImmutableArray<Entity> players; // Array for all player entities that are aiming
     ProjectileCreator projectileCreator; // This class handles making different projectiles
@@ -69,13 +71,8 @@ public class ShootingSystem extends EntitySystem {
         Entity player = this.players.get(GSM.currentPlayer);
         ShootingComponent playerShot = this.sm.get(player);
 
-        if(temp==0){
-            projectileCreator=new StandardProjectile();
-            temp+=1;
-        }else{
-            projectileCreator = new SpeedyProjectile();
-            temp=0;
-        }
+        projectileCreator = new BouncyProjectile();
+
         // Create and add entities to engine
         Entity projectile = projectileCreator.createProjectile(player, playerShot); // Create projectile
         getEngine().addEntity(projectile); // Add the new projectile to the engine
