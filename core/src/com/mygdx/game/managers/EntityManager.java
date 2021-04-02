@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
@@ -32,6 +33,7 @@ import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.UISystem;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
+
 import java.util.HashMap;
 
 
@@ -46,6 +48,7 @@ public class EntityManager {
 
     // Entity listeners
     private EntityListener movementControlListener;
+    private EntityListener box2DComponentListener;
 
     // Entity systems
     private ControllerSystem controllerSystem;
@@ -150,10 +153,10 @@ public class EntityManager {
 
         // Instantiate player entities
         player1.add(new SpriteComponent(
-                        this.tankTexture,
-                        50f,
-                        50f)
-                )
+                this.tankTexture,
+                50f,
+                50f)
+        )
                 .add(new PositionComponent(
                         sm.get(player1).size.x,
                         Gdx.graphics.getHeight() / 1.2f)
@@ -171,10 +174,10 @@ public class EntityManager {
                 .add(new PlayerComponent());
 
         player2.add(new SpriteComponent(
-                        this.tankTexture,
-                        50f,
-                        50f)
-                )
+                this.tankTexture,
+                50f,
+                50f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 100f,
                         Gdx.graphics.getHeight() / 1.2f)
@@ -199,30 +202,30 @@ public class EntityManager {
                 .add(new RenderComponent());
 
         powerBar.add(new SpriteComponent(
-                        this.powerBarTexture,
-                        40f,
-                        350f)
-                )
+                this.powerBarTexture,
+                40f,
+                350f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 50f,
                         Gdx.graphics.getHeight() / 2f)
                 );
 
         powerBarArrow.add(new SpriteComponent(
-                    this.rightArrowTexture,
-                    40f,
-                    40f)
-                )
+                this.rightArrowTexture,
+                40f,
+                40f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
                         (Gdx.graphics.getHeight() - sm.get(powerBar).size.y) / 2f)
                 );
 
         ground.add(new SpriteComponent(
-                    this.tankTexture,
-                    Gdx.graphics.getWidth() * 2f,
-                    10f)
-                )
+                this.tankTexture,
+                Gdx.graphics.getWidth() * 2f,
+                10f)
+        )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 2f)
@@ -236,9 +239,9 @@ public class EntityManager {
                 .add(new RenderComponent());
 
         aimArrow.add(new PositionComponent(
-                        Gdx.graphics.getWidth() / 2f,
-                        Gdx.graphics.getHeight() / 2f)
-                )
+                Gdx.graphics.getWidth() / 2f,
+                Gdx.graphics.getHeight() / 2f)
+        )
                 .add(new SpriteComponent(
                         this.rightArrowTexture,
                         10f,
@@ -269,7 +272,7 @@ public class EntityManager {
 
         restartButton.add(new FontComponent(
                 "Restart Game"
-                ))
+        ))
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 2.2f
@@ -277,7 +280,7 @@ public class EntityManager {
 
         exitButton.add(new FontComponent(
                 "Exit Game"
-                ))
+        ))
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 1.8f
@@ -285,7 +288,7 @@ public class EntityManager {
 
         statistics.add(new FontComponent(
                 "Player Statistics"
-                ))
+        ))
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 1.2f
@@ -319,7 +322,8 @@ public class EntityManager {
             }
 
             @Override
-            public void entityAdded(Entity entity) {}
+            public void entityAdded(Entity entity) {
+            }
         };
 
         // The family decides which components the entity listener should listen for
@@ -327,14 +331,18 @@ public class EntityManager {
         this.engine.addEntityListener(HasControl, this.movementControlListener);
 
         // Stops add the entity to the entityFixtureHashMap
-        EntityListener box2DComponentListener = new EntityListener() {
+        this.box2DComponentListener = new EntityListener() {
+            Body body;
+
             @Override
             public void entityRemoved(Entity entity) {
                 entityFixtureHashMap.remove(entity); // Remove from HashMap
+                body.getWorld().destroyBody(body); // Destroy the box2d body
             }
 
             @Override
             public void entityAdded(Entity entity) {
+                body = b2dm.get(entity).body; // Get the body so we can destroy it later
                 Fixture fixture = b2dm.get(entity).fixture; // Get the fixture of the entity
                 entityFixtureHashMap.put(fixture, entity); // Add to HashMap
             }

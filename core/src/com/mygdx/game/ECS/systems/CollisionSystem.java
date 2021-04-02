@@ -48,8 +48,6 @@ public class CollisionSystem extends EntitySystem {
         // Loop through and destroy projectiles that collides
         for (int i = 0; i < collidingProjectiles.size(); i++) {
             Entity projectile = collidingProjectiles.get(i);
-            Body body = b2dm.get(projectile).body;
-            body.getWorld().destroyBody(body);
             projectile.removeAll();
 
             // On last projectile, switch GameState
