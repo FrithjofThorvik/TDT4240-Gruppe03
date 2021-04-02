@@ -81,6 +81,7 @@ public class EntityManager {
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
+    private final ComponentMapper<ParentComponent> pam = ComponentMapper.getFor(ParentComponent.class);
 
     //Tuple for storing entity/fixture pair
     public static HashMap<Fixture, Entity> entityFixtureHashMap = new HashMap<Fixture, Entity>();
@@ -251,7 +252,7 @@ public class EntityManager {
         health1
                 .add(new ParentComponent(player1))
                 .add(new FontComponent(
-                        health1.getComponent(ParentComponent.class).parent.getComponent(HealthComponent.class).hp + " hp")
+                        hm.get(pam.get(health1).parent).hp + " hp")
                 )
                 .add(new PositionComponent(
                         50f,
@@ -262,7 +263,7 @@ public class EntityManager {
         health2
                 .add(new ParentComponent(player2))
                 .add(new FontComponent(
-                        health1.getComponent(ParentComponent.class).parent.getComponent(HealthComponent.class).hp + " hp")
+                        hm.get(pam.get(health1).parent).hp + " hp")
                 )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 50f,

@@ -37,6 +37,7 @@ public class UISystem extends EntitySystem {
 
     //Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private final ComponentMapper<FontComponent> fm = ComponentMapper.getFor(FontComponent.class);
     private final ComponentMapper<ParentComponent> pam = ComponentMapper.getFor(ParentComponent.class);
@@ -73,8 +74,8 @@ public class UISystem extends EntitySystem {
             pm.get(EntityManager.powerBarArrow).position.y = startPositionArrow + (sm.get(EntityManager.powerBar).size.y * (power / MAX_SHOOTING_POWER));
 
             // Update health displays
-            fm.get(EntityManager.health1).text = pam.get(EntityManager.health1).parent.getComponent(HealthComponent.class).hp + " hp";
-            fm.get(EntityManager.health2).text = pam.get(EntityManager.health2).parent.getComponent(HealthComponent.class).hp + " hp";
+            fm.get(EntityManager.health1).text = hm.get(pam.get(EntityManager.health1).parent).hp + " hp";
+            fm.get(EntityManager.health2).text = hm.get(pam.get(EntityManager.health2).parent).hp + " hp";
         }
     }
 
@@ -82,21 +83,21 @@ public class UISystem extends EntitySystem {
     private void printTimer() {
         // SWITCH_ROUND
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
-            FontComponent timerFont = EntityManager.timer.getComponent(FontComponent.class);
+            FontComponent timerFont = fm.get(EntityManager.timer);
             timerFont.text = "Switching players in: " + this.df.format(TIME_BETWEEN_ROUNDS - GSM.time) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // START_GAME
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME)) {
-            FontComponent timerFont = EntityManager.timer.getComponent(FontComponent.class);
+            FontComponent timerFont = fm.get(EntityManager.timer);
             timerFont.text = "\n\n\n\n" + ((int) START_GAME_TIME - (int) GSM.time);
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // OTHER
         else {
-            FontComponent timerFont = EntityManager.timer.getComponent(FontComponent.class);
+            FontComponent timerFont = fm.get(EntityManager.timer);
             timerFont.text = "Timer: " + this.df.format(ROUND_TIME - GSM.time) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }

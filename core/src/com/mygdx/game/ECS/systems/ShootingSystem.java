@@ -30,6 +30,7 @@ public class ShootingSystem extends EntitySystem {
     // Using a component mapper is the fastest way to load entities
     private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
     private final ComponentMapper<ProjectileDamageComponent> pdm = ComponentMapper.getFor(ProjectileDamageComponent.class);
+    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
@@ -69,7 +70,7 @@ public class ShootingSystem extends EntitySystem {
         getEngine().addEntity(projectile); // Add the new projectile to the engine
 
         // Shoot projectile with Box2D impulse
-        Box2DComponent b2d = projectile.getComponent(Box2DComponent.class); // Get Box2D component
+        Box2DComponent b2d = b2dm.get(projectile); // Get Box2D component
         Vector2 impulseVector = calculateAngleVelocity(this.pdm.get(projectile).speed); // Calculate velocity
         b2d.body.applyLinearImpulse(impulseVector, b2d.body.getWorldCenter(), false); // Apply impulse to body
     }

@@ -1,22 +1,14 @@
 package com.mygdx.game.states.screens;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.CollisionHandler;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
-import com.mygdx.game.managers.ScreenManager;
 
 import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
-import static com.mygdx.game.managers.ScreenManager.SM;
-import static com.mygdx.game.utils.B2DConstants.PPM;
 
 public class EndScreen extends AbstractScreen {
 
