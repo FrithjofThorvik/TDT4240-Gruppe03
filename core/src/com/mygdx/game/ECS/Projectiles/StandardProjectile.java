@@ -8,7 +8,7 @@ public class StandardProjectile extends ProjectileCreator {
 
     @Override
     void addVariableComponents() {
-        projectile.add(new ProjectileDamageComponent(20, 20, 20))
+        projectile.add(new ProjectileDamageComponent(20, 20))
                 .add(new SpriteComponent(
                         new Texture("cannonball.png"),
                         25f, 25)

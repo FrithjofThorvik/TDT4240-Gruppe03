@@ -9,7 +9,7 @@ import static com.mygdx.game.managers.ScreenManager.SM;
 
 
 /**
- *
+ * This screen will display buttons for going to different screens
  **/
 public class MainMenuScreen extends AbstractScreen {
 
@@ -24,7 +24,7 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     private void handleInput() {
-        if (Gdx.input.isTouched())
+        if (Gdx.input.justTouched())
             SM.setScreen(ScreenManager.STATE.PLAY);
     }
 
@@ -55,6 +55,5 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 }

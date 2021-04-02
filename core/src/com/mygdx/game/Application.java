@@ -44,17 +44,17 @@ public class Application extends Game {
 		super.render();
 
 		// Exit app when pressing ESC button
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			this.dispose();
 			Gdx.app.exit();
+		}
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-
-		// Dispose this class's objects (Remember order of disposing)
+		SM.dispose();
 		this.batch.dispose();
 		this.shapeBatch.dispose();
-		SM.dispose();
 	}
 }

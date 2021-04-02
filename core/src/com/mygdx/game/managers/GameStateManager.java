@@ -2,8 +2,12 @@ package com.mygdx.game.managers;
 
 import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.EndGame;
+import com.mygdx.game.states.game.ExitGame;
 import com.mygdx.game.states.game.PlayerAim;
 import com.mygdx.game.states.game.PlayerShoot;
+import com.mygdx.game.states.game.ProjectileAirborne;
+import com.mygdx.game.states.game.RestartGame;
+import com.mygdx.game.states.game.StartGame;
 import com.mygdx.game.states.game.StartRound;
 import com.mygdx.game.states.game.SwitchRound;
 
@@ -15,53 +19,73 @@ import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 /**
  * This manages game states
  * Will be used to set different states
+ * Will also be used as a data_layer to store & get game information
  **/
 public class GameStateManager {
     public static GameStateManager GSM; // Makes the GameStateManager accessed globally
+    public AbstractGameState gameState; // Represents the current game state
 
+    public boolean pauseTimer = false;
+    public boolean pauseGame = false;
     public float time = 0; // To keep track of time
     public int currentPlayer = 0; // Decides which player has the turn
     public int numberOfPlayers = 0; // To keep track of number of players
-    public AbstractGameState gameState; // Represents the current game state
+    // TODO: Add more to data_layer
 
     // Create defined game states
     public enum STATE {
+        START_GAME,
+        END_GAME,
+        RESTART_GAME,
+        EXIT_GAME,
         START_ROUND,
         SWITCH_ROUND,
         PLAYER_AIM,
         PLAYER_SHOOT,
-        END_GAME
+        PROJECTILE_AIRBORNE
     }
 
     // Store game states in HashMap
     private HashMap<STATE, AbstractGameState> gameStates;
 
-    // GameStateManager constructor
+    // GameStateManager constructor instantiates a static instance of itself and initializes all states
     public GameStateManager() {
         GSM = this;
+
         this.initGameStates();
     }
 
     // Get game state
     public void update(float dt) {
-        this.gameState.update(dt); // Run update functions for all AbstractGameState()
-        this.time += dt; // The time variable keeps control of the time spent in this state
+        // Check if game is paused
+        if (!this.pauseGame) {
+            this.gameState.update(dt); // Run update functions for all AbstractGameState()
 
-        if (this.time > ROUND_TIME)
-            this.setGameState(STATE.SWITCH_ROUND); // Switch state
+            if (!this.pauseTimer)
+                this.time += dt; // The time variable keeps control of the time spent in this state
+
+            if (this.time > ROUND_TIME)
+                this.setGameState(STATE.SWITCH_ROUND); // Force round_switch if timer is larger that round_time
+        }
     }
 
     // Initialise and map all STATEs to respective GameState
     private void initGameStates() {
         // Map all states to respective GameState
         this.gameStates = new HashMap<STATE, AbstractGameState>();
+
+        this.gameStates.put(STATE.START_GAME, new StartGame());
+        this.gameStates.put(STATE.END_GAME, new EndGame());
+        this.gameStates.put(STATE.RESTART_GAME, new RestartGame());
+        this.gameStates.put(STATE.EXIT_GAME, new ExitGame());
+
         this.gameStates.put(STATE.START_ROUND, new StartRound());
         this.gameStates.put(STATE.SWITCH_ROUND, new SwitchRound());
         this.gameStates.put(STATE.PLAYER_AIM, new PlayerAim());
         this.gameStates.put(STATE.PLAYER_SHOOT, new PlayerShoot());
-        this.gameStates.put(STATE.END_GAME, new EndGame());
+        this.gameStates.put(STATE.PROJECTILE_AIRBORNE, new ProjectileAirborne());
 
-        this.gameState = gameStates.get(STATE.SWITCH_ROUND); // Set new STATE
+        this.gameState = gameStates.get(STATE.START_GAME); // Set new STATE
         this.gameState.startGameState(); // Start current STATE
     }
 
@@ -75,5 +99,13 @@ public class GameStateManager {
     // Get a game state from the hash map
     public AbstractGameState getGameState(STATE gameState) {
         return this.gameStates.get(gameState);
+    }
+
+    // Loos through all GameStates and runs respective dispose() functions
+    public void dispose() {
+        for (AbstractGameState state : this.gameStates.values()) {
+            if (state != null)
+                state.dispose();
+        }
     }
 }

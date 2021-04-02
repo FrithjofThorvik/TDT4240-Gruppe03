@@ -7,7 +7,7 @@ import com.mygdx.game.ECS.components.SpriteComponent;
 public class SpeedyProjectile extends ProjectileCreator {
     @Override
     void addVariableComponents() {
-        projectile.add(new ProjectileDamageComponent(5, 5, 100))
+        projectile.add(new ProjectileDamageComponent(5, 5))
                 .add(new SpriteComponent(
                         new Texture("cannonball.png"),
                         15f, 15f)

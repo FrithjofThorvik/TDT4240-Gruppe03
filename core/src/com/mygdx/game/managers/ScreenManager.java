@@ -2,6 +2,7 @@ package com.mygdx.game.managers;
 
 import com.mygdx.game.Application;
 import com.mygdx.game.states.screens.AbstractScreen;
+import com.mygdx.game.states.screens.EndScreen;
 import com.mygdx.game.states.screens.GameScreen;
 import com.mygdx.game.states.screens.MainMenuScreen;
 
@@ -20,7 +21,8 @@ public class ScreenManager {
     // Create defined screen states
     public enum STATE {
         MAIN_MENU,
-        PLAY
+        PLAY,
+        END_SCREEN
         // TODO: Implement TUTORIAL
     }
 
@@ -47,12 +49,15 @@ public class ScreenManager {
     // Initialize all screens
     private void initScreen() {
         this.screens = new HashMap<STATE, AbstractScreen>();
-        this.screens.put(STATE.PLAY, new GameScreen(app));          // Creates GameScreen
         this.screens.put(STATE.MAIN_MENU, new MainMenuScreen(app)); // Creates MainMenuScreen
+        this.screens.put(STATE.END_SCREEN, new EndScreen(app)); // Creates EndScreen
     }
 
     // Set predefined screen
     public void setScreen(STATE nextScreen) {
+        if(nextScreen==STATE.PLAY){
+            this.screens.put(STATE.PLAY, new GameScreen(app));  // Creates new GameScreen every time we change to the game screen
+        }
         this.app.setScreen(this.screens.get(nextScreen));
     }
 

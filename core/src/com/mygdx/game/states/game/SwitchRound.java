@@ -29,4 +29,7 @@ public class SwitchRound extends AbstractGameState {
         if (GSM.time > TIME_BETWEEN_ROUNDS)
             GSM.setGameState(STATE.START_ROUND);
     }
+
+    @Override
+    public void dispose() {}
 }

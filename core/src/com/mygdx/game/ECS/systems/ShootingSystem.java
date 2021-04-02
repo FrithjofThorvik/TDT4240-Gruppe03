@@ -35,6 +35,7 @@ public class ShootingSystem extends EntitySystem {
     // Using a component mapper is the fastest way to load entities
     private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
     private final ComponentMapper<ProjectileDamageComponent> pdm = ComponentMapper.getFor(ProjectileDamageComponent.class);
+    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
@@ -45,18 +46,20 @@ public class ShootingSystem extends EntitySystem {
     public void update(float dt) {
         // Check first if there are any players shooting
         if (this.players.size() > 0) {
-            // Get the the player whose turn it is and get its shootingComponent
-            Entity player = this.players.get(GSM.currentPlayer);
-            ShootingComponent shootingComponent = this.sm.get(player);
+            if (!GSM.pauseTimer) {
+                // Get the the player whose turn it is and get its shootingComponent
+                Entity player = this.players.get(GSM.currentPlayer);
+                ShootingComponent shootingComponent = this.sm.get(player);
 
-            // Increase the power -> since we are now charging power for the shot
-            shootingComponent.power += dt;
+                // Increase the power -> since we are now charging power for the shot
+                shootingComponent.power += dt; // Reset in GamePlaySystem (SWITCH_ROUND)
 
-            // Shoot if S key stops being pressed, power reaches max, or round time is reached
-            if (!Gdx.input.isKeyPressed(Input.Keys.S) || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
-                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND); // Switch game state
-                shootProjectile(); // Create projectile and shoot it
-                shootingComponent.power = 0; // Reset the power after you have shot
+                // Shoot if S key stops being pressed, power reaches max, or round time is reached
+                if (!Gdx.input.isKeyPressed(Input.Keys.S) || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
+                    shootProjectile(); // Create projectile and shoot it (deleted on collision)
+                    shootingComponent.power = 0; // Reset the power when the shot has been taken
+                    GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // GSM.time paused on start() and resumed on end()
+                }
             }
         }
     }
@@ -78,7 +81,7 @@ public class ShootingSystem extends EntitySystem {
         getEngine().addEntity(projectile); // Add the new projectile to the engine
 
         // Shoot projectile with Box2D impulse
-        Box2DComponent b2d = projectile.getComponent(Box2DComponent.class); // Get Box2D component
+        Box2DComponent b2d = b2dm.get(projectile); // Get Box2D component
         Vector2 impulseVector = calculateAngleVelocity(this.pdm.get(projectile).speed); // Calculate velocity
         b2d.body.applyLinearImpulse(impulseVector, b2d.body.getWorldCenter(), false); // Apply impulse to body
     }

@@ -13,4 +13,7 @@ public class PlayerAim extends AbstractGameState {
 
     @Override
     public void update(float dt) {}
+
+    @Override
+    public void dispose() {}
 }
