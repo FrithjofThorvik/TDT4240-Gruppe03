@@ -31,6 +31,7 @@ public class GameScreen extends AbstractScreen {
 
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
+        System.out.println("Init GameScreen");
 
         // Set camera
         camera = new OrthographicCamera();
