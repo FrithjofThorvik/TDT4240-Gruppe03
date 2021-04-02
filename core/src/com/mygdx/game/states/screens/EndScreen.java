@@ -23,7 +23,6 @@ public class EndScreen extends AbstractScreen {
         if (Gdx.input.justTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY(); // Input y is inverted compared to position y
-            System.out.println("Here");
 
             PositionComponent exitButtonPosition = EntityManager.exitButton.getComponent(PositionComponent.class);
             FontComponent exitButtonFont = EntityManager.exitButton.getComponent(FontComponent.class);
