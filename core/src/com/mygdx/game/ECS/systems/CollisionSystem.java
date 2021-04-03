@@ -6,68 +6,65 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
-import com.mygdx.game.ECS.components.ProjectileDamageComponent;
+import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
+import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
 /**
- * This system should determine behavior of entities colliding -> depending on what collides with what
+ * This system should determine behavior of entities colliding -> depending on what it collides with
  **/
 public class CollisionSystem extends EntitySystem {
     // Prepare arrays for entities
-    private ImmutableArray<Entity> projectiles;
-    private ImmutableArray<Entity> collidingPlayers;
+    private ImmutableArray<Entity> players;
     private ImmutableArray<Entity> collidingProjectiles;
+    private ImmutableArray<Entity> projectiles;
 
     // Prepare component mappers
-    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
-    private final ComponentMapper<ProjectileDamageComponent> pdm = ComponentMapper.getFor(ProjectileDamageComponent.class);
-    private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
     private final ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
+    private final ComponentMapper<ProjectileComponent> pdm = ComponentMapper.getFor(ProjectileComponent.class);
+    private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
+    private final ComponentMapper<ProjectileComponent> pm = ComponentMapper.getFor(ProjectileComponent.class);
+
 
     // Store entities into arrays
     public void addedToEngine(Engine e) {
-        this.projectiles = e.getEntitiesFor(Family.all(ProjectileDamageComponent.class).get());
-        this.collidingPlayers = e.getEntitiesFor(Family.all(CollisionComponent.class, PlayerComponent.class).get());
-        this.collidingProjectiles = e.getEntitiesFor(Family.all(CollisionComponent.class, ProjectileDamageComponent.class).get());
+        this.projectiles = e.getEntitiesFor(Family.all(ProjectileComponent.class).get());
+        this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        this.collidingProjectiles = e.getEntitiesFor(Family.all(CollisionComponent.class, ProjectileComponent.class).get());
     }
 
     // Will be called by the engine automatically
     public void update(float dt) {
+        // Loop through all colliding projectile and give it context for what it collides with
+        for (int i = 0; i < this.collidingProjectiles.size(); i++) {
+            Entity projectile = collidingProjectiles.get(i); // Get the entity
+            Entity collisionEntity = cm.get(projectile).collisionEntity; // Get the colliding entity
 
-        // Check if projectile collides with a player and update health accordingly
-        checkProjectilePlayerCollision();
+            // If projectile collides with player -> update players health
+            if (players.contains(collisionEntity, true)) {
+                updateHealth(projectile, collisionEntity); // Update the colliding player's health
+            }
 
-        // Loop through and destroy projectiles that collides
-        for (int i = 0; i < collidingProjectiles.size(); i++) {
-            Entity projectile = collidingProjectiles.get(i);
-            projectile.removeAll();
+            // Activate the collision function for the projectile
+            pm.get(projectile).projectileType.collision();
+        }
 
-            // On last projectile, switch GameState
-            if (i + 1 == collidingProjectiles.size())
+        // Check if there are no projectiles -> move on to SWITCH_ROUND state
+        if (projectiles.size() <= 0) {
+            if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)) {
                 GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
-
-            // TODO: The projectile might want to do something when it collides, like exploding/splitting into pieces
+            }
         }
     }
 
-    public void checkProjectilePlayerCollision() {
-        // Loop through all colliding players
-        for (int i = 0; i < this.collidingPlayers.size(); i++) {
-            Entity player = collidingPlayers.get(i); // Get the entity
-            Entity collisionEntity = cm.get(player).collisionEntity; // Get the colliding entity
-
-            // If player collides with projectile -> update health and destroy projectile
-            if (projectiles.contains(collisionEntity, true)) {
-                hm.get(player).hp -= pdm.get(collisionEntity).damage;
-            }
-        }
+    // Update the player's health
+    void updateHealth(Entity projectile, Entity player) {
+        hm.get(player).hp -= pdm.get(projectile).damage;
     }
 }

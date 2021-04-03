@@ -57,17 +57,6 @@ public class ControllerSystem extends EntitySystem {
                 if (Gdx.input.isTouched()) {
                     this.handleInput(player, controllerEntity);
                 }
-
-                /**
-                // Move player when screen is touched
-                if (Gdx.input.isTouched())
-                    movePlayer(player);
-
-                // When space is pressed -> change state to aiming
-                if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
-                    GSM.setGameState(GameStateManager.STATE.PLAYER_AIM);
-
-                 **/
             }
         }
     }

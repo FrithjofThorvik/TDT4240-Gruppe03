@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Application;
+import com.mygdx.game.states.screens.GameScreen;
 
 
 /**
@@ -28,48 +29,16 @@ public class ControllerComponent implements Component {
     public boolean leftPressed, rightPressed, powerPressed;
 
     public ControllerComponent() {
-        this.camera = new OrthographicCamera();
+        this.camera = GameScreen.camera;
         this.viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), this.camera);
         this.stage = new Stage(this.viewport, Application.batch);
-
-        this.stage.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                switch(keycode){
-                    case Input.Keys.UP:
-                        powerPressed = true;
-                        break;
-                    case Input.Keys.LEFT:
-                        leftPressed = true;
-                        break;
-                    case Input.Keys.RIGHT:
-                        rightPressed = true;
-                        break;
-                }
-                return true;
-            }
-
-            @Override
-            public boolean keyUp(InputEvent event, int keycode) {
-                switch(keycode){
-                    case Input.Keys.UP:
-                        powerPressed = false;
-                        break;
-                    case Input.Keys.LEFT:
-                        leftPressed = false;
-                        break;
-                    case Input.Keys.RIGHT:
-                        rightPressed = false;
-                        break;
-                }
-                return true;
-            }
-        });
 
         Gdx.input.setInputProcessor(this.stage);
 
         Table table = new Table();
-        table.bottom().left();
+        table.setWidth(Gdx.graphics.getWidth());
+        table.bottom().center();
+
 
         Image leftImg = new Image(new Texture("button_left.png"));
         leftImg.setSize(50, 50);
@@ -116,11 +85,10 @@ public class ControllerComponent implements Component {
             }
         });
 
-        table.row().pad(5, 5, 5, 5);
+        table.row().pad(5, 5, 70, 5);
         table.add(leftImg).size(leftImg.getWidth(), leftImg.getHeight());
         table.add(powerImg).size(powerImg.getWidth(), powerImg.getHeight());
         table.add(rightImg).size(rightImg.getWidth(), rightImg.getHeight());
-        table.row().padBottom(5);
 
         this.stage.addActor(table);
     }
