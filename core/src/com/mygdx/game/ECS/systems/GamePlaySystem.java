@@ -52,7 +52,7 @@ public class GamePlaySystem extends EntitySystem {
         // START_GAME -> Displays a countdown until round starts
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME)) {
             // Start or stop systems (if they should be processed or not)
-            getEngine().getSystem(AimingSystem.class).setProcessing(false);
+            getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(false);
         }
@@ -88,30 +88,19 @@ public class GamePlaySystem extends EntitySystem {
             getEngine().getSystem(ControllerSystem.class).setProcessing(true);
         }
 
-        // PLAYER_AIM -> Player can aim projectile
-        else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_AIM)) {
+        // PLAYER_SHOOTING -> Player can aim and shoot projectile
+        else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_SHOOTING)) {
             // Remove or add components to entities
             players.get(GSM.currentPlayer).remove(MovementControlComponent.class); // The player should loose ability to move whilst aiming
-            controllers.first().remove(RenderComponent.class); // TODO: Create EntityListener
+            EntityManager.powerBar.add(new RenderComponent()); // Render power bar
+            EntityManager.powerBarArrow.add(new RenderComponent()); // Render power bar arrow
             EntityManager.aimArrow.add(new RenderComponent()); // Render the aim arrow
 
             // Start or stop systems (if they should be processed or not)
-            getEngine().getSystem(AimingSystem.class).setProcessing(true);
-            getEngine().getSystem(ControllerSystem.class).setProcessing(false);
-        }
-
-        // PLAYER_SHOOT -> Player can choose shot power & shoot projectile
-        else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_SHOOT)) {
-            // Remove or add components to entities
-            EntityManager.powerBar.add(new RenderComponent()); // Render power bar
-            EntityManager.powerBarArrow.add(new RenderComponent()); // Render power bar arrow
-
-            // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(ShootingSystem.class).setProcessing(true);
-            getEngine().getSystem(AimingSystem.class).setProcessing(false);
         }
 
-        // PLAYER_SHOOT -> Player can choose shot power & shoot projectile
+        // PROJECTILE_AIRBORNE -> Player can choose shot power & shoot projectile
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)) {
             // Remove or add components to entities
             EntityManager.aimArrow.remove(RenderComponent.class);
@@ -120,6 +109,7 @@ public class GamePlaySystem extends EntitySystem {
 
             // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+            getEngine().getSystem(ControllerSystem.class).setProcessing(false);
         }
     }
 

@@ -22,7 +22,7 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
-import com.mygdx.game.ECS.systems.AimingSystem;
+import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.CollisionSystem;
 import com.mygdx.game.ECS.systems.ControllerSystem;
 import com.mygdx.game.ECS.systems.GamePlaySystem;
@@ -30,7 +30,6 @@ import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
-import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.UISystem;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
@@ -57,7 +56,6 @@ public class EntityManager {
     private RenderingSystem renderingSystem;
     private ProjectileSystem projectileSystem;
     private GamePlaySystem gameplaySystem;
-    private AimingSystem aimingSystem;
     private PowerUpSystem powerUpSystem;
     private PhysicsSystem physicsSystem;
     private ShootingSystem shootingSystem;
@@ -117,7 +115,6 @@ public class EntityManager {
         this.projectileSystem = new ProjectileSystem();
         this.gameplaySystem = new GamePlaySystem();
         this.powerUpSystem = new PowerUpSystem();
-        this.aimingSystem = new AimingSystem();
         this.physicsSystem = new PhysicsSystem();
         this.shootingSystem = new ShootingSystem();
         this.userInterfaceSystem = new UISystem();
@@ -129,7 +126,6 @@ public class EntityManager {
         this.engine.addSystem(this.projectileSystem);
         this.engine.addSystem(this.gameplaySystem);
         this.engine.addSystem(this.powerUpSystem);
-        this.engine.addSystem(this.aimingSystem);
         this.engine.addSystem(this.physicsSystem);
         this.engine.addSystem(this.shootingSystem);
         this.engine.addSystem(this.userInterfaceSystem);
@@ -378,7 +374,6 @@ public class EntityManager {
         this.engine.removeSystem(this.renderingSystem);
         this.engine.removeSystem(this.projectileSystem);
         this.engine.removeSystem(this.gameplaySystem);
-        this.engine.removeSystem(this.aimingSystem);
         this.engine.removeSystem(this.powerUpSystem);
         this.engine.removeSystem(this.physicsSystem);
         this.engine.removeSystem(this.shootingSystem);

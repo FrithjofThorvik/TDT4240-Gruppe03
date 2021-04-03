@@ -97,11 +97,11 @@ public class RenderingSystem extends EntitySystem {
             // Loop through all controller entities, and run draw() function
             for (int i = 0; i < this.controllerEntities.size(); i++) {
                 // Fetch each component
-                Entity entity = this.controllerEntities.get(i);
-                ControllerComponent controller = this.cm.get(entity);
-                Application.batch.end();
-                controller.draw(); // Run ControllerComponent draw() function
-                Application.batch.begin();
+                //Entity entity = this.controllerEntities.get(i);
+                //ControllerComponent controller = this.cm.get(entity);
+                //Application.batch.end();
+                //controller.draw(); // Run ControllerComponent draw() function
+                //Application.batch.begin();
             }
         }
     }

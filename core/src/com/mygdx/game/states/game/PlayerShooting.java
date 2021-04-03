@@ -4,7 +4,7 @@ package com.mygdx.game.states.game;
 /**
  * In this state the player is shooting (charging power for the shot)
  **/
-public class PlayerShoot extends AbstractGameState {
+public class PlayerShooting extends AbstractGameState {
 
     @Override
     public void startGameState() {}

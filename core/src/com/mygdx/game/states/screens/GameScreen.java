@@ -1,10 +1,14 @@
 package com.mygdx.game.states.screens;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.CollisionHandler;
 import com.mygdx.game.managers.EntityManager;
@@ -20,18 +24,17 @@ import static com.mygdx.game.utils.B2DConstants.PPM;
  **/
 public class GameScreen extends AbstractScreen {
 
-    // Camera
     public static OrthographicCamera camera;
-
-    // Box2D
     public static World world;
+    public static Stage stage;
+    public static Viewport viewport;
     public Box2DDebugRenderer b2dr;
 
     private final Engine engine;
 
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
-        System.out.println("Init GameScreen");
+        System.out.println("Initializing GameScreen...");
 
         // Set camera
         camera = new OrthographicCamera();
@@ -40,6 +43,12 @@ public class GameScreen extends AbstractScreen {
         // Adjust app batches to the camera view (combined = viewport matrix)
         Application.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
+
+        // Create viewport and stage for drawing actors scaled to current camera
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        stage = new Stage(viewport, Application.batch);
+        Gdx.input.setInputProcessor(stage); // Add input processing for stage (Button, Image, etc pressess)
+
 
         // Setup ECS engine
         this.engine = new Engine();
@@ -69,15 +78,20 @@ public class GameScreen extends AbstractScreen {
         super.render(dt);
         this.b2dr.render(world, camera.combined.cpy().scl(PPM));
 
-        //Begin the batch and let the entityManager handle the rest :)
+        // Begin the batch and let the entityManager handle the rest :)
         Application.batch.begin();
         GSM.update(dt);
         EM.update(dt);
         Application.batch.end();
+
+        // Draw stage actors
+        stage.draw();
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
 
     @Override
     public void dispose() {

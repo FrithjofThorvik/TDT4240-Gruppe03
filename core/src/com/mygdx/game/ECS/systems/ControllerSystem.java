@@ -10,11 +10,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.ECS.Controller;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.ControllerComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.managers.GameStateManager;
@@ -27,57 +29,73 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
  * This system is responsible for moving the player when it is that players turn
  **/
 public class ControllerSystem extends EntitySystem {
+    // Controller creating buttons
+    private Controller controller;
+
     // Prepare arrays for entities
+    private ImmutableArray<Entity> movingPlayers;
     private ImmutableArray<Entity> players;
     private ImmutableArray<Entity> controllers;
 
     // Prepare component mappers
-    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
-    private final ComponentMapper<ControllerComponent> cm = ComponentMapper.getFor(ControllerComponent.class);
+    private final ComponentMapper<ShootingComponent> shm = ComponentMapper.getFor(ShootingComponent.class);
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
-        this.players = e.getEntitiesFor(Family.all(PlayerComponent.class, MovementControlComponent.class).get());
+        this.movingPlayers = e.getEntitiesFor(Family.all(PlayerComponent.class, MovementControlComponent.class).get());
+        this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
         this.controllers = e.getEntitiesFor(Family.all(ControllerComponent.class).get());
     }
 
     // Will be called by the engine automatically
     public void update(float dt) {
-        if (this.players.size() > 0) {
-            // Loop through all player entities
-            for (int i = 0; i < this.players.size(); ++i) {
-                // Get player entity with controller component
-                Entity player = this.players.get(i);
-                Entity controllerEntity = this.controllers.first();
+        if (this.players.size() > 0 && this.controllers.size() > 0) {
+            // Check if controller has been initialized
+            if (this.controller != null) {
+                Entity currentPlayer = this.players.get(GSM.currentPlayer);
 
-                // Check if screen is pressed, and handle the input with the ControllerComponent
-                if (Gdx.input.isTouched()) {
-                    this.handleInput(player, controllerEntity);
+                // Check if current is in a state where movement is enabled
+                if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_ROUND)) {
+                    // Check if screen is pressed, and handle the input with the ControllerComponent
+                    if (Gdx.input.isTouched()) {
+                        // Loop through all moving player entities
+                        for (int i = 0; i < this.movingPlayers.size(); ++i) {
+                            // Get player entity with controller component and handle movement
+                            Entity movingPlayer = this.movingPlayers.get(i);
+                            this.handleMovement(movingPlayer); // Move player
+                        }
+                    }
                 }
+
+                // Check if player is shooting
+                else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_SHOOTING)) {
+                    this.handleShooting(currentPlayer);
+                }
+
+            } else {
+                this.controller = new Controller(this.controllers.first()); // Initialize controller
             }
         }
     }
 
     // Handles user input, and will handle player movement and changing if GameState
-    private void handleInput(Entity player, Entity controllerEntity) {
+    private void handleMovement(Entity player) {
         // Get entity components
-        PositionComponent playerPosition = this.pm.get(player);
         VelocityComponent playerVelocity = this.vm.get(player);
         Box2DComponent playerBox2D = this.b2dm.get(player);
         SpriteComponent playerSprite = this.sm.get(player);
-        ControllerComponent controller = this.cm.get(controllerEntity);
 
-        if (controller.rightPressed) {
+        if (this.controller.buttonPresses.rightPressed) {
             playerBox2D.body.applyLinearImpulse(playerVelocity.velocity, playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is already flipped from it's original state
             if (playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
 
-        } else if (controller.leftPressed) {
+        } else if (controller.buttonPresses.leftPressed) {
             Vector2 negativeImpulse = new Vector2(-playerVelocity.velocity.x, playerVelocity.velocity.y);
             playerBox2D.body.applyLinearImpulse(negativeImpulse, playerBox2D.body.getWorldCenter(), false);
 
@@ -85,43 +103,27 @@ public class ControllerSystem extends EntitySystem {
             if (!playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
 
-        } else if (controller.powerPressed) {
-            GSM.setGameState(GameStateManager.STATE.PLAYER_AIM);
+        } else if (controller.buttonPresses.aimPressed) {
+            GSM.setGameState(GameStateManager.STATE.PLAYER_SHOOTING);
+        } else if (controller.buttonPresses.powerPressed) {
+
         }
     }
 
-    // Move player with Box2D impulses
-    public void movePlayer(Entity player) {
+    // Handles the increase of pressing shooting power button
+    private void handleShooting(Entity player) {
         // Get entity components
-        PositionComponent playerPosition = this.pm.get(player);
-        VelocityComponent playerVelocity = this.vm.get(player);
-        Box2DComponent playerBox2D = this.b2dm.get(player);
-        SpriteComponent playerSprite = this.sm.get(player);
+        ShootingComponent shootingComponent = this.shm.get(player);
 
-        // Get the screen position of the touch
-        float xTouchPixels = Gdx.input.getX();
-        float yTouchPixels = Gdx.input.getY();
+        // Check if power button is being pressed and increase shot power
+        if (this.controller.buttonPresses.powerPressed) {
+            shootingComponent.power += Gdx.graphics.getDeltaTime(); // Increase power of shot
+            shootingComponent.shooting = true; // Used in ShootingSystem
+        }
 
-        // Convert to world position
-        Vector3 touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
-        touchPoint = GameScreen.camera.unproject(touchPoint);
-
-        // Apply force to the players box2D body according to its velocity component
-        if (playerPosition.position.x < touchPoint.x) {
-            playerBox2D.body.applyLinearImpulse(playerVelocity.velocity, playerBox2D.body.getWorldCenter(), false);
-
-            // Flip sprite if it is already flipped from it's original state
-            if (playerSprite.sprite.isFlipX())
-                playerSprite.sprite.flip(true, false);
-
-        } else if (playerPosition.position.x > touchPoint.x) {
-            Vector2 negativeImpulse = new Vector2(- playerVelocity.velocity.x, playerVelocity.velocity.y);
-            playerBox2D.body.applyLinearImpulse(negativeImpulse, playerBox2D.body.getWorldCenter(), false);
-
-            // Flip sprite if it is not flipped from it's initial state
-            if (!playerSprite.sprite.isFlipX())
-                playerSprite.sprite.flip(true, false);
-
+        // Check if power button has stopped being pressed after being pressed
+        else if (shootingComponent.power > 0 && !this.controller.buttonPresses.powerPressed) {
+            shootingComponent.shooting = false; // Used in ShootingSystem
         }
     }
 }
