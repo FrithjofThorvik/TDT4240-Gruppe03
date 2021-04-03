@@ -38,7 +38,7 @@ public class GameScreen extends AbstractScreen {
         camera.setToOrtho(false, Application.V_WIDTH, Application.V_HEIGHT);
 
         // Adjust app batches to the camera view (combined = viewport matrix)
-        app.batch.setProjectionMatrix(camera.combined);
+        Application.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
 
         // Setup ECS engine
@@ -46,16 +46,16 @@ public class GameScreen extends AbstractScreen {
 
         // Create world
         this.b2dr = new Box2DDebugRenderer();
-        world = new World(new Vector2(0f, -98f), false);
+        world = new World(new Vector2(0, -100), false);
     }
 
     @Override
     public void show() {
-        new EntityManager(this.engine, this.app.batch); // Manager for generating all ECS functions
+        new EntityManager(this.engine, Application.batch); // Manager for generating all ECS functions
         new GameStateManager(); // Manager for handling all game states
         world.setContactListener(new CollisionHandler()); // Set contact listener for world
 
-        app.batch.setProjectionMatrix(camera.combined);
+        Application.batch.setProjectionMatrix(camera.combined);
         app.shapeBatch.setProjectionMatrix(camera.combined);
     }
 
@@ -70,10 +70,10 @@ public class GameScreen extends AbstractScreen {
         this.b2dr.render(world, camera.combined.cpy().scl(PPM));
 
         //Begin the batch and let the entityManager handle the rest :)
-        app.batch.begin();
+        Application.batch.begin();
         GSM.update(dt);
         EM.update(dt);
-        app.batch.end();
+        Application.batch.end();
     }
 
     @Override

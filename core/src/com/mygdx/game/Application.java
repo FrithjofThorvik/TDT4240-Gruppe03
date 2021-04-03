@@ -25,7 +25,7 @@ public class Application extends Game {
 	public static  int V_HEIGHT = 420;	// Core
 
 	//Batches
-	public SpriteBatch batch;
+	public static SpriteBatch batch;
 	public ShapeRenderer shapeBatch;
 
 	// Methods
@@ -33,7 +33,7 @@ public class Application extends Game {
 	public void create() {
 
 		// Setup batches
-		this.batch = new SpriteBatch();
+		batch = new SpriteBatch();
 		this.shapeBatch = new ShapeRenderer();
 
 		new ScreenManager(this); // Create ScreenManager
@@ -54,7 +54,7 @@ public class Application extends Game {
 	public void dispose() {
 		super.dispose();
 		SM.dispose();
-		this.batch.dispose();
+		batch.dispose();
 		this.shapeBatch.dispose();
 	}
 }

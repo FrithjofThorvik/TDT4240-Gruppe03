@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.mygdx.game.ECS.components.ControllerComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
@@ -71,6 +72,7 @@ public class EntityManager {
     public static Entity powerBar;
     public static Entity powerBarArrow;
     public static Entity timer;
+    public static Entity controller;
     public static Entity ground;
     public static Entity restartButton;
     public static Entity exitButton;
@@ -144,6 +146,7 @@ public class EntityManager {
 
         // Instantiate all UI entities
         timer = new Entity();
+        controller = new Entity();
         powerBar = new Entity();
         powerBarArrow = new Entity();
         ground = new Entity();
@@ -194,6 +197,8 @@ public class EntityManager {
                 .add(new ShootingComponent(0, 0))
                 .add(new RenderComponent())
                 .add(new PlayerComponent());
+
+        controller.add(new ControllerComponent());
 
         timer.add(new PositionComponent(
                 Gdx.graphics.getWidth() / 2f,
@@ -299,6 +304,7 @@ public class EntityManager {
         this.engine.addEntity(player1);
         this.engine.addEntity(player2);
         this.engine.addEntity(timer);
+        this.engine.addEntity(controller);
         this.engine.addEntity(powerBar);
         this.engine.addEntity(powerBarArrow);
         this.engine.addEntity(ground);
