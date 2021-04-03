@@ -1,17 +1,29 @@
 package com.mygdx.game.ECS.Projectiles;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileDamageComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.badlogic.ashley.core.Entity;
+import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
 
-public class StandardProjectile extends ProjectileCreator {
+/**
+ * Inherits from Projectile and implements features for the standard projectile type
+ **/
+public class StandardProjectile extends Projectile {
+    public StandardProjectile(Entity parent) {
+        super(parent);
+    }
 
     @Override
     void addVariableComponents() {
-        projectile.add(new ProjectileDamageComponent(20, 20))
-                .add(new SpriteComponent(
-                        new Texture("cannonball.png"),
-                        25f, 25)
-                );
+        projectile.add(new ProjectileComponent(20, 20, this));
+    }
+
+    @Override
+    public void collision() {
+        // When this projectile collides with something -> destroy the projectile
+        projectile.removeAll();
+    }
+
+    @Override
+    public void midAir() {
+        // Do nothing
     }
 }

@@ -43,7 +43,7 @@ import java.util.HashMap;
 public class EntityManager {
     public static EntityManager EM;
 
-    private final Engine engine;
+    public final Engine engine;
     private final SpriteBatch batch;
 
     // Entity listeners
@@ -331,21 +331,22 @@ public class EntityManager {
         Family HasControl = Family.all(MovementControlComponent.class).get();
         this.engine.addEntityListener(HasControl, this.movementControlListener);
 
-        // Stops add the entity to the entityFixtureHashMap
+        // This should activate when a box2d component is added or removed from an entity
         this.box2DComponentListener = new EntityListener() {
-            Body body;
+            // Create a hashmap to keep track of Entities and their box2d bodies
+            HashMap<Entity, Body> bodyEntityHashMap = new HashMap<Entity, Body>();
+
 
             @Override
             public void entityRemoved(Entity entity) {
-                entityFixtureHashMap.remove(entity); // Remove from HashMap
-                body.getWorld().destroyBody(body); // Destroy the box2d body
+                entityFixtureHashMap.remove(entity); // Remove from fixture HashMap -> needed for collision detection
+                bodyEntityHashMap.get(entity).getWorld().destroyBody(bodyEntityHashMap.get(entity)); // Destroy the box2d body
             }
 
             @Override
             public void entityAdded(Entity entity) {
-                body = b2dm.get(entity).body; // Get the body so we can destroy it later
-                Fixture fixture = b2dm.get(entity).fixture; // Get the fixture of the entity
-                entityFixtureHashMap.put(fixture, entity); // Add to HashMap
+                bodyEntityHashMap.put(entity, b2dm.get(entity).body); // Store the body so we can destroy it later
+                entityFixtureHashMap.put(b2dm.get(entity).fixture, entity); // Add to fixture HashMap -> needed for collision detection
             }
         };
 

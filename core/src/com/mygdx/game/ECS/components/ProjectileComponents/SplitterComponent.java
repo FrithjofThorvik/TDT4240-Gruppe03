@@ -3,7 +3,7 @@ package com.mygdx.game.ECS.components.ProjectileComponents;
 import com.badlogic.ashley.core.Component;
 
 /**
- * This component is attached to projectiles that split into multiple parts
+ * Add this to entities that should split into pieces
  **/
 public class SplitterComponent implements Component {
     public int numberOfSplits;

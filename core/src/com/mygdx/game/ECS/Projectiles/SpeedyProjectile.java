@@ -1,16 +1,29 @@
 package com.mygdx.game.ECS.Projectiles;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileDamageComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.badlogic.ashley.core.Entity;
+import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
 
-public class SpeedyProjectile extends ProjectileCreator {
+/**
+ * Inherits from Projectile and implements features for the speedy projectile type
+ **/
+public class SpeedyProjectile extends Projectile {
+    public SpeedyProjectile(Entity parent) {
+        super(parent);
+    }
+
     @Override
     void addVariableComponents() {
-        projectile.add(new ProjectileDamageComponent(5, 5))
-                .add(new SpriteComponent(
-                        new Texture("cannonball.png"),
-                        15f, 15f)
-                );
+        projectile.add(new ProjectileComponent(5, 500, this));
+    }
+
+    @Override
+    public void collision() {
+        // Destroy the projectile when it collides with something
+        projectile.removeAll();
+    }
+
+    @Override
+    public void midAir() {
+        // Do nothing
     }
 }
