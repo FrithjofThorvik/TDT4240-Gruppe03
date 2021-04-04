@@ -1,14 +1,21 @@
 package com.mygdx.game.states.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
+import com.mygdx.game.managers.ScreenManager;
 
 import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
+import static com.mygdx.game.managers.ScreenManager.SM;
 
 public class EndScreen extends AbstractScreen {
 
@@ -19,6 +26,48 @@ public class EndScreen extends AbstractScreen {
 
     @Override
     public void initScreen() {
+        Texture restartTexture = new Texture("button_restart.png");
+        Texture exitTexture = new Texture("button_exit.png");
+
+        Table table = new Table();
+        table.setWidth(Gdx.graphics.getWidth());
+        table.center();
+
+        // Initialise Restart Button
+        Image restartImg = new Image(restartTexture);
+        restartImg.setSize(75, 75);
+        restartImg.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                SM.setScreen(ScreenManager.STATE.PLAY);
+            }
+        });
+
+        // Initialise Exit Button
+        Image exitImg = new Image(exitTexture);
+        exitImg.setSize(75, 75);
+        exitImg.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                SM.setScreen(ScreenManager.STATE.MAIN_MENU);
+            }
+        });
+
+        table.row().pad(5, 5, 100, 5);
+        table.add(exitImg).size(exitImg.getWidth(), exitImg.getHeight());
+        table.add(restartImg).size(restartImg.getWidth(), restartImg.getHeight());
+
+        Application.stage.addActor(table); // Add table actor to GameScreen stage
 
     }
 
@@ -26,53 +75,13 @@ public class EndScreen extends AbstractScreen {
     public void endScreen() {}
 
     @Override
-    public void update(float delta) {
-        // Handle input
-        if (Gdx.input.justTouched()) {
-            int x = Gdx.input.getX();
-            int y = Gdx.graphics.getHeight() - Gdx.input.getY(); // Input y is inverted compared to position y
-
-            PositionComponent exitButtonPosition = EntityManager.exitButton.getComponent(PositionComponent.class);
-            FontComponent exitButtonFont = EntityManager.exitButton.getComponent(FontComponent.class);
-
-            PositionComponent restartButtonPosition = EntityManager.restartButton.getComponent(PositionComponent.class);
-            FontComponent restartButtonFont = EntityManager.restartButton.getComponent(FontComponent.class);
-
-            // Check if exit button is pressed
-            if (
-                    (int) exitButtonPosition.position.x - (int) exitButtonFont.layout.width / 1f <= x &&
-                            (int) exitButtonPosition.position.x + (int) exitButtonFont.layout.width / 1f >= x &&
-                            (int) exitButtonPosition.position.y - (int) exitButtonFont.layout.height / 1f <= y &&
-                            (int) exitButtonPosition.position.y + (int) exitButtonFont.layout.height / 1f >= y
-            ) {
-                System.out.println("Exiting to main menu...");
-                GSM.setGameState(GameStateManager.STATE.EXIT_GAME);
-            }
-
-            // Check if restart button is pressed
-            else if (
-                    (int) restartButtonPosition.position.x - (int) restartButtonFont.layout.width / 1f <= x &&
-                            (int) restartButtonPosition.position.x + (int) restartButtonFont.layout.width / 1f >= x &&
-                            (int) restartButtonPosition.position.y - (int) restartButtonFont.layout.height / 1f <= y &&
-                            (int) restartButtonPosition.position.y + (int) restartButtonFont.layout.height / 1f >= y
-            ) {
-                System.out.println("Restarting game...");
-                GSM.setGameState(GameStateManager.STATE.RESTART_GAME);
-            }
-
-        }
-    }
+    public void update(float delta) {}
 
     @Override
     public void render(float dt) {
         // Super.render(delta) sets BG_Color and calls update(float delta)
         super.render(dt);
 
-        //Begin the batch and let the entityManager handle the rest :)
-        Application.batch.begin();
-        GSM.update(dt);
-        EM.update(dt);
-        Application.batch.end();
         Application.stage.draw();
     }
 

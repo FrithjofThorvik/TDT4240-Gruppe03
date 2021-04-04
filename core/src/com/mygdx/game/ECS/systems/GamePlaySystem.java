@@ -59,11 +59,6 @@ public class GamePlaySystem extends EntitySystem {
 
         //END_GAME -> Displays necessary game data when a player has won the game
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.END_GAME)) {
-            // Rendering of END_GAME entities
-            EntityManager.statistics.add(new RenderComponent());
-            EntityManager.restartButton.add(new RenderComponent());
-            EntityManager.exitButton.add(new RenderComponent());
-
             // Remove rendering of entities
             EntityManager.player1.remove(RenderComponent.class);
             EntityManager.player2.remove(RenderComponent.class);

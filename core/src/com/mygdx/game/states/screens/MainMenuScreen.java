@@ -54,16 +54,14 @@ public class MainMenuScreen extends AbstractScreen {
     public void endScreen() {}
 
     @Override
-    public void update(float dt) {
-        // Draw to screen
-        Application.stage.draw();
-    }
+    public void update(float dt) {}
 
     @Override
     public void render(float dt) {
         // Super.render(delta) sets BG_Color and calls update(float delta)
         super.render(dt);
-        this.update(dt);
+
+        Application.stage.draw();
     }
 
     @Override

@@ -72,9 +72,6 @@ public class EntityManager {
     public static Entity timer;
     public static Entity controller;
     public static Entity ground;
-    public static Entity restartButton;
-    public static Entity exitButton;
-    public static Entity statistics;
 
     // Preparing component mappers
     private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
@@ -147,9 +144,6 @@ public class EntityManager {
         powerBarArrow = new Entity();
         ground = new Entity();
         aimArrow = new Entity();
-        restartButton = new Entity();
-        exitButton = new Entity();
-        statistics = new Entity();
 
         // Instantiate player entities
         player1.add(new SpriteComponent(
@@ -272,30 +266,6 @@ public class EntityManager {
                 ))
                 .add(new RenderComponent());
 
-        restartButton.add(new FontComponent(
-                "Restart Game"
-        ))
-                .add(new PositionComponent(
-                        Gdx.graphics.getWidth() / 2f,
-                        Gdx.graphics.getHeight() / 2.2f
-                ));
-
-        exitButton.add(new FontComponent(
-                "Exit Game"
-        ))
-                .add(new PositionComponent(
-                        Gdx.graphics.getWidth() / 2f,
-                        Gdx.graphics.getHeight() / 1.8f
-                ));
-
-        statistics.add(new FontComponent(
-                "Player Statistics"
-        ))
-                .add(new PositionComponent(
-                        Gdx.graphics.getWidth() / 2f,
-                        Gdx.graphics.getHeight() / 1.2f
-                ));
-
         // Add all ECS entities to the engine
         this.engine.addEntity(player1);
         this.engine.addEntity(player2);
@@ -307,9 +277,6 @@ public class EntityManager {
         this.engine.addEntity(aimArrow);
         this.engine.addEntity(health1);
         this.engine.addEntity(health2);
-        this.engine.addEntity(restartButton);
-        this.engine.addEntity(exitButton);
-        this.engine.addEntity(statistics);
     }
 
     // Add entity listeners for observe & listen to when adding and removing entities

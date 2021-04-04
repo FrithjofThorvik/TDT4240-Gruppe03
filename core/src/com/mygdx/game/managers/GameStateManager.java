@@ -2,10 +2,8 @@ package com.mygdx.game.managers;
 
 import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.EndGame;
-import com.mygdx.game.states.game.ExitGame;
 import com.mygdx.game.states.game.PlayerShooting;
 import com.mygdx.game.states.game.ProjectileAirborne;
-import com.mygdx.game.states.game.RestartGame;
 import com.mygdx.game.states.game.StartGame;
 import com.mygdx.game.states.game.StartRound;
 import com.mygdx.game.states.game.SwitchRound;
@@ -35,8 +33,6 @@ public class GameStateManager {
     public enum STATE {
         START_GAME,
         END_GAME,
-        RESTART_GAME,
-        EXIT_GAME,
         START_ROUND,
         SWITCH_ROUND,
         PLAYER_SHOOTING,
@@ -74,8 +70,6 @@ public class GameStateManager {
 
         this.gameStates.put(STATE.START_GAME, new StartGame());
         this.gameStates.put(STATE.END_GAME, new EndGame());
-        this.gameStates.put(STATE.RESTART_GAME, new RestartGame());
-        this.gameStates.put(STATE.EXIT_GAME, new ExitGame());
 
         this.gameStates.put(STATE.START_ROUND, new StartRound());
         this.gameStates.put(STATE.SWITCH_ROUND, new SwitchRound());
