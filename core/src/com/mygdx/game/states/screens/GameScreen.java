@@ -24,48 +24,39 @@ import static com.mygdx.game.utils.B2DConstants.PPM;
  **/
 public class GameScreen extends AbstractScreen {
 
-    public static OrthographicCamera camera;
     public static World world;
-    public static Stage stage;
-    public static Viewport viewport;
     public Box2DDebugRenderer b2dr;
 
-    private final Engine engine;
+    private Engine engine;
 
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
-        System.out.println("Initializing GameScreen...");
-
-        // Set camera
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, Application.V_WIDTH, Application.V_HEIGHT);
-
-        // Adjust app batches to the camera view (combined = viewport matrix)
-        Application.batch.setProjectionMatrix(camera.combined);
-        app.shapeBatch.setProjectionMatrix(camera.combined);
-
-        // Create viewport and stage for drawing actors scaled to current camera
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-        stage = new Stage(viewport, Application.batch);
-        Gdx.input.setInputProcessor(stage); // Add input processing for stage (Button, Image, etc pressess)
-
 
         // Setup ECS engine
         this.engine = new Engine();
 
-        // Create world
+        // Create Box2D world with physics
         this.b2dr = new Box2DDebugRenderer();
         world = new World(new Vector2(0, -100), false);
     }
 
     @Override
+    public void initScreen() {
+        System.out.println("Initializing GameScreen...");
+
+        // Setup ECS engine
+        this.engine = new Engine();
+    }
+
+    @Override
+    public void endScreen() {}
+
+    @Override
     public void show() {
         new EntityManager(this.engine, Application.batch); // Manager for generating all ECS functions
         new GameStateManager(); // Manager for handling all game states
-        world.setContactListener(new CollisionHandler()); // Set contact listener for world
 
-        Application.batch.setProjectionMatrix(camera.combined);
-        app.shapeBatch.setProjectionMatrix(camera.combined);
+        world.setContactListener(new CollisionHandler()); // Set contact listener for world
     }
 
     @Override
@@ -76,21 +67,14 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void render(float dt) {
         super.render(dt);
-        this.b2dr.render(world, camera.combined.cpy().scl(PPM));
+        this.b2dr.render(world, Application.camera.combined.cpy().scl(PPM));
 
-        // Begin the batch and let the entityManager handle the rest :)
+        // Draw to screen
         Application.batch.begin();
         GSM.update(dt);
         EM.update(dt);
         Application.batch.end();
-
-        // Draw stage actors
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
+        Application.stage.draw();
     }
 
     @Override

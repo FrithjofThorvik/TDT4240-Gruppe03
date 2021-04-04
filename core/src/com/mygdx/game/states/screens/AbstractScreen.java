@@ -13,6 +13,8 @@ public abstract class AbstractScreen implements Screen {
         this.app = app;
     }
 
+    public abstract void initScreen(); // Abstract function: (Template Method)
+    public abstract void endScreen(); // Abstract function: (Template Method)
     public abstract void update(float delta); // Abstract function: (Template Method)
 
     @Override

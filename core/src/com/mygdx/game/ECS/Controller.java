@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.ControllerComponent;
 import com.mygdx.game.states.screens.GameScreen;
 
@@ -95,6 +96,6 @@ public class Controller {
         table.add(rightImg).size(rightImg.getWidth(), rightImg.getHeight());
         table.add(powerImg).size(powerImg.getWidth(), powerImg.getHeight()).padLeft(75);
 
-        GameScreen.stage.addActor(table); // Add table actor to GameScreen stage
+        Application.stage.addActor(table); // Add table actor to GameScreen stage
     }
 }

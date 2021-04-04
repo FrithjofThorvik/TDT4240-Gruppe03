@@ -9,6 +9,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Application;
 import com.mygdx.game.ECS.Projectiles.SplitterProjectile;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
@@ -69,7 +70,7 @@ public class ShootingSystem extends EntitySystem {
 
         // Convert touch/click to world position
         Vector3 touchPoint = new Vector3(xTouchPixels, yTouchPixels, 0);
-        touchPoint = GameScreen.camera.unproject(touchPoint);
+        touchPoint = Application.camera.unproject(touchPoint);
 
         // Find the aim angle in radians
         return Math.atan2(touchPoint.x - position.position.x, touchPoint.y - position.position.y);

@@ -18,6 +18,14 @@ public class EndScreen extends AbstractScreen {
     }
 
     @Override
+    public void initScreen() {
+
+    }
+
+    @Override
+    public void endScreen() {}
+
+    @Override
     public void update(float delta) {
         // Handle input
         if (Gdx.input.justTouched()) {
@@ -60,18 +68,14 @@ public class EndScreen extends AbstractScreen {
         // Super.render(delta) sets BG_Color and calls update(float delta)
         super.render(dt);
 
-        //this.render(GameScreen.world, camera.combined.cpy().scl(PPM));
-
         //Begin the batch and let the entityManager handle the rest :)
-        app.batch.begin();
+        Application.batch.begin();
         GSM.update(dt);
         EM.update(dt);
-        app.batch.end();
+        Application.batch.end();
+        Application.stage.draw();
     }
 
     @Override
-    public void show() {
-        app.batch.setProjectionMatrix(GameScreen.camera.combined);
-        app.shapeBatch.setProjectionMatrix(GameScreen.camera.combined);
-    }
+    public void show() {}
 }

@@ -1,5 +1,7 @@
 package com.mygdx.game.managers;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
 import com.mygdx.game.states.screens.AbstractScreen;
 import com.mygdx.game.states.screens.EndScreen;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 public class ScreenManager {
     public static ScreenManager SM; // Singleton instance of GameScreenManager
     public final Application app; // Pass through application
+    public static AbstractScreen screen;
 
     // Create defined screen states
     public enum STATE {
@@ -34,7 +37,7 @@ public class ScreenManager {
         SM = this;
         this.app = app;
 
-        this.initScreen();
+        this.initScreens();
         this.setScreen(STATE.MAIN_MENU);
     }
 
@@ -47,18 +50,20 @@ public class ScreenManager {
     }
 
     // Initialize all screens
-    private void initScreen() {
+    private void initScreens() {
         this.screens = new HashMap<STATE, AbstractScreen>();
         this.screens.put(STATE.MAIN_MENU, new MainMenuScreen(app)); // Creates MainMenuScreen
         this.screens.put(STATE.END_SCREEN, new EndScreen(app)); // Creates EndScreen
+        this.screens.put(STATE.PLAY, new GameScreen(app));  // Creates new GameScreen every time we change to the game screen
     }
 
     // Set predefined screen
     public void setScreen(STATE nextScreen) {
-        if(nextScreen==STATE.PLAY){
-            this.screens.put(STATE.PLAY, new GameScreen(app));  // Creates new GameScreen every time we change to the game screen
-        }
+        this.removeAllActors(); // Removes all current actors from Application.stage
+
         this.app.setScreen(this.screens.get(nextScreen));
+        screen = this.screens.get(nextScreen);
+        screen.initScreen();
     }
 
     // Run dispose() on all screens
@@ -66,6 +71,15 @@ public class ScreenManager {
         for (AbstractScreen screen : this.screens.values()) {
             if (screen != null)
                 screen.dispose();
+        }
+    }
+
+    // Remove all current actors
+    private void removeAllActors() {
+        Array<Actor> actors =  Application.stage.getActors();
+
+        for (int i = 0; i < actors.size; i++) {
+            actors.get(i).remove();
         }
     }
 }
