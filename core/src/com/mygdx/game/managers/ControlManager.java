@@ -1,7 +1,6 @@
-package com.mygdx.game.ECS;
+package com.mygdx.game.managers;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,9 +17,10 @@ import com.mygdx.game.ECS.components.ControllerComponent;
 /**
  * This is used for creating a controller
  **/
-public class Controller {
+public class ControlManager {
+    public static ControlManager CM;
     private int currentProjectile = 0;
-    public ControllerComponent buttonPresses;
+    public boolean leftPressed, rightPressed, aimPressed, powerPressed = false;
     private final Array<Texture> projectileTextures;
 
     private Image aimImg;
@@ -34,9 +34,9 @@ public class Controller {
     // Prepare component mappers
     private final ComponentMapper<ControllerComponent> cm = ComponentMapper.getFor(ControllerComponent.class);
 
-    public Controller(final Entity controllerEntity) {
-        this.buttonPresses = cm.get(controllerEntity);
-        this.projectileTextures = new Array<Texture>(); // TODO: Pass this through constructor
+    public ControlManager() {
+        CM = this;
+        this.projectileTextures = new Array<Texture>();
         this.projectileTextures.add(new Texture("play.png"));
         this.projectileTextures.add(new Texture("cannonball.png"));
         this.projectileTextures.add(new Texture("badlogic.jpg"));
@@ -58,13 +58,13 @@ public class Controller {
         this.leftImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.leftPressed = true;
+                leftPressed = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.leftPressed = false;
+                leftPressed = false;
 
             }
         });
@@ -74,13 +74,13 @@ public class Controller {
         this.rightImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.rightPressed = true;
+                rightPressed = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.rightPressed = false;
+                rightPressed = false;
             }
         });
 
@@ -89,13 +89,13 @@ public class Controller {
         this.powerImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.powerPressed = true;
+                powerPressed = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.powerPressed = false;
+                powerPressed = false;
             }
         });
 
@@ -104,13 +104,13 @@ public class Controller {
         this.aimImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.aimPressed = true;
+                aimPressed = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPresses.aimPressed = false;
+                aimPressed = false;
             }
         });
 
@@ -200,7 +200,7 @@ public class Controller {
         this.disableActor(this.projectileImg);
         this.disableActor(this.projectileLeftImg);
         this.disableActor(this.projectileRightImg);
-    }
+    } // TODO: Change
 
     public void startMoving() {
         this.enableActor(this.leftImg);
@@ -210,7 +210,7 @@ public class Controller {
         this.enableActor(this.projectileLeftImg);
         this.enableActor(this.projectileRightImg);
         this.disableActor(this.powerImg);
-    }
+    } // TODO: Change
 
     public void startShooting() {
         this.enableActor(this.powerImg);
@@ -220,5 +220,5 @@ public class Controller {
         this.disableActor(this.projectileImg);
         this.disableActor(this.projectileLeftImg);
         this.disableActor(this.projectileRightImg);
-    }
+    } // TODO: Change
 }

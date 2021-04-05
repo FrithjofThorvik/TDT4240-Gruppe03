@@ -22,9 +22,10 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.ECS.systems.AimingSystem;
+import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.CollisionSystem;
-import com.mygdx.game.ECS.systems.ControllerSystem;
 import com.mygdx.game.ECS.systems.GamePlaySystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.PowerUpSystem;
@@ -51,7 +52,8 @@ public class EntityManager {
     private EntityListener box2DComponentListener;
 
     // Entity systems
-    private ControllerSystem controllerSystem;
+    private MovementSystem movementSystem;
+    private AimingSystem aimingSystem;
     private CollisionSystem collisionSystem;
     private RenderingSystem renderingSystem;
     private ProjectileSystem projectileSystem;
@@ -106,7 +108,8 @@ public class EntityManager {
     // Add all ECS systems
     private void addSystems() {
         // Instantiates all ECS systems
-        this.controllerSystem = new ControllerSystem();
+        this.movementSystem = new MovementSystem();
+        this.aimingSystem = new AimingSystem();
         this.collisionSystem = new CollisionSystem();
         this.renderingSystem = new RenderingSystem(this.batch);
         this.projectileSystem = new ProjectileSystem();
@@ -117,7 +120,8 @@ public class EntityManager {
         this.userInterfaceSystem = new UISystem();
 
         // Add all ECS systems to the engine
-        this.engine.addSystem(this.controllerSystem);
+        this.engine.addSystem(this.movementSystem);
+        this.engine.addSystem(this.aimingSystem);
         this.engine.addSystem(this.collisionSystem);
         this.engine.addSystem(this.renderingSystem);
         this.engine.addSystem(this.projectileSystem);
@@ -336,7 +340,7 @@ public class EntityManager {
         this.engine.removeEntityListener(this.movementControlListener); // Remove all listeners
 
         // Remove all engine systems
-        this.engine.removeSystem(this.controllerSystem);
+        this.engine.removeSystem(this.movementSystem);
         this.engine.removeSystem(this.collisionSystem);
         this.engine.removeSystem(this.renderingSystem);
         this.engine.removeSystem(this.projectileSystem);

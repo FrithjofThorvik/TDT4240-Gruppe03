@@ -1,16 +1,12 @@
 package com.mygdx.game.states.screens;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.CollisionHandler;
+import com.mygdx.game.managers.ControlManager;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 
@@ -55,6 +51,7 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         new EntityManager(this.engine, Application.batch); // Manager for generating all ECS functions
         new GameStateManager(); // Manager for handling all game states
+        new ControlManager(); // Manages all game controls
 
         world.setContactListener(new CollisionHandler()); // Set contact listener for world
     }
