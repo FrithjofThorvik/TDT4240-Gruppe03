@@ -20,13 +20,13 @@ public class BouncyProjectile extends Projectile {
 
         // Give the box2d component bounciness
         projectile.getComponent(Box2DComponent.class).fixture.setRestitution(0.9f);
-        projectile.getComponent(Box2DComponent.class).fixture.setFriction(0.0001f);
+        projectile.getComponent(Box2DComponent.class).fixture.setFriction(0.01f);
     }
 
     @Override
     public void collision() {
         // When this projectile collides with something -> count down numberOfBounces
-        projectile.getComponent(BouncyComponent.class).numberOfBounces -= 1;
+        projectile.getComponent(BouncyComponent.class).numberOfBounces--;
 
         // When the projectile is done bouncing destroy it
         if (projectile.getComponent(BouncyComponent.class).numberOfBounces <= 0) {

@@ -13,7 +13,7 @@ public class SpeedyProjectile extends Projectile {
 
     @Override
     void addVariableComponents() {
-        projectile.add(new ProjectileComponent(5, 500, this));
+        projectile.add(new ProjectileComponent(5, 10, this));
     }
 
     @Override

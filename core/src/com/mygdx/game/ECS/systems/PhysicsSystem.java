@@ -13,6 +13,7 @@ import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 
 import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.utils.B2DConstants.PPM;
 
 
 /**
@@ -49,7 +50,7 @@ public class PhysicsSystem extends EntitySystem {
                 Box2DComponent entityBox2D = EM.b2dMapper.get(entity);
 
                 // Synchronise position component with body position
-                entityPosition.position = new Vector2(entityBox2D.body.getPosition().x, entityBox2D.body.getPosition().y);
+                entityPosition.position = new Vector2(entityBox2D.body.getPosition().x * PPM, entityBox2D.body.getPosition().y * PPM);
 
                 // Checks if a projectile has reached peak height and activates it's midAir function
                 // TODO -> make it so that this only happens once

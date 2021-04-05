@@ -1,11 +1,11 @@
 package com.mygdx.game.ECS.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
@@ -64,8 +64,8 @@ public class RenderingSystem extends EntitySystem {
 
                 // Draw the sprite, so that the center of its sprite is the position of the given entity
                 sc.sprite.setSize(sc.size.x, sc.size.y);
-                sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2);
-                sc.sprite.setOrigin(sc.size.x / 2, sc.size.y / 2);
+                sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2f);
+                sc.sprite.setOrigin(sc.size.x / 2f, sc.size.y / 2f);
                 sc.sprite.draw(batch);
             }
 
@@ -77,7 +77,12 @@ public class RenderingSystem extends EntitySystem {
                 PositionComponent pc = EM.positionMapper.get(entity);
 
                 // Draw font components to the given position with respect to center of font
-                fc.font.draw(batch, fc.text, pc.position.x - (fc.layout.width / 2f), pc.position.y - (fc.layout.height / 2f));
+                fc.font.draw(
+                        batch,
+                        fc.text,
+                        pc.position.x - (fc.layout.width / 2f),
+                        pc.position.y - (fc.layout.height / 2f)
+                );
             }
         }
     }

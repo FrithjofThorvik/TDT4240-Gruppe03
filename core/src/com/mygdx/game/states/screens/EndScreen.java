@@ -7,16 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.FontComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.managers.EntityManager;
-import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.managers.ScreenManager;
 
-import static com.mygdx.game.managers.EntityManager.EM;
-import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.ScreenManager.SM;
 
+
+/**
+ * This screen will give the options of exiting to the main menu, or restart the game
+ **/
 public class EndScreen extends AbstractScreen {
 
 
@@ -35,7 +33,7 @@ public class EndScreen extends AbstractScreen {
 
         // Initialise Restart Button
         Image restartImg = new Image(restartTexture);
-        restartImg.setSize(75, 75);
+        restartImg.setSize(75f, 75f);
         restartImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -50,7 +48,7 @@ public class EndScreen extends AbstractScreen {
 
         // Initialise Exit Button
         Image exitImg = new Image(exitTexture);
-        exitImg.setSize(75, 75);
+        exitImg.setSize(75f, 75f);
         exitImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

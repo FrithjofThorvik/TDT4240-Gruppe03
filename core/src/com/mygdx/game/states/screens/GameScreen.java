@@ -33,7 +33,7 @@ public class GameScreen extends AbstractScreen {
 
         // Create Box2D world with physics
         this.b2dr = new Box2DDebugRenderer();
-        world = new World(new Vector2(0, -100), false);
+        world = new World(new Vector2(0, -10f), false);
     }
 
     @Override

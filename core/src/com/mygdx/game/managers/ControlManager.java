@@ -1,6 +1,5 @@
 package com.mygdx.game.managers;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
-
-import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
 /**
@@ -54,7 +51,7 @@ public class ControlManager {
         Texture buttonAim = new Texture("button_aim.png");
 
         this.leftImg = new Image(buttonLeft);
-        this.leftImg.setSize(50, 50);
+        this.leftImg.setSize(50f, 50f);
         this.leftImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -70,7 +67,7 @@ public class ControlManager {
         });
 
         this.rightImg = new Image(buttonRight);
-        this.rightImg.setSize(50, 50);
+        this.rightImg.setSize(50f, 50f);
         this.rightImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -85,7 +82,7 @@ public class ControlManager {
         });
 
         this.powerImg = new Image(buttonPower);
-        this.powerImg.setSize(50, 50);
+        this.powerImg.setSize(50f, 50f);
         this.powerImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -100,7 +97,7 @@ public class ControlManager {
         });
 
         this.aimImg = new Image(buttonAim);
-        this.aimImg.setSize(50, 50);
+        this.aimImg.setSize(50f, 50f);
         this.aimImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -116,10 +113,10 @@ public class ControlManager {
 
         /* Projectile Image */
         this.projectileImg = new Image(this.projectileTextures.first());
-        this.projectileImg.setSize(50, 50);
+        this.projectileImg.setSize(50f, 50f);
 
         this.projectileLeftImg = new Image(buttonLeft);
-        this.projectileLeftImg.setSize(30, 30);
+        this.projectileLeftImg.setSize(30f, 30f);
         this.projectileLeftImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -132,7 +129,7 @@ public class ControlManager {
         });
 
         this.projectileRightImg = new Image(buttonRight);
-        this.projectileRightImg.setSize(30, 30);
+        this.projectileRightImg.setSize(30f, 30f);
         this.projectileRightImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -150,14 +147,14 @@ public class ControlManager {
         table.setWidth(Gdx.graphics.getWidth());
         table.bottom().center();
 
-        table.row().pad(5, 5, 70, 5);
+        table.row().pad(5f, 5f, 70f, 5f);
         table.add(projectileLeftImg).size(projectileLeftImg.getWidth(), projectileLeftImg.getHeight());
         table.add(projectileImg).size(projectileImg.getWidth(), projectileImg.getHeight());
         table.add(projectileRightImg).size(projectileRightImg.getWidth(), projectileRightImg.getHeight());
-        table.add(aimImg).size(aimImg.getWidth(), aimImg.getHeight()).padLeft(50).padRight(50);
+        table.add(aimImg).size(aimImg.getWidth(), aimImg.getHeight()).padLeft(50f).padRight(50f);
         table.add(leftImg).size(leftImg.getWidth(), leftImg.getHeight());
         table.add(rightImg).size(rightImg.getWidth(), rightImg.getHeight());
-        table.add(powerImg).size(powerImg.getWidth(), powerImg.getHeight()).padLeft(100).padRight(150);
+        table.add(powerImg).size(powerImg.getWidth(), powerImg.getHeight()).padLeft(100f).padRight(150f);
 
         table.setColor(table.getColor().r, table.getColor().g, table.getColor().b, table.getColor().a - 0.2f);
 
@@ -217,8 +214,5 @@ public class ControlManager {
         this.disableActor(this.leftImg);
         this.disableActor(this.rightImg);
         this.disableActor(this.aimImg);
-        //this.disableActor(this.projectileImg);
-        //this.disableActor(this.projectileLeftImg);
-        //this.disableActor(this.projectileRightImg);
     } // TODO: Change
 }

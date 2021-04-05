@@ -158,10 +158,10 @@ public class EntityManager {
 
         // Instantiate player entities
         player1.add(new SpriteComponent(
-                this.tankTexture,
-                50f,
-                50f)
-        )
+                    this.tankTexture,
+                    50f,
+                    50f)
+                )
                 .add(new PositionComponent(
                         spriteMapper.get(player1).size.x,
                         Gdx.graphics.getHeight() / 1.2f)
@@ -174,17 +174,17 @@ public class EntityManager {
                         BIT_PLAYER,
                         (short) (BIT_PLAYER | BIT_GROUND | BIT_PROJECTILE))
                 )
-                .add(new VelocityComponent(1000, 0))
+                .add(new VelocityComponent(25f, 0))
                 .add(new HealthComponent(100))
                 .add(new ShootingComponent(0, 0))
                 .add(new RenderComponent())
                 .add(new PlayerComponent());
 
         player2.add(new SpriteComponent(
-                this.tankTexture,
-                50f,
-                50f)
-        )
+                    this.tankTexture,
+                    50f,
+                    50f)
+                )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 100f,
                         Gdx.graphics.getHeight() / 1.2f)
@@ -197,7 +197,7 @@ public class EntityManager {
                         BIT_PLAYER,
                         (short) (BIT_PLAYER | BIT_GROUND | BIT_PROJECTILE))
                 )
-                .add(new VelocityComponent(1000, 0))
+                .add(new VelocityComponent(25f, 0))
                 .add(new HealthComponent(100))
                 .add(new ShootingComponent(0, 0))
                 .add(new RenderComponent())
@@ -205,37 +205,37 @@ public class EntityManager {
 
 
         timer.add(new PositionComponent(
-                Gdx.graphics.getWidth() / 2f,
-                Gdx.graphics.getHeight() * 0.97f)
-        )
+                    Gdx.graphics.getWidth() / 2f,
+                    Gdx.graphics.getHeight() * 0.97f)
+                )
                 .add(new FontComponent("Time: 0.0s"))
                 .add(new RenderComponent());
 
         powerBar.add(new SpriteComponent(
-                this.powerBarTexture,
-                40f,
-                350f)
-        )
+                    this.powerBarTexture,
+                    40f,
+                    350f)
+                )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 50f,
                         Gdx.graphics.getHeight() / 2f)
                 );
 
         powerBarArrow.add(new SpriteComponent(
-                this.rightArrowTexture,
-                40f,
-                40f)
-        )
+                    this.rightArrowTexture,
+                    40f,
+                    40f)
+                )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
-                        (Gdx.graphics.getHeight() - spriteMapper.get(powerBar).size.y) / 2f)
+                        Gdx.graphics.getHeight() - (spriteMapper.get(powerBar).size.y) / 2f)
                 );
 
         ground.add(new SpriteComponent(
-                this.tankTexture,
-                Gdx.graphics.getWidth() * 2f,
-                10f)
-        )
+                    this.tankTexture,
+                    Gdx.graphics.getWidth() * 2f,
+                    10f)
+                )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() / 2f,
                         Gdx.graphics.getHeight() / 2f)
@@ -244,16 +244,16 @@ public class EntityManager {
                         positionMapper.get(ground).position,
                         spriteMapper.get(ground).size,
                         true,
-                        1000000,
+                        10000,
                         BIT_GROUND,
                         (short) (BIT_PLAYER | BIT_PROJECTILE))
                 )
                 .add(new RenderComponent());
 
         aimArrow.add(new PositionComponent(
-                Gdx.graphics.getWidth() / 2f,
-                Gdx.graphics.getHeight() / 2f)
-        )
+                    Gdx.graphics.getWidth() / 2f,
+                    Gdx.graphics.getHeight() / 2f)
+                )
                 .add(new SpriteComponent(
                         this.rightArrowTexture,
                         10f,

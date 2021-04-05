@@ -18,6 +18,7 @@ import static com.mygdx.game.utils.B2DConstants.BIT_GROUND;
 import static com.mygdx.game.utils.B2DConstants.BIT_PLAYER;
 import static com.mygdx.game.utils.B2DConstants.BIT_PROJECTILE;
 
+
 /**
  * This abstract class is responsible for dictating the behavior of different Projectile types
  **/
@@ -39,7 +40,7 @@ public abstract class Projectile {
     public void ShootProjectile(ShootingComponent shootingComponent) {
         // Shoot projectile with Box2D impulse
         Box2DComponent b2d = b2dm.get(projectile); // Get Box2D component
-        float impulse = (float) (this.pdm.get(projectile).speed * Math.pow(shootingComponent.power, 2));
+        float impulse = (float) (this.pdm.get(projectile).speed * shootingComponent.power);
         Vector2 impulseVector = new Vector2(
                 impulse * (float) Math.sin(shootingComponent.angle),
                 impulse * (float) Math.cos(shootingComponent.angle)); // Calculate velocity
@@ -63,7 +64,7 @@ public abstract class Projectile {
                         projectile.getComponent(PositionComponent.class).position,
                         projectile.getComponent(SpriteComponent.class).size,
                         false,
-                        1f,
+                        10f,
                         BIT_PROJECTILE,
                         (short) (BIT_PLAYER | BIT_GROUND))
                 )

@@ -44,7 +44,7 @@ public class Application extends Game {
 
 		// Initialize screen properties
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Application.V_WIDTH, Application.V_HEIGHT);
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		batch.setProjectionMatrix(camera.combined);
 		shapeBatch.setProjectionMatrix(camera.combined);

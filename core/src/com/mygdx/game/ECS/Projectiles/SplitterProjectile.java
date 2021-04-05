@@ -7,6 +7,10 @@ import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
 import com.mygdx.game.ECS.components.ProjectileComponents.SplitterComponent;
 
+import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.utils.B2DConstants.PPM;
+
+
 /**
  * Inherits from Projectile and implements features for the speedy projectile type
  **/
@@ -18,7 +22,7 @@ public class SplitterProjectile extends Projectile {
     @Override
     void addVariableComponents() {
         this.projectile.add(new ProjectileComponent(5, 20, this))
-                .add(new SplitterComponent(4));
+                .add(new SplitterComponent(10));
     }
 
     @Override
@@ -39,7 +43,8 @@ public class SplitterProjectile extends Projectile {
 
             // Get the new projectiles body and give it a variable impulse -> so that the projectile's movements vary
             Body body = split.projectile.getComponent(Box2DComponent.class).body;
-            body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x * i, 0), body.getWorldCenter(), false);
+            body.setTransform((EM.positionMapper.get(projectile).position.x + (25 * ((float) Math.random() * (1 - (-1)) + (-1)))) / PPM, (EM.positionMapper.get(projectile).position.y + (25 * ((float) Math.random() * (1 - (-1)) + (-1)))) / PPM, 0);
+            body.applyLinearImpulse(new Vector2((float) Math.random() * (1 - (-1)) + (-1), (float) Math.random() * (1 - (-1)) + (-1)), body.getWorldCenter(), false);
         }
     }
 }

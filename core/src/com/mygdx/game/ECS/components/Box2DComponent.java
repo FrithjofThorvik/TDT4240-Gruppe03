@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.states.screens.GameScreen;
 
+import static com.mygdx.game.utils.B2DConstants.PPM;
+
 
 /**
  * Every entity that should answer to physics, should have this component
@@ -26,18 +28,18 @@ public class Box2DComponent implements Component {
         if (staticBody) bodyDef.type = BodyDef.BodyType.StaticBody;
         else bodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        bodyDef.position.set(pos.x, pos.y); // Set position to given x & y value
+        bodyDef.position.set(pos.x / PPM, pos.y / PPM); // Set position to given x & y value
         bodyDef.fixedRotation = true; // Should this body be prevented from rotating?
         this.body = GameScreen.world.createBody(bodyDef); // Create the body
 
         // Create PolygonShape representing a box shape
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(spriteSize.x / 2f, spriteSize.y / 2f); // Set shape to a box with given width & height value
+        shape.setAsBox((spriteSize.x / 2f) / PPM, (spriteSize.y / 2f) / PPM); // Set shape to a box with given width & height value
 
         // Create FixtureDef representing properties such as density, restitution, etc
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape; // Add the box shape to fixture
-        fixtureDef.density = mass / 1000; // Add density to fixture (increases mass)
+        fixtureDef.density = mass; // Add density to fixture (increases mass)
         fixtureDef.friction = 0.5f;
         fixtureDef.filter.categoryBits = cBits; // Is this category of bit
         fixtureDef.filter.maskBits = mBits; // Will collide with these bits

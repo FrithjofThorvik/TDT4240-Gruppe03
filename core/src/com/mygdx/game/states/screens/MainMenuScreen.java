@@ -1,14 +1,10 @@
 package com.mygdx.game.states.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.ScreenManager;
 
@@ -30,7 +26,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         // Initialise Play Button
         Image playImg = new Image(playTexture);
-        playImg.setSize(100, 100);
+        playImg.setSize(100f, 100f);
         playImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
