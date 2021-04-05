@@ -19,7 +19,7 @@ public class Box2DComponent implements Component {
     public Body body;
     public Fixture fixture;
 
-    public Box2DComponent(Vector2 pos, Vector2 spriteSize, Boolean staticBody, float mass) {
+    public Box2DComponent(Vector2 pos, Vector2 spriteSize, Boolean staticBody, float mass, short cBits, short mBits) {
         // Create box2D BodyDef
         BodyDef bodyDef = new BodyDef();
 
@@ -39,6 +39,8 @@ public class Box2DComponent implements Component {
         fixtureDef.shape = shape; // Add the box shape to fixture
         fixtureDef.density = mass / 1000; // Add density to fixture (increases mass)
         fixtureDef.friction = 0.5f;
+        fixtureDef.filter.categoryBits = cBits; // Is this category of bit
+        fixtureDef.filter.maskBits = mBits; // Will collide with these bits
         this.fixture = body.createFixture(fixtureDef); // Add FixtureDef and id to body
 
         // Dispose shape

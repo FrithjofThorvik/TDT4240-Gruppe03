@@ -14,6 +14,9 @@ import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.managers.EntityManager;
 
 import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.utils.B2DConstants.BIT_GROUND;
+import static com.mygdx.game.utils.B2DConstants.BIT_PLAYER;
+import static com.mygdx.game.utils.B2DConstants.BIT_PROJECTILE;
 
 /**
  * This abstract class is responsible for dictating the behavior of different Projectile types
@@ -46,26 +49,28 @@ public abstract class Projectile {
 
     // Adds basic universal components to the projectile
     public Entity createProjectile() {
-        {
-            Entity parent = projectile.getComponent(ParentComponent.class).parent; // Get this projectile's parent
-            projectile
-                    .add(new SpriteComponent(
-                            new Texture("cannonball.png"),
-                            15f, 15f)
-                    )
-                    .add(new PositionComponent(
-                            parent.getComponent(PositionComponent.class).position.x,
-                            parent.getComponent(PositionComponent.class).position.y + parent.getComponent(SpriteComponent.class).size.y)
-                    )
-                    .add(new Box2DComponent(
-                            projectile.getComponent(PositionComponent.class).position,
-                            projectile.getComponent(SpriteComponent.class).size,
-                            false, 1f)
-                    )
-                    .add(new RenderComponent());
-            addVariableComponents(); // Add variable component -> is different for different subclasses
-            return projectile;
-        }
+        Entity parent = projectile.getComponent(ParentComponent.class).parent; // Get this projectile's parent
+        projectile
+                .add(new SpriteComponent(
+                        new Texture("cannonball.png"),
+                        15f, 15f)
+                )
+                .add(new PositionComponent(
+                        parent.getComponent(PositionComponent.class).position.x,
+                        parent.getComponent(PositionComponent.class).position.y + parent.getComponent(SpriteComponent.class).size.y)
+                )
+                .add(new Box2DComponent(
+                        projectile.getComponent(PositionComponent.class).position,
+                        projectile.getComponent(SpriteComponent.class).size,
+                        false,
+                        1f,
+                        BIT_PROJECTILE,
+                        (short) (BIT_PLAYER | BIT_GROUND))
+                )
+                .add(new RenderComponent());
+        addVariableComponents(); // Add variable component -> is different for different subclasses
+
+        return projectile;
     }
 
     // Set this projectile to the parent's position

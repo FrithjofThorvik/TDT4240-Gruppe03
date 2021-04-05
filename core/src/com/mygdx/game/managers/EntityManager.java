@@ -36,6 +36,7 @@ import com.mygdx.game.ECS.systems.RenderingSystem;
 import com.mygdx.game.ECS.systems.UISystem;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
+import static com.mygdx.game.utils.B2DConstants.*;
 
 import java.util.HashMap;
 
@@ -169,7 +170,9 @@ public class EntityManager {
                         positionMapper.get(player1).position,
                         spriteMapper.get(player1).size,
                         false,
-                        100f)
+                        100f,
+                        BIT_PLAYER,
+                        (short) (BIT_PLAYER | BIT_GROUND | BIT_PROJECTILE))
                 )
                 .add(new VelocityComponent(1000, 0))
                 .add(new HealthComponent(100))
@@ -190,7 +193,9 @@ public class EntityManager {
                         positionMapper.get(player2).position,
                         spriteMapper.get(player2).size,
                         false,
-                        100f)
+                        100f,
+                        BIT_PLAYER,
+                        (short) (BIT_PLAYER | BIT_GROUND | BIT_PROJECTILE))
                 )
                 .add(new VelocityComponent(1000, 0))
                 .add(new HealthComponent(100))
@@ -239,7 +244,9 @@ public class EntityManager {
                         positionMapper.get(ground).position,
                         spriteMapper.get(ground).size,
                         true,
-                        1000000)
+                        1000000,
+                        BIT_GROUND,
+                        (short) (BIT_PLAYER | BIT_PROJECTILE))
                 )
                 .add(new RenderComponent());
 
@@ -310,8 +317,8 @@ public class EntityManager {
 
         // This should activate when a box2d component is added or removed from an entity
         this.box2DComponentListener = new EntityListener() {
-            // Create a hashmap to keep track of Entities and their box2d bodies
-            HashMap<Entity, Body> bodyEntityHashMap = new HashMap<Entity, Body>();
+            // Create a HashMap to keep track of Entities and their box2d bodies
+            final HashMap<Entity, Body> bodyEntityHashMap = new HashMap<Entity, Body>();
 
 
             @Override
