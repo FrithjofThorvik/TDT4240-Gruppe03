@@ -10,8 +10,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.mygdx.game.ECS.components.CollisionComponent;
+import com.mygdx.game.ECS.components.EffectComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
+import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.FontComponent;
@@ -74,12 +77,18 @@ public class EntityManager {
     public static Entity controller;
     public static Entity ground;
 
-    // Preparing component mappers
-    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
-    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
-    private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
-    private final ComponentMapper<ParentComponent> pam = ComponentMapper.getFor(ParentComponent.class);
+    // Preparing component mappers -> the fastest way for getting entities
+    public final ComponentMapper<Box2DComponent> b2dMapper = ComponentMapper.getFor(Box2DComponent.class);
+    public final ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
+    public final ComponentMapper<SpriteComponent> spriteMapper = ComponentMapper.getFor(SpriteComponent.class);
+    public final ComponentMapper<HealthComponent> healthMapper = ComponentMapper.getFor(HealthComponent.class);
+    public final ComponentMapper<ParentComponent> parentMapper = ComponentMapper.getFor(ParentComponent.class);
+    public final ComponentMapper<ShootingComponent> shootingMapper = ComponentMapper.getFor(ShootingComponent.class);
+    public final ComponentMapper<ProjectileComponent> projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
+    public final ComponentMapper<CollisionComponent> collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
+    public final ComponentMapper<VelocityComponent> velocityMapper = ComponentMapper.getFor(VelocityComponent.class);
+    public final ComponentMapper<EffectComponent> effectMapper = ComponentMapper.getFor(EffectComponent.class);
+    public final ComponentMapper<FontComponent> fontMapper = ComponentMapper.getFor(FontComponent.class);
 
     //Tuple for storing entity/fixture pair
     public static HashMap<Fixture, Entity> entityFixtureHashMap = new HashMap<Fixture, Entity>();
@@ -155,12 +164,12 @@ public class EntityManager {
                 50f)
         )
                 .add(new PositionComponent(
-                        sm.get(player1).size.x,
+                        spriteMapper.get(player1).size.x,
                         Gdx.graphics.getHeight() / 1.2f)
                 )
                 .add(new Box2DComponent(
-                        pm.get(player1).position,
-                        sm.get(player1).size,
+                        positionMapper.get(player1).position,
+                        spriteMapper.get(player1).size,
                         false,
                         100f)
                 )
@@ -180,8 +189,8 @@ public class EntityManager {
                         Gdx.graphics.getHeight() / 1.2f)
                 )
                 .add(new Box2DComponent(
-                        pm.get(player2).position,
-                        sm.get(player2).size,
+                        positionMapper.get(player2).position,
+                        spriteMapper.get(player2).size,
                         false,
                         100f)
                 )
@@ -216,7 +225,7 @@ public class EntityManager {
         )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 70f,
-                        (Gdx.graphics.getHeight() - sm.get(powerBar).size.y) / 2f)
+                        (Gdx.graphics.getHeight() - spriteMapper.get(powerBar).size.y) / 2f)
                 );
 
         ground.add(new SpriteComponent(
@@ -229,8 +238,8 @@ public class EntityManager {
                         Gdx.graphics.getHeight() / 2f)
                 )
                 .add(new Box2DComponent(
-                        pm.get(ground).position,
-                        sm.get(ground).size,
+                        positionMapper.get(ground).position,
+                        spriteMapper.get(ground).size,
                         true,
                         1000000)
                 )
@@ -249,7 +258,7 @@ public class EntityManager {
         health1
                 .add(new ParentComponent(player1))
                 .add(new FontComponent(
-                        hm.get(pam.get(health1).parent).hp + " hp")
+                        healthMapper.get(parentMapper.get(health1).parent).hp + " hp")
                 )
                 .add(new PositionComponent(
                         50f,
@@ -260,7 +269,7 @@ public class EntityManager {
         health2
                 .add(new ParentComponent(player2))
                 .add(new FontComponent(
-                        hm.get(pam.get(health1).parent).hp + " hp")
+                        healthMapper.get(parentMapper.get(health1).parent).hp + " hp")
                 )
                 .add(new PositionComponent(
                         Gdx.graphics.getWidth() - 50f,
@@ -289,7 +298,7 @@ public class EntityManager {
             @Override
             public void entityRemoved(Entity entity) {
                 // Set the linear velocity of the entity's box2d body to 0 in x direction
-                Box2DComponent box2DComponent = b2dm.get(entity);
+                Box2DComponent box2DComponent = b2dMapper.get(entity);
                 box2DComponent.body.setLinearVelocity(0, box2DComponent.body.getLinearVelocity().y);
             }
 
@@ -316,8 +325,8 @@ public class EntityManager {
 
             @Override
             public void entityAdded(Entity entity) {
-                bodyEntityHashMap.put(entity, b2dm.get(entity).body); // Store the body so we can destroy it later
-                entityFixtureHashMap.put(b2dm.get(entity).fixture, entity); // Add to fixture HashMap -> needed for collision detection
+                bodyEntityHashMap.put(entity, b2dMapper.get(entity).body); // Store the body so we can destroy it later
+                entityFixtureHashMap.put(b2dMapper.get(entity).fixture, entity); // Add to fixture HashMap -> needed for collision detection
             }
         };
 

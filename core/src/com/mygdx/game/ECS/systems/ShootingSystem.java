@@ -1,6 +1,5 @@
 package com.mygdx.game.ECS.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -11,6 +10,7 @@ import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.managers.GameStateManager;
 
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.ControlManager.CM;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
@@ -25,10 +25,8 @@ public class ShootingSystem extends EntitySystem {
 
     private ImmutableArray<Entity> players; // Array for all player entities that are aiming
 
-    // Using a component mapper is the fastest way to load entities
-    private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
 
-    // Add entities to arrays
+    // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
         this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
     }
@@ -38,7 +36,7 @@ public class ShootingSystem extends EntitySystem {
         // Check first if there are any players aiming
         if (this.players.size() > 0) {
             Entity player = this.players.get(GSM.currentPlayer);
-            ShootingComponent shootingComponent = this.sm.get(player);
+            ShootingComponent shootingComponent = EM.shootingMapper.get(player);
 
             shootingComponent.power += dt; // Increase power
 

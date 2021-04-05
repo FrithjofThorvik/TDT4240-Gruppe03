@@ -1,18 +1,18 @@
 package com.mygdx.game.ECS.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
+
+import static com.mygdx.game.managers.EntityManager.EM;
 
 
 /**
@@ -22,11 +22,6 @@ public class PhysicsSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites
     private ImmutableArray<Entity> box2DEntities;
     private ImmutableArray<Entity> projectiles;
-
-    // Prepare component mappers
-    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
-    private final ComponentMapper<ProjectileComponent> pjm = ComponentMapper.getFor(ProjectileComponent.class);
 
     // Get entities matching the given components, and store in respective array
     public void addedToEngine(Engine e) {
@@ -50,8 +45,8 @@ public class PhysicsSystem extends EntitySystem {
                 Entity entity = this.box2DEntities.get(i);
 
                 // Fetch entity component
-                PositionComponent entityPosition = this.pm.get(entity);
-                Box2DComponent entityBox2D = this.b2dm.get(entity);
+                PositionComponent entityPosition = EM.positionMapper.get(entity);
+                Box2DComponent entityBox2D = EM.b2dMapper.get(entity);
 
                 // Synchronise position component with body position
                 entityPosition.position = new Vector2(entityBox2D.body.getPosition().x, entityBox2D.body.getPosition().y);
@@ -60,9 +55,9 @@ public class PhysicsSystem extends EntitySystem {
                 // TODO -> make it so that this only happens once
                 if (projectiles.contains(entity, true)) {
                     // Check if the projectile is on it's way down for the first time and call it's midAir function
-                    if ((entityBox2D.body.getLinearVelocity().y <= 0) && !pjm.get(entity).midAirReached) {
-                        pjm.get(entity).midAirReached = true; // Set the flag that this projectile has reached midAir
-                        entity.getComponent(ProjectileComponent.class).projectileType.midAir(); // Activate the function
+                    if ((entityBox2D.body.getLinearVelocity().y <= 0) && !EM.projectileMapper.get(entity).midAirReached) {
+                        EM.projectileMapper.get(entity).midAirReached = true; // Set the flag that this projectile has reached midAir
+                        EM.projectileMapper.get(entity).projectileType.midAir(); // Activate the function
                     }
                 }
             }

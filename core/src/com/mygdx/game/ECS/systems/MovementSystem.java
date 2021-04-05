@@ -1,7 +1,5 @@
 package com.mygdx.game.ECS.systems;
 
-
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -12,10 +10,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
+import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.managers.GameStateManager;
 
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.ControlManager.CM;
 
@@ -26,11 +26,6 @@ import static com.mygdx.game.managers.ControlManager.CM;
 public class MovementSystem extends EntitySystem {
     // Prepare arrays for entities
     private ImmutableArray<Entity> movingPlayers;
-
-    // Prepare component mappers
-    private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
-    private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
-    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
@@ -62,9 +57,9 @@ public class MovementSystem extends EntitySystem {
     private void handleMovement(Entity player) {
 
         // Get entity components
-        VelocityComponent playerVelocity = this.vm.get(player);
-        Box2DComponent playerBox2D = this.b2dm.get(player);
-        SpriteComponent playerSprite = this.sm.get(player);
+        VelocityComponent playerVelocity = EM.velocityMapper.get(player);
+        Box2DComponent playerBox2D = EM.b2dMapper.get(player);
+        SpriteComponent playerSprite = EM.spriteMapper.get(player);
 
         if (CM.rightPressed) {
             playerBox2D.body.applyLinearImpulse(playerVelocity.velocity, playerBox2D.body.getWorldCenter(), false);

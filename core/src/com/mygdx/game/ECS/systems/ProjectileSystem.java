@@ -16,8 +16,6 @@ public class ProjectileSystem extends EntitySystem {
     // Prepare arrays for entities
     private ImmutableArray<Entity> projectiles;
 
-    // Prepare component mappers
-
     // Will be called automatically by the engine
     public void addedToEngine(Engine e) {
         this.projectiles = e.getEntitiesFor(Family.all(ProjectileComponent.class).get());
