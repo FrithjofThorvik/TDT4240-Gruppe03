@@ -34,7 +34,7 @@ public class Box2DComponent implements Component {
 
         // Create PolygonShape representing a box shape
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox((spriteSize.x / 2f) / PPM, (spriteSize.y / 2f) / PPM); // Set shape to a box with given width & height value
+        shape.setAsBox((spriteSize.x / 4f) / PPM, (spriteSize.y / 4f) / PPM); // Set shape to a box with given width & height value
 
         // Create FixtureDef representing properties such as density, restitution, etc
         FixtureDef fixtureDef = new FixtureDef();
