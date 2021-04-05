@@ -80,10 +80,6 @@ public class MovementSystem extends EntitySystem {
             // Flip sprite if it is not flipped from it's initial state
             if (!playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
-
-        } else if (CM.aimPressed) {
-            CM.startShooting(); // Make everything, but the power button, transparent
-            GSM.setGameState(GameStateManager.STATE.PLAYER_SHOOTING);
         }
     }
 }

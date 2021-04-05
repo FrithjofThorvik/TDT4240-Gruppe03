@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.mygdx.game.ECS.components.ControllerComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
@@ -24,7 +23,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class GamePlaySystem extends EntitySystem {
     // Entity arrays
     public ImmutableArray<Entity> players; // List of players
-    public ImmutableArray<Entity> controllers; // List of controllers
 
     // Prepare component mappers
     private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
@@ -32,7 +30,6 @@ public class GamePlaySystem extends EntitySystem {
     // Get entities
     public void addedToEngine(Engine e) {
         this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
-        this.controllers = e.getEntitiesFor(Family.all(ControllerComponent.class).get());
     }
 
     // Update function for GamePlaySystem (calls automatically by engine)
@@ -52,7 +49,6 @@ public class GamePlaySystem extends EntitySystem {
         // START_GAME -> Displays a countdown until round starts
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME)) {
             // Start or stop systems (if they should be processed or not)
-            getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(MovementSystem.class).setProcessing(false);
             getEngine().getSystem(AimingSystem.class).setProcessing(false);
@@ -78,7 +74,6 @@ public class GamePlaySystem extends EntitySystem {
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_ROUND)) {
             // Remove or add components to entities
             players.get(GSM.currentPlayer).add(new MovementControlComponent());
-            controllers.first().add(new RenderComponent()); // TODO: Create EntityListener
 
             // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(MovementSystem.class).setProcessing(true);

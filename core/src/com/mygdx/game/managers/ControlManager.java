@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.ControllerComponent;
 
 
 /**
@@ -32,7 +31,6 @@ public class ControlManager {
     private Image rightImg;
 
     // Prepare component mappers
-    private final ComponentMapper<ControllerComponent> cm = ComponentMapper.getFor(ControllerComponent.class);
 
     public ControlManager() {
         CM = this;
@@ -217,8 +215,8 @@ public class ControlManager {
         this.disableActor(this.leftImg);
         this.disableActor(this.rightImg);
         this.disableActor(this.aimImg);
-        this.disableActor(this.projectileImg);
-        this.disableActor(this.projectileLeftImg);
-        this.disableActor(this.projectileRightImg);
+        //this.disableActor(this.projectileImg);
+        //this.disableActor(this.projectileLeftImg);
+        //this.disableActor(this.projectileRightImg);
     } // TODO: Change
 }

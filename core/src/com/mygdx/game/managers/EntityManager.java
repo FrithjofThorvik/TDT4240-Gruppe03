@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.mygdx.game.ECS.components.ControllerComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
@@ -192,7 +191,6 @@ public class EntityManager {
                 .add(new RenderComponent())
                 .add(new PlayerComponent());
 
-        controller.add(new ControllerComponent());
 
         timer.add(new PositionComponent(
                 Gdx.graphics.getWidth() / 2f,

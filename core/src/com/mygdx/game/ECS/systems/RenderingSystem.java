@@ -7,8 +7,6 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.ControllerComponent;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
@@ -23,13 +21,11 @@ public class RenderingSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites
     private ImmutableArray<Entity> spriteEntities;
     private ImmutableArray<Entity> fontEntities;
-    private ImmutableArray<Entity> controllerEntities;
 
     // Using a component mapper is the fastest way to load entities
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
     private final ComponentMapper<FontComponent> fm = ComponentMapper.getFor(FontComponent.class);
-    private final ComponentMapper<ControllerComponent> cm = ComponentMapper.getFor(ControllerComponent.class);
 
     private final SpriteBatch batch;
 
@@ -57,18 +53,11 @@ public class RenderingSystem extends EntitySystem {
                         PositionComponent.class
                 ).get()
         );
-
-        // Store controller entities
-        this.controllerEntities = e.getEntitiesFor(
-                Family.all(
-                        RenderComponent.class,
-                        ControllerComponent.class
-                ).get());
     }
 
     // Update function for RenderingSystem
     public void update(float deltaTime) {
-        if (this.spriteEntities.size() > 0 || this.fontEntities.size() > 0 || this.controllerEntities.size() > 0) {
+        if (this.spriteEntities.size() > 0 || this.fontEntities.size() > 0) {
             // Loop through all sprite entities, and draw screen
             for (int i = 0; i < this.spriteEntities.size(); i++) {
                 // Fetch each component
@@ -92,16 +81,6 @@ public class RenderingSystem extends EntitySystem {
 
                 // Draw font components to the given position with respect to center of font
                 fc.font.draw(batch, fc.text, pc.position.x - (fc.layout.width / 2f), pc.position.y - (fc.layout.height / 2f));
-            }
-
-            // Loop through all controller entities, and run draw() function
-            for (int i = 0; i < this.controllerEntities.size(); i++) {
-                // Fetch each component
-                //Entity entity = this.controllerEntities.get(i);
-                //ControllerComponent controller = this.cm.get(entity);
-                //Application.batch.end();
-                //controller.draw(); // Run ControllerComponent draw() function
-                //Application.batch.begin();
             }
         }
     }
