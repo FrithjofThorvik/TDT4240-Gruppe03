@@ -52,23 +52,23 @@ public class UISystem extends EntitySystem {
             PositionComponent position = EM.positionMapper.get(currentPlayer);
 
             // Calculate the startingPosition of an arrow (this is done here so that if the screen is resized the arrowPosition is updated)
-            float startPositionArrow = EM.positionMapper.get(EntityManager.powerBar).position.y - EM.spriteMapper.get(EntityManager.powerBar).size.y / 2;
+            float startPositionArrow = EM.positionMapper.get(EM.powerBar).position.y - EM.spriteMapper.get(EM.powerBar).size.y / 2;
 
             // Get the angle (in degrees) and power of the currentPlayer's shootingComponent
             double aimAngleInDegrees = 90f - (float) EM.shootingMapper.get(currentPlayer).angle / (float) Math.PI * 180f;
             float power = EM.shootingMapper.get(currentPlayer).power;
 
             // Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
-            EM.spriteMapper.get(EntityManager.aimArrow).sprite.setRotation((float) aimAngleInDegrees);
-            EM.positionMapper.get(EntityManager.aimArrow).position.x = position.position.x;
-            EM.positionMapper.get(EntityManager.aimArrow).position.y = position.position.y + 25;
+            EM.spriteMapper.get(EM.aimArrow).sprite.setRotation((float) aimAngleInDegrees);
+            EM.positionMapper.get(EM.aimArrow).position.x = position.position.x;
+            EM.positionMapper.get(EM.aimArrow).position.y = position.position.y + 25;
 
             //Set position of powerBarArrow -> given the power of the shootingComponent
-            EM.positionMapper.get(EntityManager.powerBarArrow).position.y = startPositionArrow + (EM.spriteMapper.get(EntityManager.powerBar).size.y * (power / MAX_SHOOTING_POWER));
+            EM.positionMapper.get(EM.powerBarArrow).position.y = startPositionArrow + (EM.spriteMapper.get(EM.powerBar).size.y * (power / MAX_SHOOTING_POWER));
 
             // Update health displays
-            EM.fontMapper.get(EntityManager.health1).text = EM.healthMapper.get(EM.parentMapper.get(EntityManager.health1).parent).hp + " hp";
-            EM.fontMapper.get(EntityManager.health2).text = EM.healthMapper.get(EM.parentMapper.get(EntityManager.health2).parent).hp + " hp";
+            EM.fontMapper.get(EM.health1).text = EM.healthMapper.get(EM.parentMapper.get(EM.health1).parent).hp + " hp";
+            EM.fontMapper.get(EM.health2).text = EM.healthMapper.get(EM.parentMapper.get(EM.health2).parent).hp + " hp";
         }
     }
 
@@ -76,21 +76,21 @@ public class UISystem extends EntitySystem {
     private void printTimer() {
         // SWITCH_ROUND
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
-            FontComponent timerFont = EM.fontMapper.get(EntityManager.timer);
+            FontComponent timerFont = EM.fontMapper.get(EM.timer);
             timerFont.text = "Switching players in: " + this.df.format(TIME_BETWEEN_ROUNDS - GSM.time) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // START_GAME
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME)) {
-            FontComponent timerFont = EM.fontMapper.get(EntityManager.timer);
+            FontComponent timerFont = EM.fontMapper.get(EM.timer);
             timerFont.text = "\n\n\n\n" + ((int) START_GAME_TIME - (int) GSM.time);
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // OTHER
         else {
-            FontComponent timerFont = EM.fontMapper.get(EntityManager.timer);
+            FontComponent timerFont = EM.fontMapper.get(EM.timer);
             timerFont.text = "Timer: " + this.df.format(ROUND_TIME - GSM.time) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }

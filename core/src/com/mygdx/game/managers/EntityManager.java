@@ -66,16 +66,16 @@ public class EntityManager {
     private UISystem userInterfaceSystem;
 
     // These entities are UI elements and are static in order to be accessible everywhere
-    public static Entity player1;
-    public static Entity player2;
-    public static Entity health1;
-    public static Entity health2;
-    public static Entity aimArrow;
-    public static Entity powerBar;
-    public static Entity powerBarArrow;
-    public static Entity timer;
-    public static Entity controller;
-    public static Entity ground;
+    public Entity player1;
+    public Entity player2;
+    public Entity health1;
+    public Entity health2;
+    public Entity aimArrow;
+    public Entity powerBar;
+    public Entity powerBarArrow;
+    public Entity timer;
+    public Entity controller;
+    public Entity ground;
 
     // Preparing component mappers -> the fastest way for getting entities
     public final ComponentMapper<Box2DComponent> b2dMapper = ComponentMapper.getFor(Box2DComponent.class);

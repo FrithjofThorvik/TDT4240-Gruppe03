@@ -55,17 +55,17 @@ public class GamePlaySystem extends EntitySystem {
         //END_GAME -> Displays necessary game data when a player has won the game
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.END_GAME)) {
             // Remove rendering of entities
-            EntityManager.player1.remove(RenderComponent.class);
-            EntityManager.player2.remove(RenderComponent.class);
-            EntityManager.health1.remove(RenderComponent.class);
-            EntityManager.health2.remove(RenderComponent.class);
-            EntityManager.ground.remove(RenderComponent.class);
-            EntityManager.timer.remove(RenderComponent.class);
-            EntityManager.powerBar.remove(RenderComponent.class);
-            EntityManager.powerBarArrow.remove(RenderComponent.class);
-            EntityManager.aimArrow.remove(RenderComponent.class);
-            EntityManager.powerBar.remove(RenderComponent.class);
-            EntityManager.powerBarArrow.remove(RenderComponent.class);
+            EM.player1.remove(RenderComponent.class);
+            EM.player2.remove(RenderComponent.class);
+            EM.health1.remove(RenderComponent.class);
+            EM.health2.remove(RenderComponent.class);
+            EM.ground.remove(RenderComponent.class);
+            EM.timer.remove(RenderComponent.class);
+            EM.powerBar.remove(RenderComponent.class);
+            EM.powerBarArrow.remove(RenderComponent.class);
+            EM.aimArrow.remove(RenderComponent.class);
+            EM.powerBar.remove(RenderComponent.class);
+            EM.powerBarArrow.remove(RenderComponent.class);
         }
 
         // START_ROUND -> Player can move & countdown
@@ -81,9 +81,9 @@ public class GamePlaySystem extends EntitySystem {
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_AIMING)) {
             // Remove or add components to entities
             players.get(GSM.currentPlayer).remove(MovementControlComponent.class); // The player should loose ability to move whilst aiming
-            EntityManager.powerBar.add(new RenderComponent()); // Render power bar
-            EntityManager.powerBarArrow.add(new RenderComponent()); // Render power bar arrow
-            EntityManager.aimArrow.add(new RenderComponent()); // Render the aim arrow
+            EM.powerBar.add(new RenderComponent()); // Render power bar
+            EM.powerBarArrow.add(new RenderComponent()); // Render power bar arrow
+            EM.aimArrow.add(new RenderComponent()); // Render the aim arrow
 
             // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(AimingSystem.class).setProcessing(true);
@@ -100,9 +100,9 @@ public class GamePlaySystem extends EntitySystem {
         // PROJECTILE_AIRBORNE -> Player can choose shot power & shoot projectile
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)) {
             // Remove or add components to entities
-            EntityManager.aimArrow.remove(RenderComponent.class);
-            EntityManager.powerBar.remove(RenderComponent.class);
-            EntityManager.powerBarArrow.remove(RenderComponent.class);
+            EM.aimArrow.remove(RenderComponent.class);
+            EM.powerBar.remove(RenderComponent.class);
+            EM.powerBarArrow.remove(RenderComponent.class);
 
             // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
