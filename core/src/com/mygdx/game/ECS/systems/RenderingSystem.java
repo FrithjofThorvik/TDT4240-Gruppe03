@@ -12,6 +12,8 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 
+import static com.mygdx.game.managers.EntityManager.EM;
+
 
 /**
  * This system should draw all components that can render
@@ -21,11 +23,6 @@ public class RenderingSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites
     private ImmutableArray<Entity> spriteEntities;
     private ImmutableArray<Entity> fontEntities;
-
-    // Using a component mapper is the fastest way to load entities
-    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
-    private final ComponentMapper<FontComponent> fm = ComponentMapper.getFor(FontComponent.class);
 
     private final SpriteBatch batch;
 
@@ -62,8 +59,8 @@ public class RenderingSystem extends EntitySystem {
             for (int i = 0; i < this.spriteEntities.size(); i++) {
                 // Fetch each component
                 Entity entity = this.spriteEntities.get(i);
-                SpriteComponent sc = this.sm.get(entity);
-                PositionComponent pc = this.pm.get(entity);
+                SpriteComponent sc = EM.spriteMapper.get(entity);
+                PositionComponent pc = EM.positionMapper.get(entity);
 
                 // Draw the sprite, so that the center of its sprite is the position of the given entity
                 sc.sprite.setSize(sc.size.x, sc.size.y);
@@ -76,8 +73,8 @@ public class RenderingSystem extends EntitySystem {
             for (int i = 0; i < this.fontEntities.size(); i++) {
                 // Fetch each component
                 Entity entity = this.fontEntities.get(i);
-                FontComponent fc = this.fm.get(entity);
-                PositionComponent pc = this.pm.get(entity);
+                FontComponent fc = EM.fontMapper.get(entity);
+                PositionComponent pc = EM.positionMapper.get(entity);
 
                 // Draw font components to the given position with respect to center of font
                 fc.font.draw(batch, fc.text, pc.position.x - (fc.layout.width / 2f), pc.position.y - (fc.layout.height / 2f));

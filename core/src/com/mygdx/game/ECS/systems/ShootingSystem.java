@@ -1,6 +1,5 @@
 package com.mygdx.game.ECS.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -13,6 +12,7 @@ import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.managers.GameStateManager;
 
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
@@ -23,9 +23,6 @@ import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
  **/
 public class ShootingSystem extends EntitySystem {
     private ImmutableArray<Entity> players; // Array for all player entities that are aiming
-
-    // Using a component mapper is the fastest way to load entities
-    private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
@@ -39,7 +36,7 @@ public class ShootingSystem extends EntitySystem {
             if (!GSM.pauseTimer) {
                 // Get the the player whose turn it is and get its shootingComponent
                 Entity player = this.players.get(GSM.currentPlayer);
-                ShootingComponent shootingComponent = this.sm.get(player);
+                ShootingComponent shootingComponent = EM.shootingMapper.get(player);
 
                 // Increase the power -> since we are now charging power for the shot
                 shootingComponent.power += dt; // Reset in GamePlaySystem (SWITCH_ROUND)

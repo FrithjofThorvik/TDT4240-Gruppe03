@@ -1,6 +1,5 @@
 package com.mygdx.game.ECS.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -19,6 +18,7 @@ import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.states.screens.GameScreen;
 
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
@@ -28,12 +28,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class ControllerSystem extends EntitySystem {
     // Prepare arrays for entities
     private ImmutableArray<Entity> players;
-
-    // Prepare component mappers
-    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private final ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
-    private final ComponentMapper<SpriteComponent> sm = ComponentMapper.getFor(SpriteComponent.class);
-    private final ComponentMapper<Box2DComponent> b2dm = ComponentMapper.getFor(Box2DComponent.class);
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
@@ -62,10 +56,10 @@ public class ControllerSystem extends EntitySystem {
     // Move player with Box2D impulses
     public void movePlayer(Entity player) {
         // Get entity components
-        PositionComponent playerPosition = this.pm.get(player);
-        VelocityComponent playerVelocity = this.vm.get(player);
-        Box2DComponent playerBox2D = this.b2dm.get(player);
-        SpriteComponent playerSprite = this.sm.get(player);
+        PositionComponent playerPosition = EM.positionMapper.get(player);
+        VelocityComponent playerVelocity = EM.velocityMapper.get(player);
+        Box2DComponent playerBox2D = EM.b2dMapper.get(player);
+        SpriteComponent playerSprite = EM.spriteMapper.get(player);
 
         // Get the screen position of the touch
         float xTouchPixels = Gdx.input.getX();
@@ -84,7 +78,7 @@ public class ControllerSystem extends EntitySystem {
                 playerSprite.sprite.flip(true, false);
 
         } else if (playerPosition.position.x > touchPoint.x) {
-            Vector2 negativeImpulse = new Vector2(- playerVelocity.velocity.x, playerVelocity.velocity.y);
+            Vector2 negativeImpulse = new Vector2(-playerVelocity.velocity.x, playerVelocity.velocity.y);
             playerBox2D.body.applyLinearImpulse(negativeImpulse, playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is not flipped from it's initial state

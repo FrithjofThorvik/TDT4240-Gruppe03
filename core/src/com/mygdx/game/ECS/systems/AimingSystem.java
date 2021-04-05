@@ -1,6 +1,5 @@
 package com.mygdx.game.ECS.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -15,6 +14,7 @@ import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.states.screens.GameScreen;
 
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
@@ -25,10 +25,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class AimingSystem extends EntitySystem {
 
     private ImmutableArray<Entity> players; // Array for all player entities that are aiming
-
-    // Using a component mapper is the fastest way to load entities
-    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private final ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
 
     // Add entities to arrays
     public void addedToEngine(Engine e) {
@@ -42,8 +38,8 @@ public class AimingSystem extends EntitySystem {
             // Calculate the aim angle when the screen is touched
             if (Gdx.input.isTouched()) {
                 Entity player = this.players.get(GSM.currentPlayer); // Get current player entity
-                PositionComponent playerPosition = this.pm.get(player); // Get the position component of that player
-                ShootingComponent playerShot = this.sm.get(player);
+                PositionComponent playerPosition = EM.positionMapper.get(player); // Get the position component of that player
+                ShootingComponent playerShot = EM.shootingMapper.get(player);
 
                 // Update angle in the players ShootingComponent
                 playerShot.angle = calculateAimAngle(playerPosition);

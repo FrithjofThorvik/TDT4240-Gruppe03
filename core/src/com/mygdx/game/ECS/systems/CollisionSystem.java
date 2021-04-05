@@ -7,12 +7,11 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.ECS.components.CollisionComponent;
-import com.mygdx.game.ECS.components.HealthComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
-import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
@@ -24,13 +23,6 @@ public class CollisionSystem extends EntitySystem {
     private ImmutableArray<Entity> players;
     private ImmutableArray<Entity> collidingProjectiles;
     private ImmutableArray<Entity> projectiles;
-
-    // Prepare component mappers
-    private final ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
-    private final ComponentMapper<ProjectileComponent> pdm = ComponentMapper.getFor(ProjectileComponent.class);
-    private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
-    private final ComponentMapper<ProjectileComponent> pm = ComponentMapper.getFor(ProjectileComponent.class);
-
 
     // Store entities into arrays
     public void addedToEngine(Engine e) {
@@ -44,7 +36,7 @@ public class CollisionSystem extends EntitySystem {
         // Loop through all colliding projectile and give it context for what it collides with
         for (int i = 0; i < this.collidingProjectiles.size(); i++) {
             Entity projectile = collidingProjectiles.get(i); // Get the entity
-            Entity collisionEntity = cm.get(projectile).collisionEntity; // Get the colliding entity
+            Entity collisionEntity = EM.collisionMapper.get(projectile).collisionEntity; // Get the colliding entity
 
             // If projectile collides with player -> update players health
             if (players.contains(collisionEntity, true)) {
@@ -52,7 +44,7 @@ public class CollisionSystem extends EntitySystem {
             }
 
             // Activate the collision function for the projectile
-            pm.get(projectile).projectileType.collision();
+            EM.projectileMapper.get(projectile).projectileType.collision();
         }
 
         // Check if there are no projectiles -> move on to SWITCH_ROUND state
@@ -65,6 +57,6 @@ public class CollisionSystem extends EntitySystem {
 
     // Update the player's health
     void updateHealth(Entity projectile, Entity player) {
-        hm.get(player).hp -= pdm.get(projectile).damage;
+        EM.healthMapper.get(player).hp -= EM.projectileMapper.get(projectile).damage;
     }
 }

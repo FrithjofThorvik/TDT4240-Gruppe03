@@ -13,6 +13,7 @@ import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.PlayerComponent;
 
+import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
@@ -23,9 +24,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class GamePlaySystem extends EntitySystem {
     // Entity arrays
     public ImmutableArray<Entity> players; // List of players
-
-    // Prepare component mappers
-    private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
 
     // Get entities
     public void addedToEngine(Engine e) {
@@ -122,7 +120,7 @@ public class GamePlaySystem extends EntitySystem {
     private void checkHealth() {
         for (int i = 0; i < players.size(); i++) {
             Entity player = players.get(i);
-            HealthComponent playerHealth = hm.get(player);
+            HealthComponent playerHealth = EM.healthMapper.get(player);
 
             if (playerHealth.hp <= 0) {
                 GSM.setGameState(GameStateManager.STATE.END_GAME);

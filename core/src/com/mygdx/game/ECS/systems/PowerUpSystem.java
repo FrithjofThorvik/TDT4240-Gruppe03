@@ -1,12 +1,13 @@
 package com.mygdx.game.ECS.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.ECS.components.EffectComponent;
+
+import static com.mygdx.game.managers.EntityManager.EM;
 
 
 /**
@@ -16,9 +17,6 @@ import com.mygdx.game.ECS.components.EffectComponent;
 public class PowerUpSystem extends EntitySystem {
     // Prepare entity arrays
     private ImmutableArray<Entity> effects;
-
-    // Prepare component mappers
-    private final ComponentMapper<EffectComponent> em = ComponentMapper.getFor(EffectComponent.class);
 
     // Store entities into arrays
     public void addedToEngine(Engine e) {
@@ -34,7 +32,7 @@ public class PowerUpSystem extends EntitySystem {
                 Entity entity = this.effects.get(i);
 
                 // Get entity components
-                EffectComponent effect = this.em.get(entity);
+                EffectComponent effect = EM.effectMapper.get(entity);
                 // TODO: Do something here
             }
         }
