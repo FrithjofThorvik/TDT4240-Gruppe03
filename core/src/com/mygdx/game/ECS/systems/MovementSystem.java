@@ -35,7 +35,6 @@ public class MovementSystem extends EntitySystem {
     // Will be called by the engine automatically
     public void update(float dt) {
         if (this.movingPlayers.size() > 0) {
-            CM.startMoving(); // Enable moving buttons
             // Check if screen is pressed, and handle the input with the ControllerComponent
             if (Gdx.input.isTouched()) {
                 // Check if aim button is pressed

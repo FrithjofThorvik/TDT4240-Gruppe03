@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
 
+import static com.mygdx.game.managers.GameStateManager.GSM;
+
 
 /**
  * This is used for creating a controller

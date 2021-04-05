@@ -1,5 +1,6 @@
 package com.mygdx.game.states.game;
 
+import static com.mygdx.game.managers.ControlManager.CM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
@@ -10,6 +11,7 @@ public class StartRound extends AbstractGameState {
 
     @Override
     public void startGameState() {
+        CM.startMoving(); // Enable moving buttons
         GSM.time = 0; // Reset the timer when a round starts
     }
 

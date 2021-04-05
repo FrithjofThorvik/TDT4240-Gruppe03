@@ -1,5 +1,6 @@
 package com.mygdx.game.states.game;
 
+import static com.mygdx.game.managers.ControlManager.CM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
@@ -11,6 +12,7 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class ProjectileAirborne extends AbstractGameState {
     @Override
     public void startGameState() {
+        CM.idle(); // Make all controller buttons idle
         GSM.pauseTimer = true;
     }
 
