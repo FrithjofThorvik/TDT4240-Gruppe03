@@ -74,7 +74,6 @@ public class EntityManager {
     public Entity powerBar;
     public Entity powerBarArrow;
     public Entity timer;
-    public Entity controller;
     public Entity ground;
 
     // Preparing component mappers -> the fastest way for getting entities
@@ -151,7 +150,6 @@ public class EntityManager {
 
         // Instantiate all UI entities
         timer = new Entity();
-        controller = new Entity();
         powerBar = new Entity();
         powerBarArrow = new Entity();
         ground = new Entity();
@@ -281,7 +279,6 @@ public class EntityManager {
         this.engine.addEntity(player1);
         this.engine.addEntity(player2);
         this.engine.addEntity(timer);
-        this.engine.addEntity(controller);
         this.engine.addEntity(powerBar);
         this.engine.addEntity(powerBarArrow);
         this.engine.addEntity(ground);
