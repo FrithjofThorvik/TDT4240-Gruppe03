@@ -9,5 +9,5 @@ import com.badlogic.ashley.core.Component;
  * The public boolean values will be used in the ControllerSystem
  **/
 public class ControllerComponent implements Component {
-    public boolean leftPressed, rightPressed, powerPressed, aimPressed = false;
+    public boolean leftPressed, rightPressed, powerPressed, aimPressed, projectileLeft, projectileRight = false;
 }

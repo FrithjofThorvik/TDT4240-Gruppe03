@@ -106,6 +106,12 @@ public class GamePlaySystem extends EntitySystem {
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(ControllerSystem.class).setProcessing(false);
         }
+
+        // SWITCH_ROUND -> Switching players
+        else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
+            // Remove or add components to entities
+            players.get(GSM.currentPlayer).remove(MovementControlComponent.class); // The player should loose ability to move
+        }
     }
 
     // Check if any player healths are under 0

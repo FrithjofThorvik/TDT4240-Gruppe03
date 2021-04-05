@@ -59,6 +59,7 @@ public class ControllerSystem extends EntitySystem {
 
                 // Check if current is in a state where movement is enabled
                 if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_ROUND)) {
+                    this.controller.startMoving(); // Make everything, but the movement buttons, transparent
                     // Check if screen is pressed, and handle the input with the ControllerComponent
                     if (Gdx.input.isTouched()) {
                         // Loop through all moving player entities
@@ -73,6 +74,11 @@ public class ControllerSystem extends EntitySystem {
                 // Check if player is shooting
                 else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PLAYER_SHOOTING)) {
                     this.handleShooting(currentPlayer);
+                }
+
+                // Make controller buttons idle, if a player is not moving or shooting
+                else {
+                    this.controller.idle();
                 }
 
             } else {
@@ -104,9 +110,8 @@ public class ControllerSystem extends EntitySystem {
                 playerSprite.sprite.flip(true, false);
 
         } else if (controller.buttonPresses.aimPressed) {
+            this.controller.startShooting(); // Make everything, but the power button, transparent
             GSM.setGameState(GameStateManager.STATE.PLAYER_SHOOTING);
-        } else if (controller.buttonPresses.powerPressed) {
-
         }
     }
 
@@ -122,7 +127,8 @@ public class ControllerSystem extends EntitySystem {
         }
 
         // Check if power button has stopped being pressed after being pressed
-        else if (shootingComponent.power > 0 && !this.controller.buttonPresses.powerPressed) {
+        else if (shootingComponent.power > 0) {
+            this.controller.idle(); // Make all controller button transparent
             shootingComponent.shooting = false; // Used in ShootingSystem
         }
     }
