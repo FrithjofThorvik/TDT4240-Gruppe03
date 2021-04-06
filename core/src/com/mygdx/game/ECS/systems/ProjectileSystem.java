@@ -5,7 +5,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
+
+import static com.mygdx.game.managers.EntityManager.EM;
 
 
 /**
@@ -28,6 +31,9 @@ public class ProjectileSystem extends EntitySystem {
             for (int i = 0; i < this.projectiles.size(); ++i) {
                 // Get projectile
                 Entity projectile = this.projectiles.get(i);
+                float posX = EM.positionMapper.get(projectile).position.x;
+                if (posX > Gdx.graphics.getWidth() || posX < 0) // Remove projectile if it is out of bounds
+                    projectile.removeAll();
 
                 // TODO: Maybe delete this system
             }

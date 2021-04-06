@@ -61,6 +61,9 @@ public class ScreenManager {
     public void setScreen(STATE nextScreen) {
         this.removeAllActors(); // Removes all current actors from Application.stage
 
+        if (nextScreen == STATE.PLAY) // Creates new GameScreen every time we change to the game screen
+            this.screens.put(STATE.PLAY, new GameScreen(app));
+
         this.app.setScreen(this.screens.get(nextScreen));
         screen = this.screens.get(nextScreen);
         screen.initScreen();
@@ -76,7 +79,7 @@ public class ScreenManager {
 
     // Remove all current actors
     private void removeAllActors() {
-        Array<Actor> actors =  Application.stage.getActors();
+        Array<Actor> actors = Application.stage.getActors();
 
         for (int i = 0; i < actors.size; i++) {
             actors.get(i).remove();
