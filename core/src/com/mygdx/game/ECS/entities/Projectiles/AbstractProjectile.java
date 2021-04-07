@@ -40,7 +40,8 @@ public abstract class AbstractProjectile extends AbstractEntity {
 
     @Override
     public void addCoreComponents() {
-        this.entity.add(new Box2DComponent(
+        this.entity.add(new ProjectileComponent(this.damage,this.speed))
+                .add(new Box2DComponent(
                     this.position, this.size, false, 10f,
                     BIT_PROJECTILE,
                     (short) (BIT_PLAYER | BIT_GROUND)))
