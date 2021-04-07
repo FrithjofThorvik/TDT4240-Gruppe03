@@ -28,7 +28,7 @@ public class EndScreen extends AbstractScreen {
         Texture exitTexture = new Texture("button_exit.png");
 
         Table table = new Table();
-        table.setWidth(Gdx.graphics.getWidth());
+        table.setWidth(Application.camera.viewportWidth);
         table.center();
 
         // Initialise Restart Button

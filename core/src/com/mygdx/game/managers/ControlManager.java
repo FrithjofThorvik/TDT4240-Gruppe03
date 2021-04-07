@@ -144,7 +144,7 @@ public class ControlManager {
         // Create controller table as 1 row
         Table table = new Table();
         table.setName("controller"); // Id for getting this specific actor
-        table.setWidth(Gdx.graphics.getWidth());
+        table.setWidth(Application.camera.viewportWidth);
         table.bottom().center();
 
         table.row().pad(5f, 5f, 70f, 5f);

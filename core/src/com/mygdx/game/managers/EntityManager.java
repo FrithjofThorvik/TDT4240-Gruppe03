@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.EffectComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
@@ -164,7 +165,7 @@ public class EntityManager {
                 )
                 .add(new PositionComponent(
                         spriteMapper.get(player1).size.x,
-                        Gdx.graphics.getHeight() / 1.2f)
+                        Application.camera.viewportHeight / 1.2f)
                 )
                 .add(new Box2DComponent(
                         positionMapper.get(player1).position,
@@ -186,8 +187,8 @@ public class EntityManager {
                     50f)
                 )
                 .add(new PositionComponent(
-                        Gdx.graphics.getWidth() - 100f,
-                        Gdx.graphics.getHeight() / 1.2f)
+                        Application.camera.viewportWidth - 100f,
+                        Application.camera.viewportHeight / 1.2f)
                 )
                 .add(new Box2DComponent(
                         positionMapper.get(player2).position,
@@ -205,8 +206,8 @@ public class EntityManager {
 
 
         timer.add(new PositionComponent(
-                    Gdx.graphics.getWidth() / 2f,
-                    Gdx.graphics.getHeight() * 0.97f)
+                        Application.camera.viewportWidth / 2f,
+                    Application.camera.viewportHeight * 0.97f)
                 )
                 .add(new FontComponent("Time: 0.0s"))
                 .add(new RenderComponent());
@@ -217,8 +218,8 @@ public class EntityManager {
                     350f)
                 )
                 .add(new PositionComponent(
-                        Gdx.graphics.getWidth() - 50f,
-                        Gdx.graphics.getHeight() / 2f)
+                        Application.camera.viewportWidth - 50f,
+                        Application.camera.viewportHeight / 2f)
                 );
 
         powerBarArrow.add(new SpriteComponent(
@@ -227,18 +228,18 @@ public class EntityManager {
                     40f)
                 )
                 .add(new PositionComponent(
-                        Gdx.graphics.getWidth() - 70f,
-                        Gdx.graphics.getHeight() - (spriteMapper.get(powerBar).size.y) / 2f)
+                        Application.camera.viewportWidth - 70f,
+                        Application.camera.viewportHeight - (spriteMapper.get(powerBar).size.y) / 2f)
                 );
 
         ground.add(new SpriteComponent(
                     this.tankTexture,
-                    Gdx.graphics.getWidth() * 2f,
+                        Application.camera.viewportWidth * 2f,
                     10f)
                 )
                 .add(new PositionComponent(
-                        Gdx.graphics.getWidth() / 2f,
-                        Gdx.graphics.getHeight() / 2f)
+                        Application.camera.viewportWidth / 2f,
+                        Application.camera.viewportHeight / 2f)
                 )
                 .add(new Box2DComponent(
                         positionMapper.get(ground).position,
@@ -251,8 +252,8 @@ public class EntityManager {
                 .add(new RenderComponent());
 
         aimArrow.add(new PositionComponent(
-                    Gdx.graphics.getWidth() / 2f,
-                    Gdx.graphics.getHeight() / 2f)
+                Application.camera.viewportWidth/ 2f,
+                    Application.camera.viewportHeight / 2f)
                 )
                 .add(new SpriteComponent(
                         this.rightArrowTexture,
@@ -267,7 +268,7 @@ public class EntityManager {
                 )
                 .add(new PositionComponent(
                         50f,
-                        Gdx.graphics.getHeight() - 20f
+                        Application.camera.viewportHeight - 20f
                 ))
                 .add(new RenderComponent());
 
@@ -277,8 +278,8 @@ public class EntityManager {
                         healthMapper.get(parentMapper.get(health1).parent).hp + " hp")
                 )
                 .add(new PositionComponent(
-                        Gdx.graphics.getWidth() - 50f,
-                        Gdx.graphics.getHeight() - 20f
+                        Application.camera.viewportWidth  - 50f,
+                        Application.camera.viewportHeight - 20f
                 ))
                 .add(new RenderComponent());
 

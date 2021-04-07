@@ -39,8 +39,8 @@ public class MainMenuScreen extends AbstractScreen {
             }
         });
         playImg.setPosition(
-                (Gdx.graphics.getWidth() / 2f) - (playImg.getWidth() / 2f),
-                (Gdx.graphics.getHeight() / 2f) - (playImg.getHeight() / 2f)
+                (Application.camera.viewportWidth / 2f) - (playImg.getWidth() / 2f),
+                (Application.camera.viewportHeight / 2f) - (playImg.getHeight() / 2f)
         );
 
         Application.stage.addActor(playImg); // Add table actor to GameScreen stage
