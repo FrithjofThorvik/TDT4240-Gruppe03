@@ -14,18 +14,18 @@ public abstract class AbstractEntity {
         this.entity = new Entity();
 
         setEntityStats();
-        addCoreComponents(this.entity);
-        addClassComponents(this.entity);
-        this.addToEngine(this.entity);
+        addCoreComponents();
+        addClassComponents();
+        this.addToEngine();
 
         return this.entity;
     }
 
     // Abstract functions for building out the specified entity
     public abstract void setEntityStats();
-    public abstract void addCoreComponents(Entity entity);
-    public abstract void addClassComponents(Entity entity);
+    public abstract void addCoreComponents();
+    public abstract void addClassComponents();
 
     // Add the current entity instance to EntityManager's engine
-    private void addToEngine(Entity entity) { EM.engine.addEntity(entity); };
+    private void addToEngine() { EM.engine.addEntity(this.entity); };
 }

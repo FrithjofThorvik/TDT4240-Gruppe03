@@ -25,6 +25,7 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.ECS.entities.EntityCreator;
 import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
@@ -50,6 +51,7 @@ public class EntityManager {
 
     public final Engine engine;
     private final SpriteBatch batch;
+    public EntityCreator entityCreator;
 
     // Entity listeners
     private EntityListener movementControlListener;
@@ -105,6 +107,7 @@ public class EntityManager {
         EM = this;
         this.engine = engine;
         this.batch = batch;
+        this.entityCreator = new EntityCreator();
 
         // Create ECS entity listeners -> has to be done before createEntities to function correctly
         this.createEntityListeners();

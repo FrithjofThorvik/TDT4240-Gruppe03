@@ -58,7 +58,7 @@ public class PhysicsSystem extends EntitySystem {
                     // Check if the projectile is on it's way down for the first time and call it's midAir function
                     if ((entityBox2D.body.getLinearVelocity().y <= 0) && !EM.projectileMapper.get(entity).midAirReached) {
                         EM.projectileMapper.get(entity).midAirReached = true; // Set the flag that this projectile has reached midAir
-                        EM.projectileMapper.get(entity).projectileType.midAir(); // Activate the function
+                        //EM.projectileMapper.get(entity).projectileType.midAir(entity); // Activate the function
                     }
                 }
             }

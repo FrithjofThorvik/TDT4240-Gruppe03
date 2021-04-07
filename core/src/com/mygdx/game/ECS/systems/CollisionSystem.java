@@ -44,7 +44,7 @@ public class CollisionSystem extends EntitySystem {
             }
 
             // Activate the collision function for the projectile
-            EM.projectileMapper.get(projectile).projectileType.collision();
+            //EM.projectileMapper.get(projectile).projectileType.collision(collisionEntity);
         }
 
         // Check if there are no projectiles -> move on to SWITCH_ROUND state

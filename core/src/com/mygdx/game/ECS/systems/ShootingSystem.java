@@ -5,8 +5,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
+import com.mygdx.game.ECS.entities.EntityCreator;
 import com.mygdx.game.managers.GameStateManager;
 
 import static com.mygdx.game.managers.EntityManager.EM;
@@ -41,9 +44,20 @@ public class ShootingSystem extends EntitySystem {
 
             // Create & shoot projectile if button stops being pressed, max power is reached, or round time is reached
             if (!CM.powerPressed || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
-                new SplitterProjectile(player).ShootProjectile(shootingComponent); // Create new projectile and shoot it
+                Entity projectile = EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.BOUNCER).createEntity();
+                ShootProjectile(projectile, shootingComponent);
                 GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // GSM.time paused on start() and resumed on end()
             }
         }
+    }
+    public void ShootProjectile(Entity projectile, ShootingComponent shootingComponent) {
+        // Shoot projectile with Box2D impulse
+        Box2DComponent b2d = EM.b2dMapper.get(projectile); // Get Box2D component
+        float impulse = (float) (EM.projectileMapper.get(projectile).speed * shootingComponent.power);
+        Vector2 impulseVector = new Vector2(
+                impulse * (float) Math.sin(shootingComponent.angle),
+                impulse * (float) Math.cos(shootingComponent.angle)); // Calculate velocity
+        b2d.body.applyLinearImpulse(impulseVector, b2d.body.getWorldCenter(), false); // Apply impulse to body
+        shootingComponent.power = 0; // Reset the power when the shot has been taken
     }
 }
