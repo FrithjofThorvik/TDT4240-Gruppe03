@@ -15,6 +15,7 @@ import com.mygdx.game.managers.GameStateManager;
 import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.ControlManager.CM;
+import static com.mygdx.game.utils.B2DConstants.PPM;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 
@@ -44,14 +45,15 @@ public class ShootingSystem extends EntitySystem {
 
             // Create & shoot projectile if button stops being pressed, max power is reached, or round time is reached
             if (!CM.powerPressed || shootingComponent.power >= MAX_SHOOTING_POWER || GSM.time > ROUND_TIME) {
-                Entity projectile = EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.BOUNCER).createEntity();
-                ShootProjectile(projectile, shootingComponent);
+                Entity projectile = EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.SPLITTER).createEntity();
+                ShootProjectile(projectile, shootingComponent, player);
                 GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // GSM.time paused on start() and resumed on end()
             }
         }
     }
-    public void ShootProjectile(Entity projectile, ShootingComponent shootingComponent) {
+    public void ShootProjectile(Entity projectile, ShootingComponent shootingComponent, Entity player) {
         // Shoot projectile with Box2D impulse
+        EM.b2dMapper.get(projectile).body.setTransform((EM.positionMapper.get(player).position.x)/PPM,(EM.positionMapper.get(player).position.y+ EM.spriteMapper.get(player).size.y)/PPM,0);
         Box2DComponent b2d = EM.b2dMapper.get(projectile); // Get Box2D component
         float impulse = (float) (EM.projectileMapper.get(projectile).speed * shootingComponent.power);
         Vector2 impulseVector = new Vector2(

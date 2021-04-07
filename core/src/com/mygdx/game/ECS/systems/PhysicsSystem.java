@@ -51,16 +51,6 @@ public class PhysicsSystem extends EntitySystem {
 
                 // Synchronise position component with body position
                 entityPosition.position = new Vector2(entityBox2D.body.getPosition().x * PPM, entityBox2D.body.getPosition().y * PPM);
-
-                // Checks if a projectile has reached peak height and activates it's midAir function
-                // TODO -> make it so that this only happens once
-                if (projectiles.contains(entity, true)) {
-                    // Check if the projectile is on it's way down for the first time and call it's midAir function
-                    if ((entityBox2D.body.getLinearVelocity().y <= 0) && !EM.projectileMapper.get(entity).midAirReached) {
-                        EM.projectileMapper.get(entity).midAirReached = true; // Set the flag that this projectile has reached midAir
-                        //EM.projectileMapper.get(entity).projectileType.midAir(entity); // Activate the function
-                    }
-                }
             }
         }
     }

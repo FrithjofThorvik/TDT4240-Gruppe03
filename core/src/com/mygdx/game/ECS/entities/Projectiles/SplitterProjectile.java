@@ -6,14 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.ProjectileAlgorithms.BouncyType;
 import com.mygdx.game.ECS.components.ProjectileAlgorithms.ProjectileType;
 import com.mygdx.game.ECS.components.ProjectileAlgorithms.SplitterType;
+import com.mygdx.game.ECS.components.ProjectileComponents.SplitterComponent;
 
 /**
  * ...
  **/
 public class SplitterProjectile extends AbstractProjectile {
-
+    int numOfSplits = 5;
     int damage = 5;
-    float speed = 1f;
+    float speed = 3f;
     Vector2 size = new Vector2(10f, 10f);
     Vector2 position = new Vector2(0f, 0f);
     Texture texture = new Texture("cannonball.png");
@@ -45,7 +46,12 @@ public class SplitterProjectile extends AbstractProjectile {
     }
 
     @Override
+    public ProjectileType setType() {
+        return type;
+    }
+
+    @Override
     public void addClassComponents() {
-        // Nothing
+        entity.add(new SplitterComponent(numOfSplits));
     }
 }

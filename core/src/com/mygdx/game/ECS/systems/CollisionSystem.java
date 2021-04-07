@@ -33,26 +33,26 @@ public class CollisionSystem extends EntitySystem {
 
     // Will be called by the engine automatically
     public void update(float dt) {
-        // Loop through all colliding projectile and give it context for what it collides with
-        for (int i = 0; i < this.collidingProjectiles.size(); i++) {
-            Entity projectile = collidingProjectiles.get(i); // Get the entity
-            Entity collisionEntity = EM.collisionMapper.get(projectile).collisionEntity; // Get the colliding entity
-
-            // If projectile collides with player -> update players health
-            if (players.contains(collisionEntity, true)) {
-                updateHealth(projectile, collisionEntity); // Update the colliding player's health
-            }
-
-            // Activate the collision function for the projectile
-            //EM.projectileMapper.get(projectile).projectileType.collision(collisionEntity);
-        }
-
-        // Check if there are no projectiles -> move on to SWITCH_ROUND state
-        if (projectiles.size() <= 0) {
-            if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)) {
-                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
-            }
-        }
+//        // Loop through all colliding projectile and give it context for what it collides with
+//        for (int i = 0; i < this.collidingProjectiles.size(); i++) {
+//            Entity projectile = collidingProjectiles.get(i); // Get the entity
+//            Entity collisionEntity = EM.collisionMapper.get(projectile).collisionEntity; // Get the colliding entity
+//
+//            // If projectile collides with player -> update players health
+//            if (players.contains(collisionEntity, true)) {
+//                updateHealth(projectile, collisionEntity); // Update the colliding player's health
+//            }
+//
+//            // Activate the collision function for the projectile
+//           EM.projectileMapper.get(projectile).projectileType.collision(projectile);
+//        }
+//
+//        // Check if there are no projectiles -> move on to SWITCH_ROUND state
+//        if (projectiles.size() <= 0) {
+//            if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)) {
+//                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
+//            }
+//        }
     }
 
     // Update the player's health

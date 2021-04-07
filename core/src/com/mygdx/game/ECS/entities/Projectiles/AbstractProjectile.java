@@ -28,6 +28,7 @@ public abstract class AbstractProjectile extends AbstractEntity {
     public Vector2 size;
     public Vector2 position;
     public Texture texture;
+    public ProjectileType type;
 
     @Override
     public void setEntityStats() {
@@ -36,15 +37,16 @@ public abstract class AbstractProjectile extends AbstractEntity {
         this.size = setSize();
         this.position = setPosition();
         this.texture = setTexture();
+        this.type = setType();
     }
 
     @Override
     public void addCoreComponents() {
-        this.entity.add(new ProjectileComponent(this.damage,this.speed))
+        this.entity.add(new ProjectileComponent(this.damage, this.speed,this.type))
                 .add(new Box2DComponent(
-                    this.position, this.size, false, 10f,
-                    BIT_PROJECTILE,
-                    (short) (BIT_PLAYER | BIT_GROUND)))
+                        this.position, this.size, false, 10f,
+                        BIT_PROJECTILE,
+                        (short) (BIT_PLAYER | BIT_GROUND)))
                 .add(new SpriteComponent(this.texture, this.size.x, this.size.y))
                 .add(new PositionComponent(this.position.x, this.position.y))
                 .add(new RenderComponent());
@@ -59,4 +61,6 @@ public abstract class AbstractProjectile extends AbstractEntity {
     public abstract Vector2 setPosition();
 
     public abstract Texture setTexture();
+
+    public abstract ProjectileType setType();
 }
