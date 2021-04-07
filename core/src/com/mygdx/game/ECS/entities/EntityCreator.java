@@ -1,5 +1,6 @@
 package com.mygdx.game.ECS.entities;
 
+import com.mygdx.game.ECS.entities.Fonts.HealthFont;
 import com.mygdx.game.ECS.entities.Players.AbstractPlayer;
 import com.mygdx.game.ECS.entities.Players.DefaultPlayer;
 import com.mygdx.game.ECS.entities.Players.SpeedyPlayer;
@@ -23,6 +24,7 @@ public class EntityCreator {
         DEFAULT,
         SPEEDY
     }
+
     public enum PROJECTILES {
         DEFAULT,
         SPLITTER,
@@ -57,4 +59,9 @@ public class EntityCreator {
     public AbstractEntity getProjectileClass(PROJECTILES projectileClass) {
         return this.projectiles.get(projectileClass);
     }
+
+    public AbstractEntity getHealthFont() {
+        return new HealthFont();
+    }
+
 }

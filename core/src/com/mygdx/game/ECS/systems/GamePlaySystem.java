@@ -6,15 +6,21 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.HealthDisplayerComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
+import com.mygdx.game.ECS.components.ParentComponent;
+import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
+import com.mygdx.game.ECS.entities.EntityCreator;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.ECS.components.PlayerComponent;
 
 import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
+import static com.mygdx.game.utils.B2DConstants.PPM;
 
 
 /**
@@ -24,17 +30,21 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class GamePlaySystem extends EntitySystem {
     // Entity arrays
     public ImmutableArray<Entity> players; // List of players
+    public ImmutableArray<Entity> healthDisplayers; // List of players
 
     // Get entities
     public void addedToEngine(Engine e) {
         this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        this.healthDisplayers = e.getEntitiesFor(Family.all(HealthDisplayerComponent.class).get());
     }
 
     // Update function for GamePlaySystem (calls automatically by engine)
     public void update(float dt) {
         if (this.players.size() > 0) {
-            if (GSM.numberOfPlayers == 0)
+            if (GSM.numberOfPlayers == 0) {
                 GSM.numberOfPlayers = this.players.size(); // Tell the state manager how many players are in the game
+                setPlayerSpawn();
+            }
 
             this.checkHealth(); // Check if any health components have reached 0
             this.updateStates(); // Check which gameState the system is in -> Remove or add component, start or stop systems
@@ -55,11 +65,14 @@ public class GamePlaySystem extends EntitySystem {
         //END_GAME -> Displays necessary game data when a player has won the game
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.END_GAME)) {
             // Remove rendering of entities
-            EM.player1.remove(RenderComponent.class);
-            EM.player2.remove(RenderComponent.class);
-            EM.health1.remove(RenderComponent.class);
-            EM.health2.remove(RenderComponent.class);
-            EM.ground.remove(RenderComponent.class);
+            // Remove rendering of entities
+            for (int i = 0; i < players.size(); i++) {
+                players.get(i).remove(RenderComponent.class);
+            }
+            for (int i = 0; i < healthDisplayers.size(); i++) {
+                healthDisplayers.get(i).remove(RenderComponent.class);
+            }
+
             EM.timer.remove(RenderComponent.class);
             EM.powerBar.remove(RenderComponent.class);
             EM.powerBarArrow.remove(RenderComponent.class);
@@ -122,8 +135,23 @@ public class GamePlaySystem extends EntitySystem {
             HealthComponent playerHealth = EM.healthMapper.get(player);
 
             if (playerHealth.hp <= 0) {
-                GSM.setGameState(GameStateManager.STATE.END_GAME);
+                for (int j = 0; j < healthDisplayers.size(); j++) {
+                    Entity healthDisplayer = healthDisplayers.get(j);
+                    if (EM.parentMapper.get(healthDisplayer).parent == player)
+                        healthDisplayer.removeAll();
+                }
+                player.removeAll();
+                GSM.numberOfPlayers--;
             }
+        }
+    }
+
+    private void setPlayerSpawn(){
+        for (int i = 0; i < players.size(); i++) {
+            Entity player = players.get(i);
+            PositionComponent pos = EM.positionMapper.get(player);
+            EM.b2dMapper.get(player).body.setTransform((50f + (Application.camera.viewportWidth / players.size()) * i)/PPM,pos.position.y/PPM,0);
+            EM.entityCreator.getHealthFont().createEntity().add(new ParentComponent(player));
         }
     }
 }

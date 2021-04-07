@@ -9,6 +9,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.HealthDisplayerComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
@@ -35,10 +36,12 @@ public class UISystem extends EntitySystem {
 
     // Array for all player entities that are aiming
     private ImmutableArray<Entity> players;
+    private ImmutableArray<Entity> healthDisplayers;
 
     // Store all entities with respective components to entity arrays
     public void addedToEngine(Engine e) {
         this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        this.healthDisplayers = e.getEntitiesFor(Family.all(HealthDisplayerComponent.class).get());
     }
 
     // Will be called by the engine automatically
@@ -67,8 +70,14 @@ public class UISystem extends EntitySystem {
             EM.positionMapper.get(EM.powerBarArrow).position.y = startPositionArrow + (EM.spriteMapper.get(EM.powerBar).size.y * (power / MAX_SHOOTING_POWER));
 
             // Update health displays
-            EM.fontMapper.get(EM.health1).text = EM.healthMapper.get(EM.parentMapper.get(EM.health1).parent).hp + " hp";
-            EM.fontMapper.get(EM.health2).text = EM.healthMapper.get(EM.parentMapper.get(EM.health2).parent).hp + " hp";
+            // Update health displays
+            for(int i =0; i<healthDisplayers.size();i++){
+                Entity entity = healthDisplayers.get(i);
+                Entity parent = EM.parentMapper.get(entity).parent;
+                EM.positionMapper.get(entity).position.x = EM.positionMapper.get(parent).position.x;
+                EM.positionMapper.get(entity).position.y = EM.positionMapper.get(parent).position.y+EM.spriteMapper.get(parent).size.y;
+                EM.fontMapper.get(entity).text = EM.healthMapper.get(parent).hp + " hp";
+            }
         }
     }
 
