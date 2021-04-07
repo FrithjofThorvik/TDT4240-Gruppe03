@@ -1,7 +1,6 @@
 package com.mygdx.game.ECS.components.ProjectileComponents;
 
 import com.badlogic.ashley.core.Component;
-import com.mygdx.game.ECS.Projectiles.Projectile;
 
 
 /**
@@ -13,7 +12,7 @@ public class ProjectileComponent implements Component {
     public Projectile projectileType;
     public boolean midAirReached = false; // Needed to activate midAir function of a projectile
 
-    public ProjectileComponent(int damage, int speed, Projectile projectileType) {
+    public ProjectileComponent(int damage, int speed) {
         this.damage = damage;
         this.speed = speed;
         this.projectileType = projectileType;
