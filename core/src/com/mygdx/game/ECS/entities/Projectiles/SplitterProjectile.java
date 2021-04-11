@@ -12,10 +12,10 @@ import com.mygdx.game.ECS.components.ProjectileComponents.SplitterComponent;
  * ...
  **/
 public class SplitterProjectile extends AbstractProjectile {
-    int numOfSplits = 5;
-    int damage = 5;
-    float speed = 3f;
-    Vector2 size = new Vector2(10f, 10f);
+    int numOfSplits = 10;
+    int damage = 15;
+    float speed = 1f;
+    Vector2 size = new Vector2(15f, 15f);
     Vector2 position = new Vector2(0f, 0f);
     Texture texture = new Texture("cannonball.png");
     ProjectileType type = new SplitterType();

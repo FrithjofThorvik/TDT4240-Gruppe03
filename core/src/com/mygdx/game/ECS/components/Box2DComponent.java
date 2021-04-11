@@ -39,7 +39,7 @@ public class Box2DComponent implements Component {
         // Create FixtureDef representing properties such as density, restitution, etc
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape; // Add the box shape to fixture
-        fixtureDef.density = mass; // Add density to fixture (increases mass)
+        fixtureDef.density = mass/(((spriteSize.x / 4f)*(spriteSize.y / 4f) / PPM)); // Add density to fixture (increases mass)
         fixtureDef.friction = 0.5f;
         fixtureDef.filter.categoryBits = cBits; // Is this category of bit
         fixtureDef.filter.maskBits = mBits; // Will collide with these bits

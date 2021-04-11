@@ -12,7 +12,7 @@ import com.mygdx.game.ECS.components.ProjectileAlgorithms.StandardType;
 public class DefaultProjectile extends AbstractProjectile {
 
     int damage = 5;
-    float speed = 3f;
+    float speed = 1f;
     Vector2 size = new Vector2(10f, 10f);
     Vector2 position = new Vector2(0f, 0f);
     Texture texture = new Texture("cannonball.png");

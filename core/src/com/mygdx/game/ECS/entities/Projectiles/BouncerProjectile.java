@@ -15,9 +15,11 @@ import com.mygdx.game.ECS.components.ProjectileComponents.BouncyComponent;
  * ...
  **/
 public class BouncerProjectile extends AbstractProjectile {
-    int numOfBounces = 5;
+    int numOfBounces = 3;
+    float bounciness = 0.6f;
+    float friction = 0.01f;
     int damage = 5;
-    float speed = 3f;
+    float speed = 1f;
     Vector2 size = new Vector2(10f, 10f);
     Vector2 position = new Vector2(Application.camera.viewportWidth / 2f, Application.camera.viewportHeight);
     Texture texture = new Texture("cannonball.png");
@@ -58,7 +60,7 @@ public class BouncerProjectile extends AbstractProjectile {
         this.entity.add(new BouncyComponent(numOfBounces));
 
         // Give the box2d component bounciness
-        entity.getComponent(Box2DComponent.class).fixture.setRestitution(0.8f);
-        entity.getComponent(Box2DComponent.class).fixture.setFriction(0.01f);
+        entity.getComponent(Box2DComponent.class).fixture.setRestitution(bounciness);
+        entity.getComponent(Box2DComponent.class).fixture.setFriction(friction);
     }
 }
