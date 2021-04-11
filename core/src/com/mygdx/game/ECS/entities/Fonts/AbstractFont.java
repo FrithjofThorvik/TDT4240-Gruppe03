@@ -4,7 +4,9 @@ import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.entities.AbstractEntity;
-
+/**
+ * This abstract font class add the components most Fonts need
+ **/
 public abstract class AbstractFont extends AbstractEntity {
     public float posX;
     public float posY;
