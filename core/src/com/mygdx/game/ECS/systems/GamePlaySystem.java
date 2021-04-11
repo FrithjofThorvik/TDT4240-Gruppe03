@@ -43,7 +43,7 @@ public class GamePlaySystem extends EntitySystem {
         if (this.players.size() > 0) {
             if (GSM.numberOfPlayers == 0) {
                 GSM.numberOfPlayers = this.players.size(); // Tell the state manager how many players are in the game
-                setPlayerSpawn();
+                setPlayerSpawn(); // Set spawn point for players
             }
 
             this.checkHealth(); // Check if any health components have reached 0
@@ -134,6 +134,7 @@ public class GamePlaySystem extends EntitySystem {
             Entity player = players.get(i);
             HealthComponent playerHealth = EM.healthMapper.get(player);
 
+            // If player health < 0 -> delete the player and its associate health displayer
             if (playerHealth.hp <= 0) {
                 for (int j = 0; j < healthDisplayers.size(); j++) {
                     Entity healthDisplayer = healthDisplayers.get(j);
@@ -141,17 +142,19 @@ public class GamePlaySystem extends EntitySystem {
                         healthDisplayer.removeAll();
                 }
                 player.removeAll();
-                GSM.numberOfPlayers--;
+                GSM.numberOfPlayers--; // Reduce the player count
             }
         }
     }
 
+    // Set the spawnpoint of players
     private void setPlayerSpawn(){
         for (int i = 0; i < players.size(); i++) {
             Entity player = players.get(i);
             PositionComponent pos = EM.positionMapper.get(player);
+
+            // Spawn players with equal distance between them
             EM.b2dMapper.get(player).body.setTransform((50f + (Application.camera.viewportWidth / players.size()) * i)/PPM,pos.position.y/PPM,0);
-            EM.entityCreator.getHealthFont().createEntity().add(new ParentComponent(player));
         }
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -160,6 +161,9 @@ public class EntityManager {
         // Instantiate player entities
         spawnPlayers(5);
 
+        // Instantiate health displayers
+        createHealthDisplayers();
+
 
         timer.add(new PositionComponent(
                 Application.camera.viewportWidth / 2f,
@@ -302,9 +306,21 @@ public class EntityManager {
         this.powerBarTexture.dispose();
     }
 
+    // Spawn players
     private void spawnPlayers(int numberOfPlayers) {
         for (int i = 0; i < numberOfPlayers; i++) {
             entityCreator.getPlayerClass(EntityCreator.PLAYERS.DEFAULT).createEntity();
+        }
+    }
+
+    // Create health displayers
+    private void createHealthDisplayers(){
+        ImmutableArray<Entity> players = engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
+        for(int i=0; i<players.size();i++){
+            Entity player = players.get(i); // Get a player
+
+            // Create the health displayer and add the player as the parent -> such that the health font is attached to the player
+            EM.entityCreator.getHealthFont().createEntity().add(new ParentComponent(player));
         }
     }
 }
