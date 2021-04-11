@@ -23,6 +23,7 @@ public class GameStateManager {
     public static GameStateManager GSM; // Makes the GameStateManager accessed globally
     public AbstractGameState gameState; // Represents the current game state
 
+    public boolean updateGamePlaySystem = false; // should be true each time we switch states
     public boolean pauseTimer = false;
     public boolean pauseGame = false;
     public float time = 0; // To keep track of time
@@ -81,12 +82,15 @@ public class GameStateManager {
 
         this.gameState = gameStates.get(STATE.START_GAME); // Set new STATE
         this.gameState.startGameState(); // Start current STATE
+
+        updateGamePlaySystem = true; // Start the gamePlaySystem
     }
 
     // Set game state and reset timer
     public void setGameState(STATE gameState) {
         this.gameState.endGameState(); // End previous STATE
         this.gameState = gameStates.get(gameState); // Set new STATE
+        updateGamePlaySystem = true;
         this.gameState.startGameState(); // Start current STATE
     }
 
