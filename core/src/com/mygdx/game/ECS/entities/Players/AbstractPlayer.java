@@ -1,6 +1,5 @@
 package com.mygdx.game.ECS.entities.Players;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
@@ -30,11 +29,11 @@ public abstract class AbstractPlayer extends AbstractEntity {
 
     @Override
     public void setEntityStats() {
-        this.health = setPlayerHealth();
-        this.velocity = setPlayerVelocity();
-        this.size = setPlayerSize();
-        this.position = setPlayerPosition();
-        this.texture = setPlayerTexture();
+        this.health = getPlayerHealth();
+        this.velocity = getPlayerVelocity();
+        this.size = getPlayerSize();
+        this.position = getPlayerPosition();
+        this.texture = getPlayerTexture();
     }
 
     @Override
@@ -52,9 +51,9 @@ public abstract class AbstractPlayer extends AbstractEntity {
                 .add(new PlayerComponent());
     }
 
-    public abstract int setPlayerHealth();
-    public abstract Vector2 setPlayerVelocity();
-    public abstract Vector2 setPlayerSize();
-    public abstract Vector2 setPlayerPosition();
-    public abstract Texture setPlayerTexture();
+    public abstract int getPlayerHealth();
+    public abstract Vector2 getPlayerVelocity();
+    public abstract Vector2 getPlayerSize();
+    public abstract Vector2 getPlayerPosition();
+    public abstract Texture getPlayerTexture();
 }

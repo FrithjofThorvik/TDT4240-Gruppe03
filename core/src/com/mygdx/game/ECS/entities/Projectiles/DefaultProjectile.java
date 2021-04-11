@@ -19,32 +19,32 @@ public class DefaultProjectile extends AbstractProjectile {
     ProjectileType type = new StandardType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
-    public int setDamage() {
+    public int getDamage() {
         return damage;
     }
 
     @Override
-    public float setSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
     @Override
-    public Vector2 setSize() {
+    public Vector2 getSize() {
         return size;
     }
 
     @Override
-    public Vector2 setPosition() {
+    public Vector2 getPosition() {
         return position;
     }
 
     @Override
-    public Texture setTexture() {
+    public Texture getTexture() {
         return texture;
     }
 
     @Override
-    public ProjectileType setType() {
+    public ProjectileType getType() {
         return type;
     }
 

@@ -1,6 +1,5 @@
 package com.mygdx.game.managers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.entities.EntityCreator;
 
 import static com.mygdx.game.managers.EntityManager.EM;
@@ -43,7 +41,7 @@ public class ControlManager {
         // Get number of projectile types
         numberOfProjectiles = EntityCreator.PROJECTILES.values().length;
         for (int i=0;i<numberOfProjectiles;i++){
-            this.projectileTextures.add(EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.values()[i]).setTexture());
+            this.projectileTextures.add(EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.values()[i]).getTexture());
         }
 
         Actor controller = this.createControllerActor();

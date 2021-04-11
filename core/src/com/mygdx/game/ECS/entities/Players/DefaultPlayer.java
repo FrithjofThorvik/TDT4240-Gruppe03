@@ -19,27 +19,27 @@ public class DefaultPlayer extends AbstractPlayer {
 
 
     @Override
-    public int setPlayerHealth() {
+    public int getPlayerHealth() {
         return this.health;
     }
 
     @Override
-    public Vector2 setPlayerVelocity() {
+    public Vector2 getPlayerVelocity() {
         return this.velocity;
     }
 
     @Override
-    public Vector2 setPlayerSize() {
+    public Vector2 getPlayerSize() {
         return this.size;
     }
 
     @Override
-    public Vector2 setPlayerPosition() {
+    public Vector2 getPlayerPosition() {
         return this.position;
     }
 
     @Override
-    public Texture setPlayerTexture() {
+    public Texture getPlayerTexture() {
         return this.texture;
     }
 

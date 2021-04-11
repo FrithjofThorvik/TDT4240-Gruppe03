@@ -35,7 +35,7 @@ public class EntityCreator {
     }
 
     // Create HashMaps
-    private HashMap<PLAYERS, AbstractEntity> players;
+    private HashMap<PLAYERS, AbstractPlayer> players;
     private HashMap<PROJECTILES, AbstractProjectile> projectiles;
 
     public EntityCreator() {
@@ -43,7 +43,7 @@ public class EntityCreator {
     }
 
     private void initClasses() {
-        this.players = new HashMap<PLAYERS, AbstractEntity>();
+        this.players = new HashMap<PLAYERS, AbstractPlayer>();
         this.projectiles = new HashMap<PROJECTILES, AbstractProjectile>();
 
         this.players.put(PLAYERS.DEFAULT, new DefaultPlayer());
@@ -54,7 +54,7 @@ public class EntityCreator {
         this.projectiles.put(PROJECTILES.SPEEDY, new SpeedyProjectile());
     }
 
-    public AbstractEntity getPlayerClass(PLAYERS playerClass) {
+    public AbstractPlayer getPlayerClass(PLAYERS playerClass) {
         return this.players.get(playerClass);
     }
 
