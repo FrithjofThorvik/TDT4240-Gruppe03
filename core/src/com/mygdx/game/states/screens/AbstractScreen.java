@@ -5,6 +5,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.Application;
 
+/**
+ * Contain the template for how screens are implemented
+ * Create new screen types by inheriting from this class
+ **/
 public abstract class AbstractScreen implements Screen {
 
     protected final Application app; // Only one instance of app (final)

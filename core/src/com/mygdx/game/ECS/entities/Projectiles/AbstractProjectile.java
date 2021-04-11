@@ -20,7 +20,9 @@ import static com.mygdx.game.utils.B2DConstants.BIT_PROJECTILE;
 
 
 /**
- * ...
+ * Adds the core components that all projectiles need
+ * The variables are overwritten by child classes
+ * The child classes can add variable components
  **/
 public abstract class AbstractProjectile extends AbstractEntity {
     public int damage;

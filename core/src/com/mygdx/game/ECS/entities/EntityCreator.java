@@ -15,7 +15,8 @@ import java.util.HashMap;
 
 
 /**
- * ...
+ * This class is responsible for keeping a HashMap of available default construction of certain entities
+ * Use this class in order when creating these entities -> so you don't need to remember all the different variants
  **/
 public class EntityCreator {
 

@@ -17,7 +17,9 @@ import static com.mygdx.game.utils.B2DConstants.*;
 
 
 /**
- * ...
+ * This class adds the core components that player entities need
+ * The variables are overwritten by child classes
+ * The child classes can add variable components
  **/
 public abstract class AbstractPlayer extends AbstractEntity {
     public int health;
