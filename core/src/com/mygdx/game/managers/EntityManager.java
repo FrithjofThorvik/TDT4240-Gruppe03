@@ -26,6 +26,7 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.ECS.entities.AbstractEntity;
 import com.mygdx.game.ECS.entities.EntityCreator;
 import com.mygdx.game.ECS.entities.Fonts.HealthFont;
 import com.mygdx.game.ECS.systems.AimingSystem;
