@@ -7,7 +7,7 @@ import com.mygdx.game.ECS.components.ProjectileAlgorithms.ProjectileType;
 import com.mygdx.game.ECS.components.ProjectileAlgorithms.StandardType;
 
 /**
- * ...
+ * This projectile is fast :O
  **/
 public class SpeedyProjectile extends AbstractProjectile {
 
@@ -16,7 +16,7 @@ public class SpeedyProjectile extends AbstractProjectile {
     Vector2 size = new Vector2(10f, 10f);
     Vector2 position = new Vector2(0f, 0f);
     Texture texture = new Texture("cannonball.png");
-    ProjectileType type = new StandardType();
+    ProjectileType type = new StandardType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
     public int setDamage() {
@@ -49,7 +49,7 @@ public class SpeedyProjectile extends AbstractProjectile {
     }
 
     @Override
-    public void addClassComponents() {
+    public void addClassComponents() { // Variable components specific for this class
         // Nothing
     }
 }

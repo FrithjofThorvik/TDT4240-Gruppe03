@@ -5,18 +5,21 @@ import com.badlogic.ashley.core.Entity;
 import static com.mygdx.game.managers.EntityManager.EM;
 
 /**
- *  ...
+ *  The template method for creating entities
+ *  The functions are overwritten in child objects of this class
  **/
 public abstract class AbstractEntity {
     public Entity entity;
 
     public Entity createEntity() {
-        this.entity = new Entity();
+        this.entity = new Entity(); // Create a new, blank entity
 
-        setEntityStats();
-        addCoreComponents();
-        addClassComponents();
-        this.addToEngine();
+        // Template functions
+        setEntityStats(); // Set variables specific for the entity
+        addCoreComponents(); // Add core components that are common among a group of entities (eg. projectiles)
+        addClassComponents(); // Add class component that varies within a common group of entities (eg. SplitterProjectile)
+
+        this.addToEngine(); // all entities must be added to engine
 
         return this.entity;
     }

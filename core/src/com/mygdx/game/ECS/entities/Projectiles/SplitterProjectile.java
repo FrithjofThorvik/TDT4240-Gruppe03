@@ -9,7 +9,7 @@ import com.mygdx.game.ECS.components.ProjectileAlgorithms.SplitterType;
 import com.mygdx.game.ECS.components.ProjectileComponents.SplitterComponent;
 
 /**
- * ...
+ * A projectile that splits -> how splendid
  **/
 public class SplitterProjectile extends AbstractProjectile {
     int numOfSplits = 10;
@@ -18,7 +18,7 @@ public class SplitterProjectile extends AbstractProjectile {
     Vector2 size = new Vector2(15f, 15f);
     Vector2 position = new Vector2(0f, 0f);
     Texture texture = new Texture("cannonball.png");
-    ProjectileType type = new SplitterType();
+    ProjectileType type = new SplitterType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
     public int setDamage() {
@@ -51,7 +51,7 @@ public class SplitterProjectile extends AbstractProjectile {
     }
 
     @Override
-    public void addClassComponents() {
+    public void addClassComponents() { // Variable components specific for this class
         entity.add(new SplitterComponent(numOfSplits));
     }
 }

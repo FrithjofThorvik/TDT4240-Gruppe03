@@ -44,7 +44,11 @@ import java.util.HashMap;
 
 
 /**
- * This class will systems and components, and takes in an engine
+ * This class creates initializes all the ECS -> adds things to the engine
+ * Adds all the systems required for the gameplay
+ * Adds all the entities required for gameplay
+ * Adds entity listeners required for gameplay
+ * Contains component mappers
  **/
 public class EntityManager {
     public static EntityManager EM;

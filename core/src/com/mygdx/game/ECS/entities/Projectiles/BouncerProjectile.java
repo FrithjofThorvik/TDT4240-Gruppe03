@@ -12,7 +12,7 @@ import com.mygdx.game.ECS.components.ProjectileComponents.BouncyComponent;
 
 
 /**
- * ...
+ * This projectile can bounce :)
  **/
 public class BouncerProjectile extends AbstractProjectile {
     int numOfBounces = 3;
@@ -23,7 +23,7 @@ public class BouncerProjectile extends AbstractProjectile {
     Vector2 size = new Vector2(10f, 10f);
     Vector2 position = new Vector2(Application.camera.viewportWidth / 2f, Application.camera.viewportHeight);
     Texture texture = new Texture("cannonball.png");
-    ProjectileType type = new BouncyType();
+    ProjectileType type = new BouncyType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
     public int setDamage() {
@@ -56,7 +56,7 @@ public class BouncerProjectile extends AbstractProjectile {
     }
 
     @Override
-    public void addClassComponents() {
+    public void addClassComponents() { // Variable components specific for this class
         this.entity.add(new BouncyComponent(numOfBounces));
 
         // Give the box2d component bounciness

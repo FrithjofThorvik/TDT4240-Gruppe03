@@ -8,7 +8,7 @@ import com.mygdx.game.Application;
 
 
 /**
- * ...
+ * Player goes vroom vroom -> but has less health
  **/
 public class SpeedyPlayer extends AbstractPlayer {
     int health = 70;
@@ -44,7 +44,7 @@ public class SpeedyPlayer extends AbstractPlayer {
     }
 
     @Override
-    public void addClassComponents() {
+    public void addClassComponents() { // Variable components specific for this class
         // Nothing
     }
 }

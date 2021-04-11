@@ -8,7 +8,7 @@ import com.mygdx.game.Application;
 
 
 /**
- * ...
+ * Your standard run of the mill player
  **/
 public class DefaultPlayer extends AbstractPlayer {
     int health = 100;
@@ -44,7 +44,7 @@ public class DefaultPlayer extends AbstractPlayer {
     }
 
     @Override
-    public void addClassComponents() {
+    public void addClassComponents() { // Variable components specific for this class
         // Nothing
     }
 }
