@@ -28,6 +28,7 @@ import static com.mygdx.game.utils.B2DConstants.PPM;
  * This system is also responsible for stopping and starting systems between rounds
  **/
 public class GamePlaySystem extends EntitySystem {
+    boolean spawn = true;
     // Entity arrays
     public ImmutableArray<Entity> players; // List of players
     public ImmutableArray<Entity> healthDisplayers; // List of players
@@ -41,10 +42,6 @@ public class GamePlaySystem extends EntitySystem {
     // Update function for GamePlaySystem (calls automatically by engine)
     public void update(float dt) {
         if (this.players.size() > 0) {
-            if (GSM.numberOfPlayers == 0) {
-                GSM.numberOfPlayers = this.players.size(); // Tell the state manager how many players are in the game
-                setPlayerSpawn(); // Set spawn point for players
-            }
 
             this.checkHealth(); // Check if any health components have reached 0
             this.updateStates(); // Check which gameState the system is in -> Remove or add component, start or stop systems
@@ -56,6 +53,8 @@ public class GamePlaySystem extends EntitySystem {
 
         // START_GAME -> Displays a countdown until round starts
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME)) {
+            if(spawn)
+                setPlayerSpawn();
             // Start or stop systems (if they should be processed or not)
             getEngine().getSystem(ShootingSystem.class).setProcessing(false);
             getEngine().getSystem(MovementSystem.class).setProcessing(false);
@@ -149,6 +148,7 @@ public class GamePlaySystem extends EntitySystem {
 
     // Set the spawnpoint of players
     private void setPlayerSpawn(){
+        spawn = false;
         for (int i = 0; i < players.size(); i++) {
             Entity player = players.get(i);
             PositionComponent pos = EM.positionMapper.get(player);
