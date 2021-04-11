@@ -46,8 +46,8 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        new EntityManager(this.engine, Application.batch); // Manager for generating all ECS functions
         new GameStateManager(); // Manager for handling all game states
+        new EntityManager(this.engine, Application.batch); // Manager for generating all ECS functions
         new ControlManager(); // Manages all game controls
 
         world.setContactListener(new CollisionHandler()); // Set contact listener for world

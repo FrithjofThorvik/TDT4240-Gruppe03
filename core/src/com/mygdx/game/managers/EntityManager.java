@@ -63,6 +63,7 @@ public class EntityManager {
     // Entity listeners
     private EntityListener movementControlListener;
     private EntityListener box2DComponentListener;
+    private EntityListener playerComponentListener;
 
     // Entity systems
     private MovementSystem movementSystem;
@@ -273,6 +274,24 @@ public class EntityManager {
         // The family decides which components the entity listener should listen for
         Family Box2D = Family.all(Box2DComponent.class).get();
         this.engine.addEntityListener(Box2D, box2DComponentListener);
+
+
+        // This should activate when a player component is added or removed from an entity
+        this.playerComponentListener = new EntityListener() {
+            @Override
+            public void entityRemoved(Entity entity) {
+                GSM.numberOfPlayers--; // Decrease number of players variable
+            }
+
+            @Override
+            public void entityAdded(Entity entity) {
+                GSM.numberOfPlayers++; // Increase number of players variable
+            }
+        };
+
+        // The family decides which components the entity listener should listen for
+        Family players = Family.all(PlayerComponent.class).get();
+        this.engine.addEntityListener(players, playerComponentListener);
     }
 
     // On update, call the engines update method
