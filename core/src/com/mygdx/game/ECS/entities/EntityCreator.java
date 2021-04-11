@@ -4,6 +4,7 @@ import com.mygdx.game.ECS.entities.Fonts.HealthFont;
 import com.mygdx.game.ECS.entities.Players.AbstractPlayer;
 import com.mygdx.game.ECS.entities.Players.DefaultPlayer;
 import com.mygdx.game.ECS.entities.Players.SpeedyPlayer;
+import com.mygdx.game.ECS.entities.Projectiles.AbstractProjectile;
 import com.mygdx.game.ECS.entities.Projectiles.BouncerProjectile;
 import com.mygdx.game.ECS.entities.Projectiles.DefaultProjectile;
 import com.mygdx.game.ECS.entities.Projectiles.SpeedyProjectile;
@@ -35,7 +36,7 @@ public class EntityCreator {
 
     // Create HashMaps
     private HashMap<PLAYERS, AbstractEntity> players;
-    private HashMap<PROJECTILES, AbstractEntity> projectiles;
+    private HashMap<PROJECTILES, AbstractProjectile> projectiles;
 
     public EntityCreator() {
         this.initClasses();
@@ -43,7 +44,7 @@ public class EntityCreator {
 
     private void initClasses() {
         this.players = new HashMap<PLAYERS, AbstractEntity>();
-        this.projectiles = new HashMap<PROJECTILES, AbstractEntity>();
+        this.projectiles = new HashMap<PROJECTILES, AbstractProjectile>();
 
         this.players.put(PLAYERS.DEFAULT, new DefaultPlayer());
         this.players.put(PLAYERS.SPEEDY, new SpeedyPlayer());
@@ -57,7 +58,7 @@ public class EntityCreator {
         return this.players.get(playerClass);
     }
 
-    public AbstractEntity getProjectileClass(PROJECTILES projectileClass) {
+    public AbstractProjectile getProjectileClass(PROJECTILES projectileClass) {
         return this.projectiles.get(projectileClass);
     }
 

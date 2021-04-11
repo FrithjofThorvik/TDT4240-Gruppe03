@@ -15,7 +15,7 @@ public class SpeedyProjectile extends AbstractProjectile {
     float speed = 1.5f;
     Vector2 size = new Vector2(10f, 10f);
     Vector2 position = new Vector2(0f, 0f);
-    Texture texture = new Texture("cannonball.png");
+    public Texture texture = new Texture("button_restart.png");
     ProjectileType type = new StandardType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
