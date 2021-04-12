@@ -11,7 +11,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.managers.ScreenManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static com.mygdx.game.managers.ScreenManager.SM;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 /**
@@ -23,6 +30,9 @@ public class Application extends Game {
     public static int APP_DESKTOP_WIDTH = 1600;    // Scaled
     public static int APP_DESKTOP_HEIGHT = 900;    // Scaled
     public static int APP_FPS = 60;
+
+    //server
+    private Socket socket;
 
     // Game Globals
     public static int VIRTUAL_WORLD_WIDTH = 1600;    // Core
@@ -43,6 +53,10 @@ public class Application extends Game {
         batch = new SpriteBatch();
         this.shapeBatch = new ShapeRenderer();
 
+        //connecting to server
+        connectSocket();
+        configSocketEvents();
+
         // Initialize screen properties
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WORLD_WIDTH, VIRTUAL_WORLD_HEIGHT, camera);
@@ -59,6 +73,8 @@ public class Application extends Game {
 
         new ScreenManager(this); // Create ScreenManager
     }
+
+
 
     @Override
     public void render() {
@@ -78,6 +94,38 @@ public class Application extends Game {
         camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
         camera.update();
     }
+
+    public void connectSocket() {
+        try {
+            socket = IO.socket("http://localhost:8080");  //showing where the server is located
+            socket.connect();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void configSocketEvents() {
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Gdx.app.log("SocketIO", "Connected");
+            }
+        }).on("socketID", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    String id = data.getString("id");
+                    Gdx.app.log("SocketIO", "My ID:" + id);
+                } catch (JSONException e) {
+                    Gdx.app.log("SocketIO", "error getting ID");
+                }
+            }
+        });
+    }
+
+
+
 
     @Override
     public void dispose() {

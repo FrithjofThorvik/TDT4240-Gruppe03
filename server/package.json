@@ -1,0 +1,23 @@
+{
+  "name": "tdt4240-gruppe03",
+  "version": "1.0.0",
+  "description": "<pre>\r ...\r </pre>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FrithjofThorvik/TDT4240-Gruppe03.git"
+  },
+  "author": "Enok",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FrithjofThorvik/TDT4240-Gruppe03/issues"
+  },
+  "homepage": "https://github.com/FrithjofThorvik/TDT4240-Gruppe03#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.0.1"
+  }
+}
