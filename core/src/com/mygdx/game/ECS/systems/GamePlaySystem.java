@@ -59,7 +59,7 @@ public class GamePlaySystem extends EntitySystem {
             EM.player2.remove(RenderComponent.class);
             EM.health1.remove(RenderComponent.class);
             EM.health2.remove(RenderComponent.class);
-            EM.ground.remove(RenderComponent.class);
+            EM.map.remove(RenderComponent.class);
             EM.timer.remove(RenderComponent.class);
             EM.powerBar.remove(RenderComponent.class);
             EM.powerBarArrow.remove(RenderComponent.class);

@@ -8,11 +8,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.EffectComponent;
+import com.mygdx.game.ECS.components.MapComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
@@ -27,6 +29,7 @@ import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.ECS.entities.EntityCreator;
 import com.mygdx.game.ECS.systems.AimingSystem;
+import com.mygdx.game.ECS.systems.MapSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.CollisionSystem;
@@ -68,6 +71,7 @@ public class EntityManager {
     private PhysicsSystem physicsSystem;
     private ShootingSystem shootingSystem;
     private UISystem userInterfaceSystem;
+    private MapSystem mapSystem;
 
     // These entities are UI elements and are static in order to be accessible everywhere
     public Entity player1;
@@ -79,6 +83,7 @@ public class EntityManager {
     public Entity powerBarArrow;
     public Entity timer;
     public Entity ground;
+    public Entity map;
 
     // Preparing component mappers -> the fastest way for getting entities
     public final ComponentMapper<Box2DComponent> b2dMapper = ComponentMapper.getFor(Box2DComponent.class);
@@ -100,6 +105,7 @@ public class EntityManager {
     Texture tankTexture = new Texture("tank.png");
     Texture powerBarTexture = new Texture("powerbar.png");
     Texture rightArrowTexture = new Texture("right-arrow.png");
+    Texture mapTexture = new Texture("mapsprite.png");
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
@@ -130,6 +136,7 @@ public class EntityManager {
         this.physicsSystem = new PhysicsSystem();
         this.shootingSystem = new ShootingSystem();
         this.userInterfaceSystem = new UISystem();
+        this.mapSystem = new MapSystem();
 
         // Add all ECS systems to the engine
         this.engine.addSystem(this.movementSystem);
@@ -142,6 +149,7 @@ public class EntityManager {
         this.engine.addSystem(this.physicsSystem);
         this.engine.addSystem(this.shootingSystem);
         this.engine.addSystem(this.userInterfaceSystem);
+        this.engine.addSystem(this.mapSystem);
 
     }
 
@@ -158,13 +166,36 @@ public class EntityManager {
         powerBar = new Entity();
         powerBarArrow = new Entity();
         ground = new Entity();
+        map = new Entity();
         aimArrow = new Entity();
+
+        // Instantiate map-sprite entity
+        map.add(new SpriteComponent(
+                this.mapTexture,
+                Application.camera.viewportWidth,
+                Application.camera.viewportHeight,
+                0)
+        )
+                .add(new PositionComponent(
+                        Application.camera.viewportWidth / 2f,
+                        Application.camera.viewportHeight / 2f)
+                )
+                /*.add(new Box2DComponent(
+                        positionMapper.get(map).position,
+                        spriteMapper.get(map).size,
+                        true,
+                        10000,
+                        BIT_GROUND,
+                        (short) (BIT_PLAYER | BIT_PROJECTILE))
+                )*/
+                .add(new RenderComponent());
 
         // Instantiate player entities
         player1.add(new SpriteComponent(
                     this.tankTexture,
                     50f,
-                    50f)
+                    50f,
+                        1)
                 )
                 .add(new PositionComponent(
                         spriteMapper.get(player1).size.x,
@@ -187,7 +218,8 @@ public class EntityManager {
         player2.add(new SpriteComponent(
                     this.tankTexture,
                     50f,
-                    50f)
+                    50f,
+                        1)
                 )
                 .add(new PositionComponent(
                         Application.camera.viewportWidth - 100f,
@@ -218,7 +250,8 @@ public class EntityManager {
         powerBar.add(new SpriteComponent(
                     this.powerBarTexture,
                     40f,
-                    350f)
+                    350f,
+                        1)
                 )
                 .add(new PositionComponent(
                         Application.camera.viewportWidth - 50f,
@@ -228,31 +261,29 @@ public class EntityManager {
         powerBarArrow.add(new SpriteComponent(
                     this.rightArrowTexture,
                     40f,
-                    40f)
+                    40f,
+                        1)
                 )
                 .add(new PositionComponent(
                         Application.camera.viewportWidth - 70f,
                         Application.camera.viewportHeight - (spriteMapper.get(powerBar).size.y) / 2f)
                 );
 
-        ground.add(new SpriteComponent(
-                    this.tankTexture,
-                        Application.camera.viewportWidth * 2f,
-                    10f)
-                )
-                .add(new PositionComponent(
+
+        ground.add(new PositionComponent(
                         Application.camera.viewportWidth / 2f,
                         Application.camera.viewportHeight / 2f)
                 )
                 .add(new Box2DComponent(
                         positionMapper.get(ground).position,
-                        spriteMapper.get(ground).size,
+                        new Vector2(10, 10),
                         true,
                         10000,
                         BIT_GROUND,
                         (short) (BIT_PLAYER | BIT_PROJECTILE))
                 )
                 .add(new RenderComponent());
+
 
         aimArrow.add(new PositionComponent(
                 Application.camera.viewportWidth/ 2f,
@@ -261,7 +292,8 @@ public class EntityManager {
                 .add(new SpriteComponent(
                         this.rightArrowTexture,
                         10f,
-                        10f)
+                        10f,
+                        1)
                 );
 
         health1
@@ -293,6 +325,7 @@ public class EntityManager {
         this.engine.addEntity(powerBar);
         this.engine.addEntity(powerBarArrow);
         this.engine.addEntity(ground);
+        this.engine.addEntity(map);
         this.engine.addEntity(aimArrow);
         this.engine.addEntity(health1);
         this.engine.addEntity(health2);
@@ -364,6 +397,7 @@ public class EntityManager {
         this.engine.removeSystem(this.physicsSystem);
         this.engine.removeSystem(this.shootingSystem);
         this.engine.removeSystem(this.userInterfaceSystem);
+        this.engine.removeSystem(this.mapSystem);
 
         this.engine.removeAllEntities(); // Remove all entities
     }

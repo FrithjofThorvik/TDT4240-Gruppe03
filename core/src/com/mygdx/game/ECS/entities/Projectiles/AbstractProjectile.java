@@ -47,7 +47,7 @@ public abstract class AbstractProjectile extends AbstractEntity {
                         this.position, this.size, false, 10f,
                         BIT_PROJECTILE,
                         (short) (BIT_PLAYER | BIT_GROUND)))
-                .add(new SpriteComponent(this.texture, this.size.x, this.size.y))
+                .add(new SpriteComponent(this.texture, this.size.x, this.size.y, 1))
                 .add(new PositionComponent(this.position.x, this.position.y))
                 .add(new RenderComponent());
     }

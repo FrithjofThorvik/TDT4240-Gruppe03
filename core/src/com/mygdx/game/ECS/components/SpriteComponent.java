@@ -12,9 +12,11 @@ import com.badlogic.gdx.math.Vector2;
 public class SpriteComponent implements Component {
     public Sprite sprite;
     public Vector2 size;
+    public int zValue;
 
-    public SpriteComponent(Texture texture, float width, float height) {
+    public SpriteComponent(Texture texture, float width, float height, int zValue) {
         this.sprite = new Sprite(texture);
         this.size = new Vector2(width, height);
+        this.zValue = zValue;
     }
 }

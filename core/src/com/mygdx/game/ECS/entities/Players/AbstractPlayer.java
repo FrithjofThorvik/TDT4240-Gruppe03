@@ -41,7 +41,7 @@ public abstract class AbstractPlayer extends AbstractEntity {
                     this.position, this.size, false, 100f,
                     BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE))
                 )
-                .add(new SpriteComponent(this.texture, this.size.x, this.size.y))
+                .add(new SpriteComponent(this.texture, this.size.x, this.size.y, 1))
                 .add(new HealthComponent(this.health))
                 .add(new PositionComponent(this.position.x, this.position.y))
                 .add(new VelocityComponent(this.velocity.x, this.velocity.y))

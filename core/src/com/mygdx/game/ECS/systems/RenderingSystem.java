@@ -56,17 +56,36 @@ public class RenderingSystem extends EntitySystem {
     public void update(float deltaTime) {
         if (this.spriteEntities.size() > 0 || this.fontEntities.size() > 0) {
             // Loop through all sprite entities, and draw screen
+            // TODO: Sort by z, rather than brute force
             for (int i = 0; i < this.spriteEntities.size(); i++) {
-                // Fetch each component
-                Entity entity = this.spriteEntities.get(i);
-                SpriteComponent sc = EM.spriteMapper.get(entity);
-                PositionComponent pc = EM.positionMapper.get(entity);
+                SpriteComponent spriteComponent = this.spriteEntities.get(i).getComponent(SpriteComponent.class);
+                if(spriteComponent.zValue == 0){
+                    // Fetch each component
+                    Entity entity = this.spriteEntities.get(i);
+                    SpriteComponent sc = EM.spriteMapper.get(entity);
+                    PositionComponent pc = EM.positionMapper.get(entity);
 
-                // Draw the sprite, so that the center of its sprite is the position of the given entity
-                sc.sprite.setSize(sc.size.x, sc.size.y);
-                sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2f);
-                sc.sprite.setOrigin(sc.size.x / 2f, sc.size.y / 2f);
-                sc.sprite.draw(batch);
+                    // Draw the sprite, so that the center of its sprite is the position of the given entity
+                    sc.sprite.setSize(sc.size.x, sc.size.y);
+                    sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2f);
+                    sc.sprite.setOrigin(sc.size.x / 2f, sc.size.y / 2f);
+                    sc.sprite.draw(batch);
+                }
+            }
+            for (int i = 0; i < this.spriteEntities.size(); i++) {
+                SpriteComponent spriteComponent = this.spriteEntities.get(i).getComponent(SpriteComponent.class);
+                if(spriteComponent.zValue == 1){
+                    // Fetch each component
+                    Entity entity = this.spriteEntities.get(i);
+                    SpriteComponent sc = EM.spriteMapper.get(entity);
+                    PositionComponent pc = EM.positionMapper.get(entity);
+
+                    // Draw the sprite, so that the center of its sprite is the position of the given entity
+                    sc.sprite.setSize(sc.size.x, sc.size.y);
+                    sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2f);
+                    sc.sprite.setOrigin(sc.size.x / 2f, sc.size.y / 2f);
+                    sc.sprite.draw(batch);
+                }
             }
 
             // Loop through all sprite entities, and draw screen
