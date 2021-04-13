@@ -5,11 +5,21 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.EffectComponent;
@@ -37,6 +47,7 @@ import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 import com.mygdx.game.ECS.systems.UISystem;
+import com.mygdx.game.states.screens.GameScreen;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.*;
@@ -119,6 +130,7 @@ public class EntityManager {
         // Create and add ECS systems and entities
         this.addSystems();
         this.createEntities();
+        this.createMap();
     }
 
     // Add all ECS systems
@@ -134,7 +146,7 @@ public class EntityManager {
         this.physicsSystem = new PhysicsSystem();
         this.shootingSystem = new ShootingSystem();
         this.userInterfaceSystem = new UISystem();
-        this.mapSystem = new MapSystem();
+        //this.mapSystem = new MapSystem();
 
         // Add all ECS systems to the engine
         this.engine.addSystem(this.movementSystem);
@@ -147,7 +159,7 @@ public class EntityManager {
         this.engine.addSystem(this.physicsSystem);
         this.engine.addSystem(this.shootingSystem);
         this.engine.addSystem(this.userInterfaceSystem);
-        this.engine.addSystem(this.mapSystem);
+        //this.engine.addSystem(this.mapSystem);
 
     }
 
@@ -177,8 +189,8 @@ public class EntityManager {
                 .add(new PositionComponent(
                         Application.camera.viewportWidth / 2f,
                         Application.camera.viewportHeight / 2f)
-                )
-                .add(new RenderComponent());
+                );
+                //.add(new RenderComponent());
 
         // Instantiate player entities
         player1.add(new SpriteComponent(
@@ -364,6 +376,69 @@ public class EntityManager {
         // The family decides which components the entity listener should listen for
         Family Box2D = Family.all(Box2DComponent.class).get();
         this.engine.addEntityListener(Box2D, box2DComponentListener);
+    }
+
+    // Creates the map with all ground instances
+    private void createMap() {
+        TiledMap tiledMap = new TmxMapLoader().load("scifi.tmx");
+        MapObjects objects = tiledMap.getLayers().get("ground").getObjects();
+
+        // Loop through all ground objects, and give each object a Box2D body
+        for (MapObject object : objects) {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+
+            rectangle.height *= 2;
+            rectangle.width *= 2;
+            rectangle.x *= 2;
+            rectangle.y *= 2;
+
+            Entity mapObject = new Entity();
+            mapObject.add(new Box2DComponent(
+                    rectangle.getCenter(new Vector2()),
+                    new Vector2(rectangle.width * 2, rectangle.height * 2),
+                    true,
+                    10000f,
+                    BIT_GROUND,
+                    (short) (BIT_PLAYER | BIT_PROJECTILE))
+            );
+            engine.addEntity(mapObject);
+
+            /*
+
+            float scale = Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+            System.out.println(scale);
+            rectangle.height *= 1.9;
+            rectangle.width *= 2;
+            rectangle.x *= 2;
+            rectangle.y *= 1.9;
+
+            //create a dynamic within the world body (also can be KinematicBody or StaticBody
+
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.type = BodyDef.BodyType.StaticBody;
+            Body body = GameScreen.world.createBody(bodyDef);
+
+            //create a fixture for each body from the shape
+            // Create FixtureDef representing properties such as density, restitution, etc
+            FixtureDef fixtureDef = new FixtureDef();
+
+            PolygonShape polygonShape = new PolygonShape();
+            polygonShape.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
+
+            fixtureDef.shape = polygonShape; // Add the box shape to fixture
+            fixtureDef.density = 10000; // Add density to fixture (increases mass)
+            fixtureDef.friction = 0.1f;
+            fixtureDef.filter.categoryBits = BIT_GROUND; // Is this category of bit
+            fixtureDef.filter.maskBits = (short) (BIT_PLAYER | BIT_PROJECTILE); // Will collide with these bits
+            body.createFixture(fixtureDef); // Add FixtureDef and id to body
+
+            //setting the position of the body's origin. In this case with zero rotation
+            Vector2 center = new Vector2();
+            rectangle.getCenter(center);
+            center.scl(1 / PPM);
+            body.setTransform(center, 0);
+            */
+        }
     }
 
     // On update, call the engines update method
