@@ -21,27 +21,28 @@ public class CollisionHandler implements ContactListener {
         // Check first if the entityFixtureHashMap contains values
         if (entityFixtureHashMap.size() > 0) {
             // Get the entities corresponding to the fixtures colliding
-            Entity entity1 = entityFixtureHashMap.get(contact.getFixtureA());
-            Entity entity2 = entityFixtureHashMap.get(contact.getFixtureB());
 
-            // Add the collision component to the entities
-            entity1.add(new CollisionComponent(entity2));
-            entity2.add(new CollisionComponent(entity1));
+//            Entity entity1 = entityFixtureHashMap.get(contact.getFixtureA());
+//            Entity entity2 = entityFixtureHashMap.get(contact.getFixtureB());
+//
+//            // Add the collision component to the entities
+//            entity1.add(new CollisionComponent(entity2));
+//            entity2.add(new CollisionComponent(entity1));
         }
     }
 
     @Override
     public void endContact(Contact contact) {
         // Check first if the entityFixtureHashMap contains values
-        if (entityFixtureHashMap.size() > 0) {
-            // Get the entities corresponding to the fixtures colliding
-            Entity entity1 = entityFixtureHashMap.get(contact.getFixtureA());
-            Entity entity2 = entityFixtureHashMap.get(contact.getFixtureB());
-
-            // Remove the collision component to the entities
-            entity1.remove(CollisionComponent.class);
-            entity2.remove(CollisionComponent.class);
-        }
+//        if (entityFixtureHashMap.size() > 0) {
+//            // Get the entities corresponding to the fixtures colliding
+//            Entity entity1 = entityFixtureHashMap.get(contact.getFixtureA());
+//            Entity entity2 = entityFixtureHashMap.get(contact.getFixtureB());
+//
+//            // Remove the collision component to the entities
+//            entity1.remove(CollisionComponent.class);
+//            entity2.remove(CollisionComponent.class);
+//        }
     }
 
     @Override

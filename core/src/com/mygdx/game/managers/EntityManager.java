@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.EffectComponent;
-import com.mygdx.game.ECS.components.MapComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
@@ -180,14 +178,6 @@ public class EntityManager {
                         Application.camera.viewportWidth / 2f,
                         Application.camera.viewportHeight / 2f)
                 )
-                /*.add(new Box2DComponent(
-                        positionMapper.get(map).position,
-                        spriteMapper.get(map).size,
-                        true,
-                        10000,
-                        BIT_GROUND,
-                        (short) (BIT_PLAYER | BIT_PROJECTILE))
-                )*/
                 .add(new RenderComponent());
 
         // Instantiate player entities
