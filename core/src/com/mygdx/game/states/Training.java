@@ -37,7 +37,7 @@ import static com.mygdx.game.utils.GameConstants.TIME_BETWEEN_ROUNDS;
  * This class controls the game logic of a local multiplayer game
  * This class also spawns the entities required for a local multiplayer game
  **/
-public class LocalMultiplayer implements GameMode {
+public class Training implements GameMode {
     private final DecimalFormat df = new DecimalFormat("0.0"); // Format timer that displays on the time on the screen
     int currentPlayer = 0; // The player whose turn it is
     boolean stopTimer = false; // If the timer should increment with time
@@ -49,7 +49,7 @@ public class LocalMultiplayer implements GameMode {
     public ImmutableArray<Entity> healthDisplayers; // List of players
     private ImmutableArray<Entity> projectiles; // List of projectiles
 
-    public LocalMultiplayer() {
+    public Training() {
         this.players = EM.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
         this.projectiles = EM.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
         this.healthDisplayers = EM.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());

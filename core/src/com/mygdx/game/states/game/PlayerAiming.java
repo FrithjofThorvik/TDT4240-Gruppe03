@@ -10,6 +10,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class PlayerAiming extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.mode.playerAim();
+        GSM.getGameMode().playerAim();
     }
 }

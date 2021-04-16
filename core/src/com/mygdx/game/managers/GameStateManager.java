@@ -1,7 +1,8 @@
 package com.mygdx.game.managers;
 
 import com.mygdx.game.states.LocalMultiplayer;
-import com.mygdx.game.states.Mode;
+import com.mygdx.game.states.GameMode;
+import com.mygdx.game.states.Training;
 import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.EndGame;
 import com.mygdx.game.states.game.PlayerAiming;
@@ -13,8 +14,6 @@ import com.mygdx.game.states.game.SwitchRound;
 
 import java.util.HashMap;
 
-import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
-
 
 /**
  * This manages game states
@@ -24,7 +23,7 @@ import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 public class GameStateManager {
     public static GameStateManager GSM; // Makes the GameStateManager accessed globally
     public AbstractGameState gameState; // Represents the current game state
-    public Mode mode;
+    private GameMode gameMode;
 
     // TODO: Add more to data_layer
 
@@ -39,19 +38,29 @@ public class GameStateManager {
         PROJECTILE_AIRBORNE
     }
 
+    // Create defined game states
+    public enum GAMEMODE {
+        LOCAL,
+        ONLINE,
+        TRAINING
+    }
+
     // Store game states in HashMap
     private HashMap<STATE, AbstractGameState> gameStates;
+
+    // Store game modes in HashMap
+    private HashMap<GAMEMODE, GameMode> gameModes;
 
     // GameStateManager constructor instantiates a static instance of itself and initializes all states
     public GameStateManager() {
         GSM = this;
-        mode = new LocalMultiplayer();
         this.initGameStates();
+        this.initGameModes();
     }
 
     // Get game state
     public void update(float dt) {
-        mode.update(dt);
+        gameMode.update(dt);
     }
 
     // Initialise and map all STATEs to respective GameState
@@ -69,6 +78,15 @@ public class GameStateManager {
         this.gameStates.put(STATE.PROJECTILE_AIRBORNE, new ProjectileAirborne());
     }
 
+    private void initGameModes() {
+        // Map all states to respective GameState
+        this.gameModes = new HashMap<GAMEMODE, GameMode>();
+
+        this.gameModes.put(GAMEMODE.LOCAL, new LocalMultiplayer());
+        //this.gameModes.put(GAMEMODE.ONLINE, new EndGame());
+        this.gameModes.put(GAMEMODE.TRAINING, new Training());
+    }
+
     // Set game state and reset timer
     public void setGameState(STATE gameState) {
         this.gameState = gameStates.get(gameState); // Set new STATE
@@ -78,5 +96,14 @@ public class GameStateManager {
     // Get a game state from the hash map
     public AbstractGameState getGameState(STATE gameState) {
         return this.gameStates.get(gameState);
+    }
+
+    // Get a game mode from the hash map
+    public void setGameMode(GAMEMODE gameMode){
+        this.gameMode = gameModes.get(gameMode);
+    }
+
+    public GameMode getGameMode(){
+        return this.gameMode;
     }
 }

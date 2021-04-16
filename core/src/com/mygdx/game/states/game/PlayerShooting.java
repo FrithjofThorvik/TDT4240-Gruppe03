@@ -10,6 +10,6 @@ public class PlayerShooting extends AbstractGameState {
 
     @Override
     public void startGameState() {
-        GSM.mode.playerShooting();
+        GSM.getGameMode().playerShooting();
     }
 }

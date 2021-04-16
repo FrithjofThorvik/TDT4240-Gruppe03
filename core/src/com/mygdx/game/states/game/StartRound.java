@@ -11,6 +11,6 @@ public class StartRound extends AbstractGameState {
 
     @Override
     public void startGameState() {
-        GSM.mode.startRound();
+        GSM.getGameMode().startRound();
     }
 }

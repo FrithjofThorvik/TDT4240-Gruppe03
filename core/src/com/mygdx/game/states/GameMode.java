@@ -1,6 +1,9 @@
 package com.mygdx.game.states;
 
-public interface Mode {
+/**
+ * This interface is used for controlling game logic for different game modes
+ **/
+public interface GameMode {
     void update(float dt);
 
     void startGame();
@@ -18,4 +21,6 @@ public interface Mode {
     void switchRound();
 
     void updateUI();
+
+    void initEntities();
 }

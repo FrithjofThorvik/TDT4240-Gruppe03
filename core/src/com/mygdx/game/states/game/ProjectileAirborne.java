@@ -12,6 +12,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class ProjectileAirborne extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.mode.projectileAirborne();
+        GSM.getGameMode().projectileAirborne();
     }
 }

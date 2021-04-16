@@ -35,6 +35,7 @@ import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 
+import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.*;
 
 import java.util.HashMap;
@@ -43,7 +44,7 @@ import java.util.HashMap;
 /**
  * This class creates initializes all the ECS -> adds things to the engine
  * Adds all the systems required for the gameplay
- * Adds all the entities required for gameplay
+ * Adds all the UIentities required for gameplay
  * Adds entity listeners required for gameplay
  * Contains component mappers
  **/
@@ -53,21 +54,6 @@ public class EntityManager {
     public final Engine engine;
     private final SpriteBatch batch;
     public EntityCreator entityCreator;
-
-    // Entity listeners
-    private EntityListener movementControlListener;
-    private EntityListener box2DComponentListener;
-    private EntityListener playerComponentListener;
-
-    // Entity systems
-    private MovementSystem movementSystem;
-    private AimingSystem aimingSystem;
-    private CollisionSystem collisionSystem;
-    private RenderingSystem renderingSystem;
-    private ProjectileSystem projectileSystem;
-    private PowerUpSystem powerUpSystem;
-    private PhysicsSystem physicsSystem;
-    private ShootingSystem shootingSystem;
 
     // These entities are UI elements and are static in order to be accessible everywhere
     public Entity aimArrow;
@@ -100,9 +86,9 @@ public class EntityManager {
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
-    public EntityManager(Engine engine, SpriteBatch batch) {
+    public EntityManager(SpriteBatch batch) {
         EM = this;
-        this.engine = engine;
+        this.engine = new Engine();
         this.batch = batch;
         this.entityCreator = new EntityCreator();
 
@@ -111,49 +97,41 @@ public class EntityManager {
 
         // Create and add ECS systems and entities
         this.addSystems();
-        this.createEntities();
     }
+
 
     // Add all ECS systems
     private void addSystems() {
         // Instantiates all ECS systems
-        this.movementSystem = new MovementSystem();
-        this.aimingSystem = new AimingSystem();
-        this.collisionSystem = new CollisionSystem();
-        this.renderingSystem = new RenderingSystem(this.batch);
-        this.projectileSystem = new ProjectileSystem();
-        this.powerUpSystem = new PowerUpSystem();
-        this.physicsSystem = new PhysicsSystem();
-        this.shootingSystem = new ShootingSystem();
+        MovementSystem movementSystem = new MovementSystem();
+        AimingSystem aimingSystem = new AimingSystem();
+        CollisionSystem collisionSystem = new CollisionSystem();
+        RenderingSystem renderingSystem = new RenderingSystem(this.batch);
+        ProjectileSystem projectileSystem = new ProjectileSystem();
+        PowerUpSystem powerUpSystem = new PowerUpSystem();
+        PhysicsSystem physicsSystem = new PhysicsSystem();
+        ShootingSystem shootingSystem = new ShootingSystem();
 
         // Add all ECS systems to the engine
-        this.engine.addSystem(this.movementSystem);
-        this.engine.addSystem(this.aimingSystem);
-        this.engine.addSystem(this.collisionSystem);
-        this.engine.addSystem(this.renderingSystem);
-        this.engine.addSystem(this.projectileSystem);
-        this.engine.addSystem(this.powerUpSystem);
-        this.engine.addSystem(this.physicsSystem);
-        this.engine.addSystem(this.shootingSystem);
+        this.engine.addSystem(movementSystem);
+        this.engine.addSystem(aimingSystem);
+        this.engine.addSystem(collisionSystem);
+        this.engine.addSystem(renderingSystem);
+        this.engine.addSystem(projectileSystem);
+        this.engine.addSystem(powerUpSystem);
+        this.engine.addSystem(physicsSystem);
+        this.engine.addSystem(shootingSystem);
 
     }
 
     // Create entities with ECS components
-    private void createEntities() {
+    public void createUIEntities() {
         // Instantiate all UI entities
         timer = new Entity();
         powerBar = new Entity();
         powerBarArrow = new Entity();
         ground = new Entity();
         aimArrow = new Entity();
-
-
-        // Instantiate player entities
-        spawnPlayers(5);
-
-        // Instantiate health displayers
-        createHealthDisplayers();
-
 
         timer.add(new PositionComponent(
                 Application.camera.viewportWidth / 2f,
@@ -219,10 +197,17 @@ public class EntityManager {
         this.engine.addEntity(aimArrow);
     }
 
+    // Init Mode specific entities
+    public void createModeEntities(){
+        GSM.getGameMode().initEntities();
+    }
+
     // Add entity listeners for observe & listen to when adding and removing entities
     private void createEntityListeners() {
         // Stops the entity from moving when it loses the MovementControlComponent
-        this.movementControlListener = new EntityListener() {
+        // Set the linear velocity of the entity's box2d body to 0 in x direction
+        // Entity listeners
+        EntityListener movementControlListener = new EntityListener() {
 
             @Override
             public void entityRemoved(Entity entity) {
@@ -238,10 +223,15 @@ public class EntityManager {
 
         // The family decides which components the entity listener should listen for
         Family HasControl = Family.all(MovementControlComponent.class).get();
-        this.engine.addEntityListener(HasControl, this.movementControlListener);
+        this.engine.addEntityListener(HasControl, movementControlListener);
 
         // This should activate when a box2d component is added or removed from an entity
-        this.box2DComponentListener = new EntityListener() {
+        // Create a HashMap to keep track of Entities and their box2d bodies
+        // Remove from fixture HashMap -> needed for collision detection
+        // Destroy the box2d body
+        // Store the body so we can destroy it later
+        // Add to fixture HashMap -> needed for collision detection
+        EntityListener box2DComponentListener = new EntityListener() {
             // Create a HashMap to keep track of Entities and their box2d bodies
             final HashMap<Entity, Body> bodyEntityHashMap = new HashMap<Entity, Body>();
 
@@ -262,45 +252,11 @@ public class EntityManager {
         // The family decides which components the entity listener should listen for
         Family Box2D = Family.all(Box2DComponent.class).get();
         this.engine.addEntityListener(Box2D, box2DComponentListener);
-
-
-        // This should activate when a player component is added or removed from an entity
-        this.playerComponentListener = new EntityListener() {
-            @Override
-            public void entityRemoved(Entity entity) {
-                //GSM.numberOfPlayers--; // Decrease number of players variable
-            }
-
-            @Override
-            public void entityAdded(Entity entity) {
-                //GSM.numberOfPlayers++; // Increase number of players variable
-            }
-        };
-
-        // The family decides which components the entity listener should listen for
-        Family players = Family.all(PlayerComponent.class).get();
-        this.engine.addEntityListener(players, playerComponentListener);
     }
 
     // On update, call the engines update method
     public void update(float dt) {
         engine.update(dt);
-    }
-
-    // Reset everything
-    public void removeAll() {
-        this.engine.removeEntityListener(this.movementControlListener); // Remove all listeners
-
-        // Remove all engine systems
-        this.engine.removeSystem(this.movementSystem);
-        this.engine.removeSystem(this.collisionSystem);
-        this.engine.removeSystem(this.renderingSystem);
-        this.engine.removeSystem(this.projectileSystem);
-        this.engine.removeSystem(this.powerUpSystem);
-        this.engine.removeSystem(this.physicsSystem);
-        this.engine.removeSystem(this.shootingSystem);
-
-        this.engine.removeAllEntities(); // Remove all entities
     }
 
     // Dispose everything
@@ -311,14 +267,14 @@ public class EntityManager {
     }
 
     // Spawn players
-    private void spawnPlayers(int numberOfPlayers) {
+    public void spawnPlayers(int numberOfPlayers) {
         for (int i = 0; i < numberOfPlayers; i++) {
             entityCreator.getPlayerClass(EntityCreator.PLAYERS.DEFAULT).createEntity();
         }
     }
 
     // Create health displayers
-    private void createHealthDisplayers() {
+    public void createHealthDisplayers() {
         ImmutableArray<Entity> players = engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
         for (int i = 0; i < players.size(); i++) {
             Entity player = players.get(i); // Get a player
