@@ -12,18 +12,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class ProjectileAirborne extends AbstractGameState {
     @Override
     public void startGameState() {
-        CM.idle(); // Make all controller buttons idle
-        GSM.pauseTimer = true;
+        GSM.mode.projectileAirborne();
     }
-
-    @Override
-    public void endGameState() {
-        GSM.pauseTimer = false;
-    }
-
-    @Override
-    public void update(float dt) {}
-
-    @Override
-    public void dispose() {}
 }

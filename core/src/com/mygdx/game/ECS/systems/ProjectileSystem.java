@@ -26,8 +26,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
  * TODO: Implement projectile functionality
  **/
 public class ProjectileSystem extends EntitySystem {
-    float airBorneTime = 0;
-    float timeoutTime = 10;
     // Prepare arrays for entities
     private ImmutableArray<Entity> players;
     private ImmutableArray<Entity> collidingProjectiles;
@@ -55,22 +53,6 @@ public class ProjectileSystem extends EntitySystem {
                     checkCollision(projectile);
                 }
 
-            }
-        }
-
-        // Check if there are no projectiles -> move on to SWITCH_ROUND state
-        if (projectiles.size() <= 0) {
-            if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)) {
-                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
-            }
-        }
-
-        // Change gamestate if the projectile has been airborne too long
-        if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)){
-            airBorneTime+=deltaTime;
-            if(airBorneTime>timeoutTime){
-                airBorneTime =0;
-                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
             }
         }
     }

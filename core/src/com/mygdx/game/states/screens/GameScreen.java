@@ -9,6 +9,7 @@ import com.mygdx.game.ECS.CollisionHandler;
 import com.mygdx.game.managers.ControlManager;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
+import com.mygdx.game.states.LocalMultiplayer;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.EntityManager.EM;
@@ -46,9 +47,10 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        new GameStateManager(); // Manager for handling all game states
         new EntityManager(this.engine, Application.batch); // Manager for generating all ECS functions
+        new GameStateManager(); // Manager for handling all game states
         new ControlManager(); // Manages all game controls
+        GSM.setGameState(GameStateManager.STATE.START_GAME);
 
         world.setContactListener(new CollisionHandler()); // Set contact listener for world
     }
@@ -75,7 +77,6 @@ public class GameScreen extends AbstractScreen {
     public void dispose() {
         super.dispose();
         EM.dispose();
-        GSM.dispose();
         world.dispose();
     }
 }

@@ -2,8 +2,10 @@ package com.mygdx.game.states.game;
 
 
 import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.states.Mode;
 
 import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.ScreenManager.SM;
 
 /**
@@ -12,15 +14,6 @@ import static com.mygdx.game.managers.ScreenManager.SM;
 public class EndGame extends AbstractGameState {
     @Override
     public void startGameState() {
-        SM.setScreen(ScreenManager.STATE.END_SCREEN); // Display the end screen
+        GSM.mode.endGame(); // Display the end screen
     }
-
-    @Override
-    public void endGameState() {}
-
-    @Override
-    public void update(float dt) {}
-
-    @Override
-    public void dispose() {}
 }

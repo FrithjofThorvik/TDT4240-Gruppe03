@@ -11,16 +11,6 @@ public class StartRound extends AbstractGameState {
 
     @Override
     public void startGameState() {
-        CM.startMoving(); // Enable moving buttons
-        GSM.time = 0; // Reset the timer when a round starts
+        GSM.mode.startRound();
     }
-
-    @Override
-    public void endGameState() {}
-
-    @Override
-    public void update(float dt) {}
-
-    @Override
-    public void dispose() {}
 }

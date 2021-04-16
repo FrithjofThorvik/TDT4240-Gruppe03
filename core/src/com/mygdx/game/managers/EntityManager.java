@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -26,21 +25,16 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
-import com.mygdx.game.ECS.entities.AbstractEntity;
 import com.mygdx.game.ECS.entities.EntityCreator;
-import com.mygdx.game.ECS.entities.Fonts.HealthFont;
 import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.CollisionSystem;
-import com.mygdx.game.ECS.systems.GamePlaySystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
-import com.mygdx.game.ECS.systems.UISystem;
 
-import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.*;
 
 import java.util.HashMap;
@@ -71,11 +65,9 @@ public class EntityManager {
     private CollisionSystem collisionSystem;
     private RenderingSystem renderingSystem;
     private ProjectileSystem projectileSystem;
-    private GamePlaySystem gameplaySystem;
     private PowerUpSystem powerUpSystem;
     private PhysicsSystem physicsSystem;
     private ShootingSystem shootingSystem;
-    private UISystem userInterfaceSystem;
 
     // These entities are UI elements and are static in order to be accessible everywhere
     public Entity aimArrow;
@@ -130,11 +122,9 @@ public class EntityManager {
         this.collisionSystem = new CollisionSystem();
         this.renderingSystem = new RenderingSystem(this.batch);
         this.projectileSystem = new ProjectileSystem();
-        this.gameplaySystem = new GamePlaySystem();
         this.powerUpSystem = new PowerUpSystem();
         this.physicsSystem = new PhysicsSystem();
         this.shootingSystem = new ShootingSystem();
-        this.userInterfaceSystem = new UISystem();
 
         // Add all ECS systems to the engine
         this.engine.addSystem(this.movementSystem);
@@ -142,11 +132,9 @@ public class EntityManager {
         this.engine.addSystem(this.collisionSystem);
         this.engine.addSystem(this.renderingSystem);
         this.engine.addSystem(this.projectileSystem);
-        this.engine.addSystem(this.gameplaySystem);
         this.engine.addSystem(this.powerUpSystem);
         this.engine.addSystem(this.physicsSystem);
         this.engine.addSystem(this.shootingSystem);
-        this.engine.addSystem(this.userInterfaceSystem);
 
     }
 
@@ -280,12 +268,12 @@ public class EntityManager {
         this.playerComponentListener = new EntityListener() {
             @Override
             public void entityRemoved(Entity entity) {
-                GSM.numberOfPlayers--; // Decrease number of players variable
+                //GSM.numberOfPlayers--; // Decrease number of players variable
             }
 
             @Override
             public void entityAdded(Entity entity) {
-                GSM.numberOfPlayers++; // Increase number of players variable
+                //GSM.numberOfPlayers++; // Increase number of players variable
             }
         };
 
@@ -296,9 +284,7 @@ public class EntityManager {
 
     // On update, call the engines update method
     public void update(float dt) {
-        // Check if game is paused
-        if (!GSM.pauseGame)
-            engine.update(dt);
+        engine.update(dt);
     }
 
     // Reset everything
@@ -310,11 +296,9 @@ public class EntityManager {
         this.engine.removeSystem(this.collisionSystem);
         this.engine.removeSystem(this.renderingSystem);
         this.engine.removeSystem(this.projectileSystem);
-        this.engine.removeSystem(this.gameplaySystem);
         this.engine.removeSystem(this.powerUpSystem);
         this.engine.removeSystem(this.physicsSystem);
         this.engine.removeSystem(this.shootingSystem);
-        this.engine.removeSystem(this.userInterfaceSystem);
 
         this.engine.removeAllEntities(); // Remove all entities
     }
@@ -334,9 +318,9 @@ public class EntityManager {
     }
 
     // Create health displayers
-    private void createHealthDisplayers(){
+    private void createHealthDisplayers() {
         ImmutableArray<Entity> players = engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
-        for(int i=0; i<players.size();i++){
+        for (int i = 0; i < players.size(); i++) {
             Entity player = players.get(i); // Get a player
 
             // Create the health displayer and add the player as the parent -> such that the health font is attached to the player

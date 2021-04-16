@@ -1,5 +1,7 @@
 package com.mygdx.game.managers;
 
+import com.mygdx.game.states.LocalMultiplayer;
+import com.mygdx.game.states.Mode;
 import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.EndGame;
 import com.mygdx.game.states.game.PlayerAiming;
@@ -22,13 +24,8 @@ import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 public class GameStateManager {
     public static GameStateManager GSM; // Makes the GameStateManager accessed globally
     public AbstractGameState gameState; // Represents the current game state
+    public Mode mode;
 
-    public boolean updateGamePlaySystem = false; // should be true each time we switch states
-    public boolean pauseTimer = false;
-    public boolean pauseGame = false;
-    public float time = 0; // To keep track of time
-    public int currentPlayer = 0; // Decides which player has the turn
-    public int numberOfPlayers = 0; // To keep track of number of players
     // TODO: Add more to data_layer
 
     // Create defined game states
@@ -48,22 +45,13 @@ public class GameStateManager {
     // GameStateManager constructor instantiates a static instance of itself and initializes all states
     public GameStateManager() {
         GSM = this;
-
+        mode = new LocalMultiplayer();
         this.initGameStates();
     }
 
     // Get game state
     public void update(float dt) {
-        // Check if game is paused
-        if (!this.pauseGame) {
-            this.gameState.update(dt); // Run update functions for all AbstractGameState()
-
-            if (!this.pauseTimer)
-                this.time += dt; // The time variable keeps control of the time spent in this state
-
-            if (this.time > ROUND_TIME)
-                this.setGameState(STATE.SWITCH_ROUND); // Force round_switch if timer is larger that round_time
-        }
+        mode.update(dt);
     }
 
     // Initialise and map all STATEs to respective GameState
@@ -79,31 +67,16 @@ public class GameStateManager {
         this.gameStates.put(STATE.PLAYER_AIMING, new PlayerAiming());
         this.gameStates.put(STATE.PLAYER_SHOOTING, new PlayerShooting());
         this.gameStates.put(STATE.PROJECTILE_AIRBORNE, new ProjectileAirborne());
-
-        this.gameState = gameStates.get(STATE.START_GAME); // Set new STATE
-        this.gameState.startGameState(); // Start current STATE
-
-        updateGamePlaySystem = true; // Start the gamePlaySystem
     }
 
     // Set game state and reset timer
     public void setGameState(STATE gameState) {
-        this.gameState.endGameState(); // End previous STATE
         this.gameState = gameStates.get(gameState); // Set new STATE
-        updateGamePlaySystem = true;
         this.gameState.startGameState(); // Start current STATE
     }
 
     // Get a game state from the hash map
     public AbstractGameState getGameState(STATE gameState) {
         return this.gameStates.get(gameState);
-    }
-
-    // Loos through all GameStates and runs respective dispose() functions
-    public void dispose() {
-        for (AbstractGameState state : this.gameStates.values()) {
-            if (state != null)
-                state.dispose();
-        }
     }
 }
