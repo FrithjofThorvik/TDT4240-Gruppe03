@@ -47,6 +47,7 @@ public class Training implements GameMode {
     @Override
     public void update(float dt) {
         updateUI(); // Update UI elements
+        updateScore(); // Check if player hits the target
         // Check if aim button is pressed
         if (CM.aimPressed)
             GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING);
@@ -157,7 +158,7 @@ public class Training implements GameMode {
         scoreFont = EM.entityCreator.getTextFont().createEntity();
         EM.positionMapper.get(scoreFont).position = new Vector2(Application.camera.viewportWidth / 2f,
                 Application.camera.viewportHeight * 0.93f);
-        target = EM.spawnTarget(1);
+        target = EM.spawnTarget();
     }
 
     // Print information about how much time is left in a round, etc...
@@ -181,5 +182,14 @@ public class Training implements GameMode {
 
         // Spawn players with equal distance between them
         EM.b2dMapper.get(player).body.setTransform((sprite.size.x) / PPM, pos.position.y / PPM, 0);
+    }
+
+    private void updateScore(){
+        if(EM.collisionMapper.has(target)){
+            Entity collisionEntity = EM.collisionMapper.get(target).collisionEntity; // Get the colliding entity
+            if(EM.projectileMapper.has(collisionEntity)){
+                score += EM.projectileMapper.get(collisionEntity).damage;
+            }
+        }
     }
 }

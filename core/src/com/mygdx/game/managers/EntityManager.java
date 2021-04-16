@@ -273,9 +273,16 @@ public class EntityManager {
         }
     }
 
-    public void spawnTarget(int numberOfTargets) {
-        for (int i = 0; i < numberOfTargets; i++) {
-
-        }
+    public Entity spawnTarget(){
+        Entity target = new Entity();
+        target.add(new SpriteComponent(new Texture("target.png"), 50, 50))
+                .add(new Box2DComponent(
+                        new Vector2(Application.VIRTUAL_WORLD_WIDTH/2,ground.getComponent(PositionComponent.class).position.y+25), new Vector2(50f,50f), true, 100f,
+                        BIT_PLAYER, (short) ( BIT_PROJECTILE))
+                )
+                .add(new PositionComponent(target.getComponent(Box2DComponent.class).body.getPosition().x,target.getComponent(Box2DComponent.class).body.getPosition().y))
+                .add(new RenderComponent());
+        engine.addEntity(target);
+        return target;
     }
 }
