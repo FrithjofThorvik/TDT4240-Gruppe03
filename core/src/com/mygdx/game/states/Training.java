@@ -55,6 +55,7 @@ public class Training implements GameMode {
         timer += dt;
         if (timer >= trainingLength) // End game when timer runs out
             GSM.setGameState(GameStateManager.STATE.END_GAME);
+
     }
 
     @Override
