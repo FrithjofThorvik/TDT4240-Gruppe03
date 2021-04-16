@@ -1,6 +1,7 @@
 package com.mygdx.game.ECS.entities;
 
 import com.mygdx.game.ECS.entities.Fonts.HealthFont;
+import com.mygdx.game.ECS.entities.Fonts.TextFont;
 import com.mygdx.game.ECS.entities.Players.AbstractPlayer;
 import com.mygdx.game.ECS.entities.Players.DefaultPlayer;
 import com.mygdx.game.ECS.entities.Players.SpeedyPlayer;
@@ -64,6 +65,10 @@ public class EntityCreator {
 
     public AbstractEntity getHealthFont() {
         return new HealthFont();
+    }
+
+    public AbstractEntity getTextFont() {
+        return new TextFont();
     }
 
 }

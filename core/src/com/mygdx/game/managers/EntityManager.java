@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.Application;
@@ -127,18 +128,14 @@ public class EntityManager {
     // Create entities with ECS components
     public void createUIEntities() {
         // Instantiate all UI entities
-        timer = new Entity();
         powerBar = new Entity();
         powerBarArrow = new Entity();
         ground = new Entity();
         aimArrow = new Entity();
 
-        timer.add(new PositionComponent(
-                Application.camera.viewportWidth / 2f,
-                Application.camera.viewportHeight * 0.97f)
-        )
-                .add(new FontComponent("Time: 0.0s"))
-                .add(new RenderComponent());
+        timer = entityCreator.getTextFont().createEntity();
+        positionMapper.get(timer).position = new Vector2(Application.camera.viewportWidth / 2f,
+                Application.camera.viewportHeight * 0.97f);
 
         powerBar.add(new SpriteComponent(
                 this.powerBarTexture,
@@ -190,7 +187,6 @@ public class EntityManager {
                 );
 
         // Add all ECS entities to the engine
-        this.engine.addEntity(timer);
         this.engine.addEntity(powerBar);
         this.engine.addEntity(powerBarArrow);
         this.engine.addEntity(ground);
@@ -198,7 +194,7 @@ public class EntityManager {
     }
 
     // Init Mode specific entities
-    public void createModeEntities(){
+    public void createModeEntities() {
         GSM.getGameMode().initEntities();
     }
 
