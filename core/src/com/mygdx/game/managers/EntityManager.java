@@ -201,8 +201,6 @@ public class EntityManager {
     // Add entity listeners for observe & listen to when adding and removing entities
     private void createEntityListeners() {
         // Stops the entity from moving when it loses the MovementControlComponent
-        // Set the linear velocity of the entity's box2d body to 0 in x direction
-        // Entity listeners
         EntityListener movementControlListener = new EntityListener() {
 
             @Override
@@ -222,11 +220,6 @@ public class EntityManager {
         this.engine.addEntityListener(HasControl, movementControlListener);
 
         // This should activate when a box2d component is added or removed from an entity
-        // Create a HashMap to keep track of Entities and their box2d bodies
-        // Remove from fixture HashMap -> needed for collision detection
-        // Destroy the box2d body
-        // Store the body so we can destroy it later
-        // Add to fixture HashMap -> needed for collision detection
         EntityListener box2DComponentListener = new EntityListener() {
             // Create a HashMap to keep track of Entities and their box2d bodies
             final HashMap<Entity, Body> bodyEntityHashMap = new HashMap<Entity, Body>();
@@ -277,6 +270,12 @@ public class EntityManager {
 
             // Create the health displayer and add the player as the parent -> such that the health font is attached to the player
             EM.entityCreator.getHealthFont().createEntity().add(new ParentComponent(player));
+        }
+    }
+
+    public void spawnTarget(int numberOfTargets) {
+        for (int i = 0; i < numberOfTargets; i++) {
+
         }
     }
 }

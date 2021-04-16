@@ -58,6 +58,9 @@ public class LocalMultiplayer implements GameMode {
     @Override
     public void update(float dt) {
         updateUI(); // Update UI elements
+        // Check if aim button is pressed
+        if (CM.aimPressed)
+            GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING);
 
         //Update arrays
         this.players = EM.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
