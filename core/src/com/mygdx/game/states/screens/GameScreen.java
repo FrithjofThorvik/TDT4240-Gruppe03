@@ -45,7 +45,7 @@ public class GameScreen extends AbstractScreen {
         new GameStateManager(); // Manager for handling all game states
         new ControlManager(); // Manages all game controls
 
-        GSM.setGameMode(GameStateManager.GAMEMODE.TRAINING);
+        GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
 
         EM.createModeEntities();
         GSM.setGameState(GameStateManager.STATE.START_GAME);

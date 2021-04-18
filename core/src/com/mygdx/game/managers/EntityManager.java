@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
@@ -255,11 +256,18 @@ public class EntityManager {
         for (MapObject object : objects) {
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 
-            rectangle.height *= 1.9;
-            rectangle.width *= 2;
-            rectangle.x *= 2;
-            rectangle.y *= 2;
+            /** Since the map texture scales too the screen -> when we create box2D elements, they will have to scale the same amount **/
+            // Calculate scaleUp ratio
+            float scaleUpX = spriteMapper.get(map).size.x/mapTexture.getWidth();
+            float scaleUpY = spriteMapper.get(map).size.y/mapTexture.getHeight();
 
+            // Scale the mapObject rectangle shape
+            rectangle.width *= scaleUpX;
+            rectangle.height *= scaleUpY;
+            rectangle.x *= scaleUpX;
+            rectangle.y *= scaleUpY;
+
+            // Create a new map entity with box2d component equal to rectangle
             Entity mapObject = new Entity();
             mapObject.add(new Box2DComponent(
                     rectangle.getCenter(new Vector2()),
