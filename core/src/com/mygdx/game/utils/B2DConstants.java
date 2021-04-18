@@ -16,4 +16,5 @@ public final class B2DConstants {
     public static final short BIT_GROUND = 2;
     public static final short BIT_PLAYER = 4;
     public static final short BIT_PROJECTILE = 8;
+    public static final short BIT_POWERUP = 16;
 }

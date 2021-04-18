@@ -40,7 +40,7 @@ public abstract class AbstractPlayer extends AbstractEntity {
     public void addCoreComponents() {
         this.entity.add(new Box2DComponent(
                     this.position, this.size, false, 100f,
-                    BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE))
+                    BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE | BIT_POWERUP))
                 )
                 .add(new SpriteComponent(this.texture, this.size.x, this.size.y, 1))
                 .add(new HealthComponent(this.health))

@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
@@ -21,7 +20,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.CollisionComponent;
-import com.mygdx.game.ECS.components.EffectComponent;
+import com.mygdx.game.ECS.components.PowerUpComponent;
 import com.mygdx.game.ECS.components.MovementControlComponent;
 import com.mygdx.game.ECS.components.ParentComponent;
 import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
@@ -36,7 +35,6 @@ import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.ECS.entities.EntityCreator;
 import com.mygdx.game.ECS.systems.AimingSystem;
-import com.mygdx.game.ECS.systems.MapSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
@@ -82,7 +80,7 @@ public class EntityManager {
     public final ComponentMapper<ProjectileComponent> projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
     public final ComponentMapper<CollisionComponent> collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
     public final ComponentMapper<VelocityComponent> velocityMapper = ComponentMapper.getFor(VelocityComponent.class);
-    public final ComponentMapper<EffectComponent> effectMapper = ComponentMapper.getFor(EffectComponent.class);
+    public final ComponentMapper<PowerUpComponent> effectMapper = ComponentMapper.getFor(PowerUpComponent.class);
     public final ComponentMapper<FontComponent> fontMapper = ComponentMapper.getFor(FontComponent.class);
     public final ComponentMapper<PlayerComponent> playerMapper = ComponentMapper.getFor(PlayerComponent.class);
 
@@ -275,7 +273,7 @@ public class EntityManager {
                     true,
                     10000f,
                     BIT_GROUND,
-                    (short) (BIT_PLAYER | BIT_PROJECTILE))
+                    (short) (BIT_PLAYER | BIT_PROJECTILE | BIT_POWERUP))
             );
             engine.addEntity(mapObject);
         }

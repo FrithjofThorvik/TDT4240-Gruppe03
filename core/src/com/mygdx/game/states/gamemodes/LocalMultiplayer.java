@@ -89,8 +89,13 @@ public class LocalMultiplayer implements GameMode {
         if (!stopTimer)
             timer += dt; // Increment the timer if the
 
-        if (timer > switchTime) // Start a new round when the timer is greater than the switchTime variable
-            GSM.setGameState(GameStateManager.STATE.START_ROUND);
+        if (timer > switchTime) { // Start a new round when the timer is greater than the switchTime variable
+            timer = 0;
+            if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME) || GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
+                GSM.setGameState(GameStateManager.STATE.START_ROUND);
+            } else
+                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
+        }
     }
 
     @Override
