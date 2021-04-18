@@ -37,6 +37,8 @@ public class Training implements GameMode {
     float timer = 0; // The timer
     int score = 0; // This will increase when you hit the target
     float trainingLength = 60; // The length of training (in seconds)
+    float moveTargetTime = 15; // Move the target every 10 seconds
+    float moveTargetCountDown = moveTargetTime; // Count down and move target when reaching zero
 
     Entity player;
     Entity scoreFont;
@@ -53,6 +55,12 @@ public class Training implements GameMode {
         // Check if aim button is pressed
         if (CM.aimPressed)
             GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING);
+
+        moveTargetCountDown -= dt;
+        if (moveTargetCountDown <= 0) {
+            moveTargetCountDown = moveTargetTime;
+            moveTarget();
+        }
 
         timer += dt; // Increase the timer
         if (timer >= trainingLength) // End game when timer runs out
@@ -114,11 +122,12 @@ public class Training implements GameMode {
 
         // Start or stop systems (if they should be processed or not)
         EM.engine.getSystem(ShootingSystem.class).setProcessing(false);
+
+        GSM.setGameState(GameStateManager.STATE.START_ROUND); // Change state
     }
 
     @Override
     public void switchRound() { // Is called when the game is switching between round
-        CM.startMoving(); // Enable moving buttons (includes aiming button)
     }
 
     @Override
@@ -168,6 +177,7 @@ public class Training implements GameMode {
         EM.b2dMapper.get(player).body.setTransform((sprite.size.x) / PPM, pos.position.y / PPM, 0);
     }
 
+    // Update the score
     private void updateScore() {
         // If a projectile collides with the target -> update score equal to projectile damage
         if (EM.collisionMapper.has(target)) {
@@ -176,5 +186,13 @@ public class Training implements GameMode {
                 score += EM.projectileMapper.get(collisionEntity).damage;
             }
         }
+    }
+
+    // Move the target
+    private void moveTarget() {
+        PositionComponent pos = EM.positionMapper.get(target);
+        // Move the target to a random position within posFromEdge boundary
+        float posFromEdge = (float) Math.floor(Math.random() * Application.VIRTUAL_WORLD_WIDTH / 2);
+        EM.b2dMapper.get(target).body.setTransform((Application.VIRTUAL_WORLD_WIDTH - posFromEdge) / PPM, pos.position.y / PPM, 0);
     }
 }
