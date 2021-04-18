@@ -23,20 +23,16 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 
 /**
  * This system should control a projectile after it has been created/fired
- * TODO: Implement projectile functionality
  **/
 public class ProjectileSystem extends EntitySystem {
     // Prepare arrays for entities
     private ImmutableArray<Entity> players;
-    private ImmutableArray<Entity> collidingProjectiles;
     private ImmutableArray<Entity> projectiles;
 
     // Will be called automatically by the engine
     public void addedToEngine(Engine e) {
         this.projectiles = e.getEntitiesFor(Family.all(ProjectileComponent.class).get());
         this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
-        this.collidingProjectiles = e.getEntitiesFor(Family.all(CollisionComponent.class, ProjectileComponent.class).get());
-        this.projectiles = e.getEntitiesFor(Family.all(ProjectileComponent.class).get());
     }
 
     // Update function for ProjectileSystem
@@ -48,25 +44,25 @@ public class ProjectileSystem extends EntitySystem {
                 Entity projectile = this.projectiles.get(i);
 
                 if (EM.projectileMapper.has(projectile)) {
-                    checkMidAir(projectile);
-                    checkOutOfBounds(projectile);
+                    // If the projectile is mid air -> activate midair function
+                    if (checkMidAir(projectile))
+                        EM.projectileMapper.get(projectile).projectileType.midAir(projectile); // Activate the function
+
+                    // If the projectile is outside the screen border
+                    if (checkOutOfBounds(projectile))
+                        projectile.removeAll(); // Delete the projectile
+
+                    // Check if the projectile collides with something and execute functions depending on what the projectile collides with
                     checkCollision(projectile);
                 }
-
-            }
-        }
-        // Check if there are no projectiles -> move on to SWITCH_ROUND state
-        if (projectiles.size() <= 0) {
-            if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE)) {
-                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
             }
         }
     }
 
-    public void checkOutOfBounds(Entity projectile) {
+    public boolean checkOutOfBounds(Entity projectile) {
         float posX = EM.positionMapper.get(projectile).position.x;
-        if (posX > Application.camera.viewportWidth || posX < 0) // Remove projectile if it is out of bounds
-            projectile.removeAll();
+        // Remove projectile if it is out of bounds
+        return (posX > Application.camera.viewportWidth || posX < 0);
     }
 
     public void checkCollision(Entity projectile) {
@@ -87,14 +83,14 @@ public class ProjectileSystem extends EntitySystem {
         }
     }
 
-    public void checkMidAir(Entity projectile) {
+    public boolean checkMidAir(Entity projectile) {
         Box2DComponent entityBox2D = EM.b2dMapper.get(projectile);
+
         // Checks if a projectile has reached peak height and activates it's midAir function
-        // TODO -> make it so that this only happens once
-        // Check if the projectile is on it's way down for the first time and call it's midAir function
         if ((entityBox2D.body.getLinearVelocity().y <= 0 && !EM.projectileMapper.get(projectile).midAirReached)) {
             EM.projectileMapper.get(projectile).midAirReached = true; // Set the flag that this projectile has reached midAir
-            EM.projectileMapper.get(projectile).projectileType.midAir(projectile); // Activate the function
+            return true;
         }
+        return false;
     }
 }

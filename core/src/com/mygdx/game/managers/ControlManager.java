@@ -1,6 +1,5 @@
 package com.mygdx.game.managers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,6 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
+import com.mygdx.game.ECS.entities.EntityCreator;
+
+import static com.mygdx.game.managers.EntityManager.EM;
 
 
 /**
@@ -17,7 +19,8 @@ import com.mygdx.game.Application;
  **/
 public class ControlManager {
     public static ControlManager CM;
-    private int currentProjectile = 0;
+    public int currentProjectile = 0;
+    private int numberOfProjectiles = 0;
     public boolean leftPressed, rightPressed, aimPressed, powerPressed = false;
     private final Array<Texture> projectileTextures;
 
@@ -34,9 +37,12 @@ public class ControlManager {
     public ControlManager() {
         CM = this;
         this.projectileTextures = new Array<Texture>();
-        this.projectileTextures.add(new Texture("play.png"));
-        this.projectileTextures.add(new Texture("cannonball.png"));
-        this.projectileTextures.add(new Texture("badlogic.jpg"));
+
+        // Get number of projectile types
+        numberOfProjectiles = EntityCreator.PROJECTILES.values().length;
+        for (int i=0;i<numberOfProjectiles;i++){
+            this.projectileTextures.add(EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.values()[i]).getTexture());
+        }
 
         Actor controller = this.createControllerActor();
         Application.stage.addActor(controller); // Add table actor to GameScreen stage
@@ -166,12 +172,12 @@ public class ControlManager {
         // Iterate projectile index, and check if array should restart iteration
         if (next) {
             this.currentProjectile++;
-            if (this.currentProjectile >= this.projectileTextures.size)
+            if (this.currentProjectile >=  numberOfProjectiles)
                 this.currentProjectile = 0;
         } else {
             this.currentProjectile--;
             if (this.currentProjectile < 0)
-                this.currentProjectile = this.projectileTextures.size - 1;
+                this.currentProjectile = numberOfProjectiles - 1;
         }
 
         projectileImg.setDrawable(new TextureRegionDrawable(this.projectileTextures.get(this.currentProjectile)));

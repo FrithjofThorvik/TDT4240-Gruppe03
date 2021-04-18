@@ -12,53 +12,55 @@ import com.mygdx.game.ECS.components.ProjectileComponents.BouncyComponent;
 
 
 /**
- * ...
+ * This projectile can bounce :)
  **/
 public class BouncerProjectile extends AbstractProjectile {
-    int numOfBounces = 5;
+    int numOfBounces = 3;
+    float bounciness = 0.6f;
+    float friction = 0.01f;
     int damage = 5;
-    float speed = 3f;
+    float speed = 1f;
     Vector2 size = new Vector2(10f, 10f);
     Vector2 position = new Vector2(Application.camera.viewportWidth / 2f, Application.camera.viewportHeight);
-    Texture texture = new Texture("cannonball.png");
-    ProjectileType type = new BouncyType();
+    public Texture texture = new Texture("play.png");
+    ProjectileType type = new BouncyType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
-    public int setDamage() {
+    public int getDamage() {
         return damage;
     }
 
     @Override
-    public float setSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
     @Override
-    public Vector2 setSize() {
+    public Vector2 getSize() {
         return size;
     }
 
     @Override
-    public Vector2 setPosition() {
+    public Vector2 getPosition() {
         return position;
     }
 
     @Override
-    public Texture setTexture() {
+    public Texture getTexture() {
         return texture;
     }
 
     @Override
-    public ProjectileType setType() {
+    public ProjectileType getType() {
         return type;
     }
 
     @Override
-    public void addClassComponents() {
+    public void addClassComponents() { // Variable components specific for this class
         this.entity.add(new BouncyComponent(numOfBounces));
 
         // Give the box2d component bounciness
-        entity.getComponent(Box2DComponent.class).fixture.setRestitution(0.8f);
-        entity.getComponent(Box2DComponent.class).fixture.setFriction(0.01f);
+        entity.getComponent(Box2DComponent.class).fixture.setRestitution(bounciness);
+        entity.getComponent(Box2DComponent.class).fixture.setFriction(friction);
     }
 }

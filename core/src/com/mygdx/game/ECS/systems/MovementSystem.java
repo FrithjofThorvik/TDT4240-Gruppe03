@@ -37,16 +37,11 @@ public class MovementSystem extends EntitySystem {
         if (this.movingPlayers.size() > 0) {
             // Check if screen is pressed, and handle the input with the ControllerComponent
             if (Gdx.input.isTouched()) {
-                // Check if aim button is pressed
-                if (CM.aimPressed)
-                    GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING);
-                else {
-                    // Loop through all moving player entities
-                    for (int i = 0; i < this.movingPlayers.size(); ++i) {
-                        // Get player entity with controller component and handle movement
-                        Entity movingPlayer = this.movingPlayers.get(i);
-                        this.handleMovement(movingPlayer); // Move player
-                    }
+                // Loop through all moving player entities
+                for (int i = 0; i < this.movingPlayers.size(); ++i) {
+                    // Get player entity with controller component and handle movement
+                    Entity movingPlayer = this.movingPlayers.get(i);
+                    this.handleMovement(movingPlayer); // Move player
                 }
             }
         }

@@ -1,8 +1,11 @@
 package com.mygdx.game.ECS.entities;
 
+import com.mygdx.game.ECS.entities.Fonts.HealthFont;
+import com.mygdx.game.ECS.entities.Fonts.TextFont;
 import com.mygdx.game.ECS.entities.Players.AbstractPlayer;
 import com.mygdx.game.ECS.entities.Players.DefaultPlayer;
 import com.mygdx.game.ECS.entities.Players.SpeedyPlayer;
+import com.mygdx.game.ECS.entities.Projectiles.AbstractProjectile;
 import com.mygdx.game.ECS.entities.Projectiles.BouncerProjectile;
 import com.mygdx.game.ECS.entities.Projectiles.DefaultProjectile;
 import com.mygdx.game.ECS.entities.Projectiles.SpeedyProjectile;
@@ -14,7 +17,8 @@ import java.util.HashMap;
 
 
 /**
- * ...
+ * This class is responsible for keeping a HashMap of available default construction of certain entities
+ * Use this class in order when creating these entities -> so you don't need to remember all the different variants
  **/
 public class EntityCreator {
 
@@ -23,6 +27,7 @@ public class EntityCreator {
         DEFAULT,
         SPEEDY
     }
+
     public enum PROJECTILES {
         DEFAULT,
         SPLITTER,
@@ -31,16 +36,16 @@ public class EntityCreator {
     }
 
     // Create HashMaps
-    private HashMap<PLAYERS, AbstractEntity> players;
-    private HashMap<PROJECTILES, AbstractEntity> projectiles;
+    private HashMap<PLAYERS, AbstractPlayer> players;
+    private HashMap<PROJECTILES, AbstractProjectile> projectiles;
 
     public EntityCreator() {
         this.initClasses();
     }
 
     private void initClasses() {
-        this.players = new HashMap<PLAYERS, AbstractEntity>();
-        this.projectiles = new HashMap<PROJECTILES, AbstractEntity>();
+        this.players = new HashMap<PLAYERS, AbstractPlayer>();
+        this.projectiles = new HashMap<PROJECTILES, AbstractProjectile>();
 
         this.players.put(PLAYERS.DEFAULT, new DefaultPlayer());
         this.players.put(PLAYERS.SPEEDY, new SpeedyPlayer());
@@ -50,11 +55,20 @@ public class EntityCreator {
         this.projectiles.put(PROJECTILES.SPEEDY, new SpeedyProjectile());
     }
 
-    public AbstractEntity getPlayerClass(PLAYERS playerClass) {
+    public AbstractPlayer getPlayerClass(PLAYERS playerClass) {
         return this.players.get(playerClass);
     }
 
-    public AbstractEntity getProjectileClass(PROJECTILES projectileClass) {
+    public AbstractProjectile getProjectileClass(PROJECTILES projectileClass) {
         return this.projectiles.get(projectileClass);
     }
+
+    public AbstractEntity getHealthFont() {
+        return new HealthFont();
+    }
+
+    public AbstractEntity getTextFont() {
+        return new TextFont();
+    }
+
 }

@@ -17,7 +17,6 @@ import static com.mygdx.game.managers.EntityManager.EM;
 
 /**
  * This system should draw all components that can render
- * TODO: Implement rendering for ground (map)
  **/
 public class RenderingSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites

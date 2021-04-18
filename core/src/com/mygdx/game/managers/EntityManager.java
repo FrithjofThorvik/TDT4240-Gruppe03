@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
@@ -14,12 +14,10 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.EffectComponent;
@@ -40,23 +38,24 @@ import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.MapSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
-import com.mygdx.game.ECS.systems.CollisionSystem;
-import com.mygdx.game.ECS.systems.GamePlaySystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
-import com.mygdx.game.ECS.systems.UISystem;
-import com.mygdx.game.states.screens.GameScreen;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.*;
+import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
 import java.util.HashMap;
 
 
 /**
- * This class will systems and components, and takes in an engine
+ * This class creates initializes all the ECS -> adds things to the engine
+ * Adds all the systems required for the gameplay
+ * Adds all the UIentities required for gameplay
+ * Adds entity listeners required for gameplay
+ * Contains component mappers
  **/
 public class EntityManager {
     public static EntityManager EM;
@@ -65,33 +64,11 @@ public class EntityManager {
     private final SpriteBatch batch;
     public EntityCreator entityCreator;
 
-    // Entity listeners
-    private EntityListener movementControlListener;
-    private EntityListener box2DComponentListener;
-
-    // Entity systems
-    private MovementSystem movementSystem;
-    private AimingSystem aimingSystem;
-    private CollisionSystem collisionSystem;
-    private RenderingSystem renderingSystem;
-    private ProjectileSystem projectileSystem;
-    private GamePlaySystem gameplaySystem;
-    private PowerUpSystem powerUpSystem;
-    private PhysicsSystem physicsSystem;
-    private ShootingSystem shootingSystem;
-    private UISystem userInterfaceSystem;
-    private MapSystem mapSystem;
-
     // These entities are UI elements and are static in order to be accessible everywhere
-    public Entity player1;
-    public Entity player2;
-    public Entity health1;
-    public Entity health2;
     public Entity aimArrow;
     public Entity powerBar;
     public Entity powerBarArrow;
     public Entity timer;
-    public Entity ground;
     public Entity map;
 
     // Preparing component mappers -> the fastest way for getting entities
@@ -106,6 +83,7 @@ public class EntityManager {
     public final ComponentMapper<VelocityComponent> velocityMapper = ComponentMapper.getFor(VelocityComponent.class);
     public final ComponentMapper<EffectComponent> effectMapper = ComponentMapper.getFor(EffectComponent.class);
     public final ComponentMapper<FontComponent> fontMapper = ComponentMapper.getFor(FontComponent.class);
+    public final ComponentMapper<PlayerComponent> playerMapper = ComponentMapper.getFor(PlayerComponent.class);
 
     //Tuple for storing entity/fixture pair
     public static HashMap<Fixture, Entity> entityFixtureHashMap = new HashMap<Fixture, Entity>();
@@ -114,13 +92,12 @@ public class EntityManager {
     Texture tankTexture = new Texture("tank.png");
     Texture powerBarTexture = new Texture("powerbar.png");
     Texture rightArrowTexture = new Texture("right-arrow.png");
-    Texture mapTexture = new Texture("mapsprite.png");
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
-    public EntityManager(Engine engine, SpriteBatch batch) {
+    public EntityManager(SpriteBatch batch) {
         EM = this;
-        this.engine = engine;
+        this.engine = new Engine();
         this.batch = batch;
         this.entityCreator = new EntityCreator();
 
@@ -129,168 +106,67 @@ public class EntityManager {
 
         // Create and add ECS systems and entities
         this.addSystems();
-        this.createEntities();
-        this.createMap();
+        this.createUIEntities();
     }
+
 
     // Add all ECS systems
     private void addSystems() {
         // Instantiates all ECS systems
-        this.movementSystem = new MovementSystem();
-        this.aimingSystem = new AimingSystem();
-        this.collisionSystem = new CollisionSystem();
-        this.renderingSystem = new RenderingSystem(this.batch);
-        this.projectileSystem = new ProjectileSystem();
-        this.gameplaySystem = new GamePlaySystem();
-        this.powerUpSystem = new PowerUpSystem();
-        this.physicsSystem = new PhysicsSystem();
-        this.shootingSystem = new ShootingSystem();
-        this.userInterfaceSystem = new UISystem();
-        //this.mapSystem = new MapSystem();
+        MovementSystem movementSystem = new MovementSystem();
+        AimingSystem aimingSystem = new AimingSystem();
+        RenderingSystem renderingSystem = new RenderingSystem(this.batch);
+        ProjectileSystem projectileSystem = new ProjectileSystem();
+        PowerUpSystem powerUpSystem = new PowerUpSystem();
+        PhysicsSystem physicsSystem = new PhysicsSystem();
+        ShootingSystem shootingSystem = new ShootingSystem();
 
         // Add all ECS systems to the engine
-        this.engine.addSystem(this.movementSystem);
-        this.engine.addSystem(this.aimingSystem);
-        this.engine.addSystem(this.collisionSystem);
-        this.engine.addSystem(this.renderingSystem);
-        this.engine.addSystem(this.projectileSystem);
-        this.engine.addSystem(this.gameplaySystem);
-        this.engine.addSystem(this.powerUpSystem);
-        this.engine.addSystem(this.physicsSystem);
-        this.engine.addSystem(this.shootingSystem);
-        this.engine.addSystem(this.userInterfaceSystem);
-        //this.engine.addSystem(this.mapSystem);
+        this.engine.addSystem(movementSystem);
+        this.engine.addSystem(aimingSystem);
+        this.engine.addSystem(renderingSystem);
+        this.engine.addSystem(projectileSystem);
+        this.engine.addSystem(powerUpSystem);
+        this.engine.addSystem(physicsSystem);
+        this.engine.addSystem(shootingSystem);
 
     }
 
     // Create entities with ECS components
-    private void createEntities() {
-        // Instantiate all ECS entities
-        player1 = new Entity();
-        player2 = new Entity();
-        health1 = new Entity();
-        health2 = new Entity();
-
+    public void createUIEntities() {
         // Instantiate all UI entities
-        timer = new Entity();
         powerBar = new Entity();
         powerBarArrow = new Entity();
-        ground = new Entity();
-        map = new Entity();
         aimArrow = new Entity();
 
-        // Instantiate map-sprite entity
-        map.add(new SpriteComponent(
-                this.mapTexture,
-                Application.camera.viewportWidth,
-                Application.camera.viewportHeight,
-                0)
-        )
-                .add(new PositionComponent(
-                        Application.camera.viewportWidth / 2f,
-                        Application.camera.viewportHeight / 2f)
-                );
-                //.add(new RenderComponent());
-
-        // Instantiate player entities
-        player1.add(new SpriteComponent(
-                    this.tankTexture,
-                    50f,
-                    50f,
-                        1)
-                )
-                .add(new PositionComponent(
-                        spriteMapper.get(player1).size.x,
-                        Application.camera.viewportHeight / 1.2f)
-                )
-                .add(new Box2DComponent(
-                        positionMapper.get(player1).position,
-                        spriteMapper.get(player1).size,
-                        false,
-                        100f,
-                        BIT_PLAYER,
-                        (short) (BIT_PLAYER | BIT_GROUND | BIT_PROJECTILE))
-                )
-                .add(new VelocityComponent(25f, 0))
-                .add(new HealthComponent(100))
-                .add(new ShootingComponent(0, 0))
-                .add(new RenderComponent())
-                .add(new PlayerComponent());
-
-        player2.add(new SpriteComponent(
-                    this.tankTexture,
-                    50f,
-                    50f,
-                        1)
-                )
-                .add(new PositionComponent(
-                        Application.camera.viewportWidth - 100f,
-                        Application.camera.viewportHeight / 1.2f)
-                )
-                .add(new Box2DComponent(
-                        positionMapper.get(player2).position,
-                        spriteMapper.get(player2).size,
-                        false,
-                        100f,
-                        BIT_PLAYER,
-                        (short) (BIT_PLAYER | BIT_GROUND | BIT_PROJECTILE))
-                )
-                .add(new VelocityComponent(25f, 0))
-                .add(new HealthComponent(100))
-                .add(new ShootingComponent(0, 0))
-                .add(new RenderComponent())
-                .add(new PlayerComponent());
-
-
-        timer.add(new PositionComponent(
-                        Application.camera.viewportWidth / 2f,
-                    Application.camera.viewportHeight * 0.97f)
-                )
-                .add(new FontComponent("Time: 0.0s"))
-                .add(new RenderComponent());
+        timer = entityCreator.getTextFont().createEntity();
+        positionMapper.get(timer).position = new Vector2(Application.camera.viewportWidth / 2f,
+                Application.camera.viewportHeight * 0.97f);
 
         powerBar.add(new SpriteComponent(
-                    this.powerBarTexture,
-                    40f,
-                    350f,
-                        1)
-                )
-                .add(new PositionComponent(
-                        Application.camera.viewportWidth - 50f,
-                        Application.camera.viewportHeight / 2f)
-                );
+                this.powerBarTexture,
+                40f,
+                350f, 1)
+        ).add(new PositionComponent(
+                Application.camera.viewportWidth - 50f,
+                Application.camera.viewportHeight / 2f)
+        );
 
         powerBarArrow.add(new SpriteComponent(
-                    this.rightArrowTexture,
-                    40f,
-                    40f,
-                        1)
-                )
+                this.rightArrowTexture,
+                40f,
+                40f,
+                1)
+        )
                 .add(new PositionComponent(
                         Application.camera.viewportWidth - 70f,
                         Application.camera.viewportHeight - (spriteMapper.get(powerBar).size.y) / 2f)
                 );
 
-
-        ground.add(new PositionComponent(
-                        Application.camera.viewportWidth / 2f,
-                        Application.camera.viewportHeight / 2f)
-                )
-                .add(new Box2DComponent(
-                        positionMapper.get(ground).position,
-                        new Vector2(10, 10),
-                        true,
-                        10000,
-                        BIT_GROUND,
-                        (short) (BIT_PLAYER | BIT_PROJECTILE))
-                )
-                .add(new RenderComponent());
-
-
         aimArrow.add(new PositionComponent(
-                Application.camera.viewportWidth/ 2f,
-                    Application.camera.viewportHeight / 2f)
-                )
+                Application.camera.viewportWidth / 2f,
+                Application.camera.viewportHeight / 2f)
+        )
                 .add(new SpriteComponent(
                         this.rightArrowTexture,
                         10f,
@@ -298,45 +174,21 @@ public class EntityManager {
                         1)
                 );
 
-        health1
-                .add(new ParentComponent(player1))
-                .add(new FontComponent(
-                        healthMapper.get(parentMapper.get(health1).parent).hp + " hp")
-                )
-                .add(new PositionComponent(
-                        50f,
-                        Application.camera.viewportHeight - 20f
-                ))
-                .add(new RenderComponent());
-
-        health2
-                .add(new ParentComponent(player2))
-                .add(new FontComponent(
-                        healthMapper.get(parentMapper.get(health1).parent).hp + " hp")
-                )
-                .add(new PositionComponent(
-                        Application.camera.viewportWidth  - 50f,
-                        Application.camera.viewportHeight - 20f
-                ))
-                .add(new RenderComponent());
-
         // Add all ECS entities to the engine
-        this.engine.addEntity(player1);
-        this.engine.addEntity(player2);
-        this.engine.addEntity(timer);
         this.engine.addEntity(powerBar);
         this.engine.addEntity(powerBarArrow);
-        this.engine.addEntity(ground);
-        this.engine.addEntity(map);
         this.engine.addEntity(aimArrow);
-        this.engine.addEntity(health1);
-        this.engine.addEntity(health2);
+    }
+
+    // Init Mode specific entities
+    public void createModeEntities() {
+        GSM.getGameMode().initEntities();
     }
 
     // Add entity listeners for observe & listen to when adding and removing entities
     private void createEntityListeners() {
         // Stops the entity from moving when it loses the MovementControlComponent
-        this.movementControlListener = new EntityListener() {
+        EntityListener movementControlListener = new EntityListener() {
 
             @Override
             public void entityRemoved(Entity entity) {
@@ -352,10 +204,10 @@ public class EntityManager {
 
         // The family decides which components the entity listener should listen for
         Family HasControl = Family.all(MovementControlComponent.class).get();
-        this.engine.addEntityListener(HasControl, this.movementControlListener);
+        this.engine.addEntityListener(HasControl, movementControlListener);
 
         // This should activate when a box2d component is added or removed from an entity
-        this.box2DComponentListener = new EntityListener() {
+        EntityListener box2DComponentListener = new EntityListener() {
             // Create a HashMap to keep track of Entities and their box2d bodies
             final HashMap<Entity, Body> bodyEntityHashMap = new HashMap<Entity, Body>();
 
@@ -379,15 +231,31 @@ public class EntityManager {
     }
 
     // Creates the map with all ground instances
-    private void createMap() {
-        TiledMap tiledMap = new TmxMapLoader().load("scifi.tmx");
+    public void createMap(String filename, String mapSprite) {
+        map = new Entity();
+        Texture mapTexture = new Texture(mapSprite);
+        // Instantiate map-sprite entity
+        map.add(new SpriteComponent(
+                mapTexture,
+                Application.camera.viewportWidth,
+                Application.camera.viewportHeight,
+                0)
+        )
+                .add(new PositionComponent(
+                        Application.camera.viewportWidth / 2f,
+                        Application.camera.viewportHeight / 2f)
+                )
+                .add(new RenderComponent());
+        this.engine.addEntity(map);
+
+        TiledMap tiledMap = new TmxMapLoader().load(filename);
         MapObjects objects = tiledMap.getLayers().get("ground").getObjects();
 
         // Loop through all ground objects, and give each object a Box2D body
         for (MapObject object : objects) {
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 
-            rectangle.height *= 2;
+            rectangle.height *= 1.9;
             rectangle.width *= 2;
             rectangle.x *= 2;
             rectangle.y *= 2;
@@ -402,69 +270,12 @@ public class EntityManager {
                     (short) (BIT_PLAYER | BIT_PROJECTILE))
             );
             engine.addEntity(mapObject);
-
-            /*
-
-            float scale = Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
-            System.out.println(scale);
-            rectangle.height *= 1.9;
-            rectangle.width *= 2;
-            rectangle.x *= 2;
-            rectangle.y *= 1.9;
-
-            //create a dynamic within the world body (also can be KinematicBody or StaticBody
-
-            BodyDef bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            Body body = GameScreen.world.createBody(bodyDef);
-
-            //create a fixture for each body from the shape
-            // Create FixtureDef representing properties such as density, restitution, etc
-            FixtureDef fixtureDef = new FixtureDef();
-
-            PolygonShape polygonShape = new PolygonShape();
-            polygonShape.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
-
-            fixtureDef.shape = polygonShape; // Add the box shape to fixture
-            fixtureDef.density = 10000; // Add density to fixture (increases mass)
-            fixtureDef.friction = 0.1f;
-            fixtureDef.filter.categoryBits = BIT_GROUND; // Is this category of bit
-            fixtureDef.filter.maskBits = (short) (BIT_PLAYER | BIT_PROJECTILE); // Will collide with these bits
-            body.createFixture(fixtureDef); // Add FixtureDef and id to body
-
-            //setting the position of the body's origin. In this case with zero rotation
-            Vector2 center = new Vector2();
-            rectangle.getCenter(center);
-            center.scl(1 / PPM);
-            body.setTransform(center, 0);
-            */
         }
     }
 
     // On update, call the engines update method
     public void update(float dt) {
-        // Check if game is paused
-        if (!GSM.pauseGame)
-            engine.update(dt);
-    }
-
-    // Reset everything
-    public void removeAll() {
-        this.engine.removeEntityListener(this.movementControlListener); // Remove all listeners
-
-        // Remove all engine systems
-        this.engine.removeSystem(this.movementSystem);
-        this.engine.removeSystem(this.collisionSystem);
-        this.engine.removeSystem(this.renderingSystem);
-        this.engine.removeSystem(this.projectileSystem);
-        this.engine.removeSystem(this.gameplaySystem);
-        this.engine.removeSystem(this.powerUpSystem);
-        this.engine.removeSystem(this.physicsSystem);
-        this.engine.removeSystem(this.shootingSystem);
-        this.engine.removeSystem(this.userInterfaceSystem);
-        this.engine.removeSystem(this.mapSystem);
-
-        this.engine.removeAllEntities(); // Remove all entities
+        engine.update(dt);
     }
 
     // Dispose everything
@@ -472,5 +283,75 @@ public class EntityManager {
         this.tankTexture.dispose();
         this.rightArrowTexture.dispose();
         this.powerBarTexture.dispose();
+    }
+
+    public void removeAllEntities() {
+        engine.removeAllEntities();
+    }
+
+    public void removeShootingRender() {
+        aimArrow.remove(RenderComponent.class);
+        powerBar.remove(RenderComponent.class);
+        powerBarArrow.remove(RenderComponent.class);
+    }
+
+    public void addShootingRender() {
+        aimArrow.add(new RenderComponent());
+        powerBar.add(new RenderComponent());
+        powerBarArrow.add(new RenderComponent());
+    }
+
+    // Call to make the ai marrow update according to player aim angle
+    public void repositionAimArrow(Entity player) {
+        PositionComponent position = positionMapper.get(player);
+        // Get the angle (in degrees) and power of the currentPlayer's shootingComponent
+        double aimAngleInDegrees = 90f - (float) shootingMapper.get(player).angle / (float) Math.PI * 180f;
+
+        // Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
+        spriteMapper.get(aimArrow).sprite.setRotation((float) aimAngleInDegrees);
+        positionMapper.get(aimArrow).position.x = position.position.x;
+        positionMapper.get(aimArrow).position.y = position.position.y + 25;
+    }
+
+    // Display the powerbar according to player power
+    public void updatePowerBar(Entity player) {
+        // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
+        float startPositionArrow = positionMapper.get(powerBar).position.y - spriteMapper.get(powerBar).size.y / 2;
+
+        //Set position of powerBarArrow -> given the power of the shootingComponent
+        float power = shootingMapper.get(player).power;
+        positionMapper.get(powerBarArrow).position.y = startPositionArrow + (spriteMapper.get(powerBar).size.y * (power / MAX_SHOOTING_POWER));
+    }
+
+    // Utility function for spawning players
+    public void spawnPlayers(int numberOfPlayers) {
+        for (int i = 0; i < numberOfPlayers; i++) {
+            entityCreator.getPlayerClass(EntityCreator.PLAYERS.DEFAULT).createEntity();
+        }
+    }
+
+    // Utility function for creating health displayers
+    public void createHealthDisplayers() {
+        ImmutableArray<Entity> players = engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
+        for (int i = 0; i < players.size(); i++) {
+            Entity player = players.get(i); // Get a player
+
+            // Create the health displayer and add the player as the parent -> such that the health font is attached to the player
+            EM.entityCreator.getHealthFont().createEntity().add(new ParentComponent(player));
+        }
+    }
+
+    // Utility function for creating a target (used in training mode)
+    public Entity spawnTarget() {
+        Entity target = new Entity();
+        target.add(new SpriteComponent(new Texture("target.png"), 75, 75, 1))
+                .add(new Box2DComponent(
+                        new Vector2((float) Application.VIRTUAL_WORLD_WIDTH / 2, Application.APP_DESKTOP_HEIGHT / 2 + 25), spriteMapper.get(target).size, false, 10000000f,
+                        BIT_PLAYER, (short) (BIT_PROJECTILE | BIT_GROUND))
+                )
+                .add(new PositionComponent(target.getComponent(Box2DComponent.class).body.getPosition().x, target.getComponent(Box2DComponent.class).body.getPosition().y))
+                .add(new RenderComponent());
+        engine.addEntity(target);
+        return target;
     }
 }

@@ -9,49 +9,49 @@ import com.mygdx.game.ECS.components.ProjectileAlgorithms.SplitterType;
 import com.mygdx.game.ECS.components.ProjectileComponents.SplitterComponent;
 
 /**
- * ...
+ * A projectile that splits -> how splendid
  **/
 public class SplitterProjectile extends AbstractProjectile {
-    int numOfSplits = 5;
-    int damage = 5;
-    float speed = 3f;
-    Vector2 size = new Vector2(10f, 10f);
+    int numOfSplits = 10;
+    int damage = 15;
+    float speed = 1f;
+    Vector2 size = new Vector2(15f, 15f);
     Vector2 position = new Vector2(0f, 0f);
-    Texture texture = new Texture("cannonball.png");
-    ProjectileType type = new SplitterType();
+    public Texture texture = new Texture("badlogic.jpg");
+    ProjectileType type = new SplitterType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
-    public int setDamage() {
+    public int getDamage() {
         return damage;
     }
 
     @Override
-    public float setSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
     @Override
-    public Vector2 setSize() {
+    public Vector2 getSize() {
         return size;
     }
 
     @Override
-    public Vector2 setPosition() {
+    public Vector2 getPosition() {
         return position;
     }
 
     @Override
-    public Texture setTexture() {
+    public Texture getTexture() {
         return texture;
     }
 
     @Override
-    public ProjectileType setType() {
+    public ProjectileType getType() {
         return type;
     }
 
     @Override
-    public void addClassComponents() {
+    public void addClassComponents() { // Variable components specific for this class
         entity.add(new SplitterComponent(numOfSplits));
     }
 }

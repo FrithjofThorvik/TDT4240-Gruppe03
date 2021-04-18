@@ -10,17 +10,6 @@ public class PlayerShooting extends AbstractGameState {
 
     @Override
     public void startGameState() {
-        GSM.pauseTimer = true; // The timer should stop when you start shooting
+        GSM.getGameMode().playerShooting(); // Call the gamemode's function
     }
-
-    @Override
-    public void endGameState() {
-        GSM.pauseTimer = false; // The timer should start when you stop shooting
-    }
-
-    @Override
-    public void update(float dt) {}
-
-    @Override
-    public void dispose() {}
 }
