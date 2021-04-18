@@ -1,5 +1,7 @@
 package com.mygdx.game.ECS.entities.Fonts;
-
+/**
+ * A standard textfont -> extends abstract font
+ **/
 public class TextFont extends AbstractFont {
     @Override
     public float setPosX() {

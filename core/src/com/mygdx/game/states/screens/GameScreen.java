@@ -1,6 +1,5 @@
 package com.mygdx.game.states.screens;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -9,7 +8,6 @@ import com.mygdx.game.ECS.CollisionHandler;
 import com.mygdx.game.managers.ControlManager;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
-import com.mygdx.game.states.LocalMultiplayer;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.EntityManager.EM;

@@ -1,8 +1,8 @@
 package com.mygdx.game.managers;
 
-import com.mygdx.game.states.LocalMultiplayer;
-import com.mygdx.game.states.GameMode;
-import com.mygdx.game.states.Training;
+import com.mygdx.game.states.gamemodes.LocalMultiplayer;
+import com.mygdx.game.states.gamemodes.GameMode;
+import com.mygdx.game.states.gamemodes.Training;
 import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.EndGame;
 import com.mygdx.game.states.game.PlayerAiming;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 public class GameStateManager {
     public static GameStateManager GSM; // Makes the GameStateManager accessed globally
     public AbstractGameState gameState; // Represents the current game state
-    private GameMode gameMode;
+    private GameMode gameMode; // Is used to pick the game mode
 
     // TODO: Add more to data_layer
 
@@ -83,7 +83,7 @@ public class GameStateManager {
         this.gameModes = new HashMap<GAMEMODE, GameMode>();
 
         this.gameModes.put(GAMEMODE.LOCAL, new LocalMultiplayer());
-        //this.gameModes.put(GAMEMODE.ONLINE, new EndGame());
+        //this.gameModes.put(GAMEMODE.ONLINE, new Online());
         this.gameModes.put(GAMEMODE.TRAINING, new Training());
     }
 
@@ -98,11 +98,12 @@ public class GameStateManager {
         return this.gameStates.get(gameState);
     }
 
-    // Get a game mode from the hash map
+    // Set a the gamemode
     public void setGameMode(GAMEMODE gameMode){
         this.gameMode = gameModes.get(gameMode);
     }
 
+    // Get the current gamemode
     public GameMode getGameMode(){
         return this.gameMode;
     }

@@ -12,6 +12,6 @@ import static com.mygdx.game.utils.GameConstants.START_GAME_TIME;
 public class StartGame extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.getGameMode().startGame();
+        GSM.getGameMode().startGame();// Call the gamemode's function
     }
 }

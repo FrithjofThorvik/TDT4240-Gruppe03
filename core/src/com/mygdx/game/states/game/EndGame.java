@@ -9,6 +9,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 public class EndGame extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.getGameMode().endGame(); // Display the end screen
+        GSM.getGameMode().endGame(); // Call the gamemode's function
     }
 }

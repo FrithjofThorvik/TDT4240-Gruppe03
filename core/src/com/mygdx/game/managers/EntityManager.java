@@ -30,7 +30,6 @@ import com.mygdx.game.ECS.entities.EntityCreator;
 import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
-import com.mygdx.game.ECS.systems.CollisionSystem;
 import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
@@ -38,6 +37,7 @@ import com.mygdx.game.ECS.systems.RenderingSystem;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.*;
+import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
 import java.util.HashMap;
 
@@ -106,7 +106,6 @@ public class EntityManager {
         // Instantiates all ECS systems
         MovementSystem movementSystem = new MovementSystem();
         AimingSystem aimingSystem = new AimingSystem();
-        CollisionSystem collisionSystem = new CollisionSystem();
         RenderingSystem renderingSystem = new RenderingSystem(this.batch);
         ProjectileSystem projectileSystem = new ProjectileSystem();
         PowerUpSystem powerUpSystem = new PowerUpSystem();
@@ -116,7 +115,6 @@ public class EntityManager {
         // Add all ECS systems to the engine
         this.engine.addSystem(movementSystem);
         this.engine.addSystem(aimingSystem);
-        this.engine.addSystem(collisionSystem);
         this.engine.addSystem(renderingSystem);
         this.engine.addSystem(projectileSystem);
         this.engine.addSystem(powerUpSystem);
@@ -255,14 +253,52 @@ public class EntityManager {
         this.powerBarTexture.dispose();
     }
 
-    // Spawn players
+    public void removeAllEntities() {
+        engine.removeAllEntities();
+    }
+
+    public void removeShootingRender() {
+        aimArrow.remove(RenderComponent.class);
+        powerBar.remove(RenderComponent.class);
+        powerBarArrow.remove(RenderComponent.class);
+    }
+
+    public void addShootingRender() {
+        aimArrow.add(new RenderComponent());
+        powerBar.add(new RenderComponent());
+        powerBarArrow.add(new RenderComponent());
+    }
+
+    // Call to make the ai marrow update according to player aim angle
+    public void repositionAimArrow(Entity player) {
+        PositionComponent position = positionMapper.get(player);
+        // Get the angle (in degrees) and power of the currentPlayer's shootingComponent
+        double aimAngleInDegrees = 90f - (float) shootingMapper.get(player).angle / (float) Math.PI * 180f;
+
+        // Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
+        spriteMapper.get(aimArrow).sprite.setRotation((float) aimAngleInDegrees);
+        positionMapper.get(aimArrow).position.x = position.position.x;
+        positionMapper.get(aimArrow).position.y = position.position.y + 25;
+    }
+
+    // Display the powerbar according to player power
+    public void updatePowerBar(Entity player){
+        // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
+        float startPositionArrow = positionMapper.get(powerBar).position.y - spriteMapper.get(powerBar).size.y / 2;
+
+        //Set position of powerBarArrow -> given the power of the shootingComponent
+        float power = shootingMapper.get(player).power;
+        positionMapper.get(powerBarArrow).position.y = startPositionArrow + (spriteMapper.get(powerBar).size.y * (power / MAX_SHOOTING_POWER));
+    }
+
+    // Utility function for spawning players
     public void spawnPlayers(int numberOfPlayers) {
         for (int i = 0; i < numberOfPlayers; i++) {
             entityCreator.getPlayerClass(EntityCreator.PLAYERS.DEFAULT).createEntity();
         }
     }
 
-    // Create health displayers
+    // Utility function for creating health displayers
     public void createHealthDisplayers() {
         ImmutableArray<Entity> players = engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
         for (int i = 0; i < players.size(); i++) {
@@ -273,14 +309,15 @@ public class EntityManager {
         }
     }
 
-    public Entity spawnTarget(){
+    // Utility function for creating a target (used in training mode)
+    public Entity spawnTarget() {
         Entity target = new Entity();
         target.add(new SpriteComponent(new Texture("target.png"), 50, 50))
                 .add(new Box2DComponent(
-                        new Vector2(Application.VIRTUAL_WORLD_WIDTH/2,ground.getComponent(PositionComponent.class).position.y+25), new Vector2(50f,50f), true, 100f,
-                        BIT_PLAYER, (short) ( BIT_PROJECTILE))
+                        new Vector2((float) Application.VIRTUAL_WORLD_WIDTH / 2, ground.getComponent(PositionComponent.class).position.y + 25), new Vector2(50f, 50f), true, 100f,
+                        BIT_PLAYER, (short) (BIT_PROJECTILE))
                 )
-                .add(new PositionComponent(target.getComponent(Box2DComponent.class).body.getPosition().x,target.getComponent(Box2DComponent.class).body.getPosition().y))
+                .add(new PositionComponent(target.getComponent(Box2DComponent.class).body.getPosition().x, target.getComponent(Box2DComponent.class).body.getPosition().y))
                 .add(new RenderComponent());
         engine.addEntity(target);
         return target;

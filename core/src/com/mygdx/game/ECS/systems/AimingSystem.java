@@ -34,7 +34,7 @@ public class AimingSystem extends EntitySystem {
     // Will be called by the engine automatically
     public void update(float dt) {
         // Check first if there are any players aiming
-        for (int i=0;i<this.playersAiming.size();i++) {
+        for (int i = 0; i < this.playersAiming.size(); i++) {
             // Calculate the aim angle when the screen is touched
             if (Gdx.input.isTouched()) {
                 Entity player = this.playersAiming.get(i); // Get current player entity

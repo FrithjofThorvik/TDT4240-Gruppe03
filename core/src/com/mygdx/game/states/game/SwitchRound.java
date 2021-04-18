@@ -12,6 +12,6 @@ public class SwitchRound extends AbstractGameState {
 
     @Override
     public void startGameState() {
-        GSM.getGameMode().switchRound();
+        GSM.getGameMode().switchRound(); // Call the gamemode's function
     }
 }
