@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.FirebaseInterface;
+import com.mygdx.game.CoreInterFaceClass;
 
 import static com.mygdx.game.managers.ScreenManager.SM;
 
@@ -35,6 +38,14 @@ public class Application extends Game {
     public static Stage stage;
     public static Viewport viewport;
 
+    //firebase
+    FirebaseInterface _FBIC;
+
+
+    public Application(FirebaseInterface FBIC)
+    {
+        _FBIC = FBIC;
+    }
     // Methods
     @Override
     public void create() {
@@ -42,6 +53,12 @@ public class Application extends Game {
         // Setup batches
         batch = new SpriteBatch();
         this.shapeBatch = new ShapeRenderer();
+
+        //firebase
+        _FBIC.SomeFunction();
+        _FBIC.FirstFireBaseTest();
+        _FBIC.SetOnValueChangedListener();
+        _FBIC.SetValueInDb("message", "this is new text");
 
         // Initialize screen properties
         camera = new OrthographicCamera();

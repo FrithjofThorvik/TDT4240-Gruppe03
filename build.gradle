@@ -14,6 +14,9 @@ buildscript {
         classpath 'org.gretty:gretty:3.0.2'
         classpath 'com.android.tools.build:gradle:4.1.2'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
+
+        classpath 'com.google.gms:google-services:4.3.5' //from firebase setup
+
         
 
     }
@@ -58,6 +61,10 @@ project(":desktop") {
 project(":android") {
     apply plugin: "com.android.application"
 
+    //For firebase:
+    apply plugin: 'com.google.gms.google-services' // Google Services plugin
+
+
     configurations { natives }
 
     dependencies {
@@ -75,6 +82,14 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
+
+        // Import the BoM for the Firebase platform
+        implementation platform('com.google.firebase:firebase-bom:27.0.0')
+
+        // Declare the dependency for the Realtime Database library
+        // When using the BoM, you don't specify versions in Firebase library dependencies
+        implementation 'com.google.firebase:firebase-database'
+        //implementation 'com.google.firebase:firebase-analytics'
         
     }
 }
