@@ -58,7 +58,7 @@ public class LocalMultiplayer implements GameMode {
     private ImmutableArray<Entity> projectiles; // List of projectiles
 
     public LocalMultiplayer() {
-        // Initialize entity arrays in the constructor
+        // Initialize entity arrays
         this.players = EM.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
         this.projectiles = EM.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
         this.healthDisplayers = EM.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
@@ -77,19 +77,19 @@ public class LocalMultiplayer implements GameMode {
         this.healthDisplayers = EM.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
         this.projectiles = EM.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
 
-        checkForEndGame();// End the game if certain conditions are met
+        checkForEndGame();// Ends the game if certain conditions are met
 
-        if (players.size() > 0) {
+        if (players.size() > 0)
             checkHealth(); // Check if any health components have reached 0, and terminate those players
-        }
 
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE))
             checkProjectileTimeOut(dt); // Check if the projectiles have been airborne for two long
 
         if (!stopTimer)
-            timer += dt; // Increment the timer if the
+            timer += dt; // Increment the timer if not paused
 
-        if (timer > switchTime) { // Start a new round when the timer is greater than the switchTime variable
+        // Start a new round when the timer is greater than the switchTime variable
+        if (timer > switchTime) {
             timer = 0;
             if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME) || GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
                 GSM.setGameState(GameStateManager.STATE.START_ROUND);
@@ -163,7 +163,6 @@ public class LocalMultiplayer implements GameMode {
 
     @Override
     public void projectileAirborne() { // Is called when a projectile has been fired and is currently airborne
-
         CM.idle(); // Make all controller buttons idle
         CM.setVisible(false); // Make all controller not visible
 
