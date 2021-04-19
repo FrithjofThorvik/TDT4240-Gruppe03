@@ -17,7 +17,7 @@ public class SplitterProjectile extends AbstractProjectile {
     float speed = 1f;
     Vector2 size = new Vector2(15f, 15f);
     Vector2 position = new Vector2(0f, 0f);
-    public Texture texture = new Texture("badlogic.jpg");
+    public Texture texture = new Texture("splitter.png");
     ProjectileType type = new SplitterType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override
