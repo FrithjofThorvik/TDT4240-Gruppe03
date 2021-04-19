@@ -73,6 +73,7 @@ public class Training implements GameMode {
 
     @Override
     public void startGame() { // Is called when the game starts
+        CM.setTouchable(true);
         setPlayerSpawn(); // Choose location for where players spawn
 
         // Start or stop systems (if they should be processed or not)
@@ -91,7 +92,7 @@ public class Training implements GameMode {
 
     @Override
     public void startRound() { // Is called when a new round starts
-        CM.startMoving(); // Enable moving buttons (includes aiming button)
+        CM.startTraining(); // Enable moving buttons (includes aiming button)
     }
 
     @Override
@@ -138,7 +139,6 @@ public class Training implements GameMode {
         this.printTimer(); // Print information about how much time is left
         this.printScore(); // Prints the score
 
-        EM.repositionAimArrow(player); // Makes the aimArrow rotate according to player aim
         EM.updatePowerBar(player); // Makes the powerbar display correctly
     }
 

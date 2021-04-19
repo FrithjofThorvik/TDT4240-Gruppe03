@@ -28,7 +28,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         // Initialise background
         Image background = new Image(backgroundTexture);
-        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        background.setSize(Application.VIRTUAL_WORLD_WIDTH, Application.VIRTUAL_WORLD_HEIGHT);
         background.setPosition(
                 (Application.camera.viewportWidth) - (background.getWidth()),
                 (Application.camera.viewportHeight) - (background.getHeight())

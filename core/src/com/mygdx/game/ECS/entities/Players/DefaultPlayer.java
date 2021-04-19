@@ -15,7 +15,7 @@ public class DefaultPlayer extends AbstractPlayer {
     Vector2 velocity = new Vector2(2f, 0);
     Vector2 size = new Vector2(50f, 50f);
     Vector2 position = new Vector2(Application.camera.viewportWidth / 2f, Application.camera.viewportHeight / 1.2f);
-    Texture texture = new Texture("tank.png");
+    Texture texture = new Texture("player1.png");
 
 
     @Override

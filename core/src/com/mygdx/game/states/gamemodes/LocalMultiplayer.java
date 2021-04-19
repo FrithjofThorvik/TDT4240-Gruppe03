@@ -100,6 +100,7 @@ public class LocalMultiplayer implements GameMode {
 
     @Override
     public void startGame() { // Is called when the game starts
+        CM.setVisible(false); // Make all controller not visible
         setPlayerSpawn(); // Choose location for where players spawn
         switchTime = START_GAME_TIME; // The timer now countsdown from START_GAME_TIME to 0
 
@@ -120,6 +121,7 @@ public class LocalMultiplayer implements GameMode {
     @Override
     public void startRound() { // Is called when a new round starts
         CM.startMoving(); // Enable moving buttons
+        CM.setVisible(true); // Make all controller visible visible
 
         timer = 0; // Reset the timer
         switchTime = ROUND_TIME; // Set the timer to the length of a round
@@ -161,7 +163,9 @@ public class LocalMultiplayer implements GameMode {
 
     @Override
     public void projectileAirborne() { // Is called when a projectile has been fired and is currently airborne
+
         CM.idle(); // Make all controller buttons idle
+        CM.setVisible(false); // Make all controller not visible
 
         // Remove or add components to entities
         players.get(currentPlayer).remove(isShootingComponent.class);
@@ -169,17 +173,18 @@ public class LocalMultiplayer implements GameMode {
 
         // Start or stop systems (if they should be processed or not)
         EM.engine.getSystem(ShootingSystem.class).setProcessing(false);
+        EM.engine.getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
     public void switchRound() { // Is called when the game is switching between round
-        CM.idle(); // Make all controller buttons idle
         // Remove or add components to entities
         players.get(currentPlayer).remove(isShootingComponent.class);
         players.get(currentPlayer).remove(isAimingComponent.class);
         EM.removeShootingRender();
         // Start or stop systems (if they should be processed or not)
         EM.engine.getSystem(ShootingSystem.class).setProcessing(false);
+        EM.engine.getSystem(AimingSystem.class).setProcessing(false);
 
         timer = 0; // Reset the timer
         stopTimer = false; // Start the timer again
@@ -197,7 +202,6 @@ public class LocalMultiplayer implements GameMode {
 
         // Get the player who's turn it is
         Entity player = this.players.get(currentPlayer);
-        EM.repositionAimArrow(player); // Makes the aimArrow rotate according to player aim
         EM.updatePowerBar(player); // Makes the powerbar display correctly
 
         // Update health displays

@@ -88,9 +88,9 @@ public class EntityManager {
     public static HashMap<Fixture, Entity> entityFixtureHashMap = new HashMap<Fixture, Entity>();
 
     // Textures
-    Texture tankTexture = new Texture("tank.png");
     Texture powerBarTexture = new Texture("powerbar.png");
     Texture rightArrowTexture = new Texture("right-arrow.png");
+    Texture aimArrowTexture = new Texture("aim-arrow.png");
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
@@ -167,9 +167,9 @@ public class EntityManager {
                 Application.camera.viewportHeight / 2f)
         )
                 .add(new SpriteComponent(
-                        this.rightArrowTexture,
-                        10f,
-                        10f,
+                        this.aimArrowTexture,
+                        40f,
+                        20f,
                         1)
                 );
 
@@ -256,8 +256,8 @@ public class EntityManager {
 
             /** Since the map texture scales too the screen -> when we create box2D elements, they will have to scale the same amount **/
             // Calculate scaleUp ratio
-            float scaleUpX = spriteMapper.get(map).size.x/mapTexture.getWidth();
-            float scaleUpY = spriteMapper.get(map).size.y/mapTexture.getHeight();
+            float scaleUpX = spriteMapper.get(map).size.x / mapTexture.getWidth();
+            float scaleUpY = spriteMapper.get(map).size.y / mapTexture.getHeight();
 
             // Scale the mapObject rectangle shape
             rectangle.width *= scaleUpX;
@@ -269,7 +269,7 @@ public class EntityManager {
             Entity mapObject = new Entity();
             mapObject.add(new Box2DComponent(
                     rectangle.getCenter(new Vector2()),
-                    new Vector2(rectangle.width * 2, rectangle.height * 2),
+                    new Vector2(rectangle.width, rectangle.height),
                     true,
                     10000f,
                     BIT_GROUND,
@@ -286,9 +286,9 @@ public class EntityManager {
 
     // Dispose everything
     public void dispose() {
-        this.tankTexture.dispose();
         this.rightArrowTexture.dispose();
         this.powerBarTexture.dispose();
+        this.aimArrowTexture.dispose();
     }
 
     public void removeAllEntities() {
@@ -307,18 +307,6 @@ public class EntityManager {
         powerBarArrow.add(new RenderComponent());
     }
 
-    // Call to make the ai marrow update according to player aim angle
-    public void repositionAimArrow(Entity player) {
-        PositionComponent position = positionMapper.get(player);
-        // Get the angle (in degrees) and power of the currentPlayer's shootingComponent
-        double aimAngleInDegrees = 90f - (float) shootingMapper.get(player).angle / (float) Math.PI * 180f;
-
-        // Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
-        spriteMapper.get(aimArrow).sprite.setRotation((float) aimAngleInDegrees);
-        positionMapper.get(aimArrow).position.x = position.position.x;
-        positionMapper.get(aimArrow).position.y = position.position.y + 25;
-    }
-
     // Display the powerbar according to player power
     public void updatePowerBar(Entity player) {
         // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
@@ -332,7 +320,11 @@ public class EntityManager {
     // Utility function for spawning players
     public void spawnPlayers(int numberOfPlayers) {
         for (int i = 0; i < numberOfPlayers; i++) {
-            entityCreator.getPlayerClass(EntityCreator.PLAYERS.DEFAULT).createEntity();
+            if (i % 2 == 0)
+                entityCreator.getPlayerClass(EntityCreator.PLAYERS.DEFAULT).createEntity();
+            else
+                entityCreator.getPlayerClass(EntityCreator.PLAYERS.SPEEDY).createEntity();
+
         }
     }
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -22,7 +23,10 @@ public class ControlManager {
     public int currentProjectile = 0;
     private int numberOfProjectiles = 0;
     public boolean leftPressed, rightPressed, aimPressed, powerPressed = false;
+    private boolean anyTouched = false;
     private final Array<Texture> projectileTextures;
+
+    private float scaler = 1.5f; // Use to quickly change scale of controller images
 
     private Image aimImg;
     private Image powerImg;
@@ -40,7 +44,7 @@ public class ControlManager {
 
         // Get number of projectile types
         numberOfProjectiles = EntityCreator.PROJECTILES.values().length;
-        for (int i=0;i<numberOfProjectiles;i++){
+        for (int i = 0; i < numberOfProjectiles; i++) {
             this.projectileTextures.add(EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.values()[i]).getTexture());
         }
 
@@ -57,27 +61,34 @@ public class ControlManager {
         Texture buttonAim = new Texture("button_aim.png");
 
         this.leftImg = new Image(buttonLeft);
-        this.leftImg.setSize(50f, 50f);
+        this.leftImg.setSize(50f * scaler, 50f * scaler);
         this.leftImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 leftPressed = true;
+                anyTouched = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 leftPressed = false;
+            }
 
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                anyTouched = false;
+                return super.mouseMoved(event, x, y);
             }
         });
 
         this.rightImg = new Image(buttonRight);
-        this.rightImg.setSize(50f, 50f);
+        this.rightImg.setSize(50f * scaler, 50f * scaler);
         this.rightImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 rightPressed = true;
+                anyTouched = true;
                 return true;
             }
 
@@ -85,14 +96,21 @@ public class ControlManager {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 rightPressed = false;
             }
+
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                anyTouched = false;
+                return super.mouseMoved(event, x, y);
+            }
         });
 
         this.powerImg = new Image(buttonPower);
-        this.powerImg.setSize(50f, 50f);
+        this.powerImg.setSize(50f * scaler, 50f * scaler);
         this.powerImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 powerPressed = true;
+                anyTouched = true;
                 return true;
             }
 
@@ -100,14 +118,21 @@ public class ControlManager {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 powerPressed = false;
             }
+
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                anyTouched = false;
+                return super.mouseMoved(event, x, y);
+            }
         });
 
         this.aimImg = new Image(buttonAim);
-        this.aimImg.setSize(50f, 50f);
+        this.aimImg.setSize(50f * scaler, 50f * scaler);
         this.aimImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 aimPressed = true;
+                anyTouched = true;
                 return true;
             }
 
@@ -115,36 +140,58 @@ public class ControlManager {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 aimPressed = false;
             }
+
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                anyTouched = false;
+                return super.mouseMoved(event, x, y);
+            }
         });
 
         /* Projectile Image */
         this.projectileImg = new Image(this.projectileTextures.first());
-        this.projectileImg.setSize(50f, 50f);
+        this.projectileImg.setSize(50f * scaler, 50f * scaler);
 
         this.projectileLeftImg = new Image(buttonLeft);
-        this.projectileLeftImg.setSize(30f, 30f);
+        this.projectileLeftImg.setSize(30f * scaler, 30f * scaler);
         this.projectileLeftImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 selectNewProjectile(false);
+                anyTouched = true;
                 return true;
             }
 
             @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            }
+
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                anyTouched = false;
+                return super.mouseMoved(event, x, y);
+            }
         });
 
         this.projectileRightImg = new Image(buttonRight);
-        this.projectileRightImg.setSize(30f, 30f);
+        this.projectileRightImg.setSize(30f * scaler, 30f * scaler);
         this.projectileRightImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 selectNewProjectile(true);
+                anyTouched = true;
                 return true;
             }
 
             @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            }
+
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                anyTouched = false;
+                return super.mouseMoved(event, x, y);
+            }
         });
 
         // Create controller table as 1 row
@@ -153,14 +200,14 @@ public class ControlManager {
         table.setWidth(Application.camera.viewportWidth);
         table.bottom().center();
 
-        table.row().pad(5f, 5f, 70f, 5f);
+        table.row().pad(5f * scaler, 5f * scaler, 70f * scaler, 5f * scaler);
         table.add(projectileLeftImg).size(projectileLeftImg.getWidth(), projectileLeftImg.getHeight());
         table.add(projectileImg).size(projectileImg.getWidth(), projectileImg.getHeight());
         table.add(projectileRightImg).size(projectileRightImg.getWidth(), projectileRightImg.getHeight());
-        table.add(aimImg).size(aimImg.getWidth(), aimImg.getHeight()).padLeft(50f).padRight(50f);
+        table.add(aimImg).size(aimImg.getWidth(), aimImg.getHeight()).padLeft(50f * scaler).padRight(50f * scaler);
         table.add(leftImg).size(leftImg.getWidth(), leftImg.getHeight());
         table.add(rightImg).size(rightImg.getWidth(), rightImg.getHeight());
-        table.add(powerImg).size(powerImg.getWidth(), powerImg.getHeight()).padLeft(100f).padRight(150f);
+        table.add(powerImg).size(powerImg.getWidth(), powerImg.getHeight()).padLeft(100f * scaler).padRight(150f * scaler);
 
         table.setColor(table.getColor().r, table.getColor().g, table.getColor().b, table.getColor().a - 0.2f);
 
@@ -172,7 +219,7 @@ public class ControlManager {
         // Iterate projectile index, and check if array should restart iteration
         if (next) {
             this.currentProjectile++;
-            if (this.currentProjectile >=  numberOfProjectiles)
+            if (this.currentProjectile >= numberOfProjectiles)
                 this.currentProjectile = 0;
         } else {
             this.currentProjectile--;
@@ -196,6 +243,7 @@ public class ControlManager {
     }
 
     public void idle() {
+        setTouchable(false);
         this.disableActor(this.powerImg);
         this.disableActor(this.leftImg);
         this.disableActor(this.rightImg);
@@ -206,6 +254,7 @@ public class ControlManager {
     } // TODO: Change
 
     public void startMoving() {
+        setTouchable(true);
         this.enableActor(this.leftImg);
         this.enableActor(this.rightImg);
         this.enableActor(this.aimImg);
@@ -221,4 +270,35 @@ public class ControlManager {
         this.disableActor(this.rightImg);
         this.disableActor(this.aimImg);
     } // TODO: Change
+
+    public void startTraining() {
+        setTouchable(true);
+        this.enableActor(this.aimImg);
+        this.enableActor(this.projectileImg);
+        this.enableActor(this.projectileLeftImg);
+        this.enableActor(this.projectileRightImg);
+        this.disableActor(this.powerImg);
+    } // TODO: Change
+
+    public void setVisible(boolean visible) {
+        Array<Actor> actors = Application.stage.getActors();
+
+        for (int i = 0; i < actors.size; i++) {
+            actors.get(i).setVisible(visible);
+        }
+    }
+
+    public void setTouchable(boolean touchable) {
+        Array<Actor> actors = Application.stage.getActors();
+
+        for (int i = 0; i < actors.size; i++) {
+            if (touchable)
+                actors.get(i).setTouchable(Touchable.enabled);
+            else actors.get(i).setTouchable(Touchable.disabled);
+        }
+    }
+
+    public boolean checkControllerIsTouched() {
+        return anyTouched;
+    }
 }
