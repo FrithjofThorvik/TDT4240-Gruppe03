@@ -89,8 +89,13 @@ public class LocalMultiplayer implements GameMode {
         if (!stopTimer)
             timer += dt; // Increment the timer if the
 
-        if (timer > switchTime) // Start a new round when the timer is greater than the switchTime variable
-            GSM.setGameState(GameStateManager.STATE.START_ROUND);
+        if (timer > switchTime) { // Start a new round when the timer is greater than the switchTime variable
+            timer = 0;
+            if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME) || GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
+                GSM.setGameState(GameStateManager.STATE.START_ROUND);
+            } else
+                GSM.setGameState(GameStateManager.STATE.SWITCH_ROUND);
+        }
     }
 
     @Override
@@ -168,6 +173,14 @@ public class LocalMultiplayer implements GameMode {
 
     @Override
     public void switchRound() { // Is called when the game is switching between round
+        CM.idle(); // Make all controller buttons idle
+        // Remove or add components to entities
+        players.get(currentPlayer).remove(isShootingComponent.class);
+        players.get(currentPlayer).remove(isAimingComponent.class);
+        EM.removeShootingRender();
+        // Start or stop systems (if they should be processed or not)
+        EM.engine.getSystem(ShootingSystem.class).setProcessing(false);
+
         timer = 0; // Reset the timer
         stopTimer = false; // Start the timer again
         switchTime = TIME_BETWEEN_ROUNDS; // Set the switchTime to how long the round switch should take
