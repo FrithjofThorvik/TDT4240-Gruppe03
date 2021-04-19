@@ -70,12 +70,6 @@ public class OnlineMultiplayer implements GameMode {
     boolean gameStart = false;
 
     public OnlineMultiplayer() {
-        // Initialize entity arrays
-        this.players = EM.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
-        this.projectiles = EM.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
-        this.healthDisplayers = EM.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
-
-
         // Connect to server
         this.connectSocket();
         this.socketConfigs();
@@ -121,6 +115,11 @@ public class OnlineMultiplayer implements GameMode {
 
     @Override
     public void startGame() { // Is called when the game starts
+        // Initialize entity arrays
+        this.players = EM.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
+        this.projectiles = EM.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
+        this.healthDisplayers = EM.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
+
         CM.setVisible(false); // Make all controller not visible
         setPlayerSpawn(); // Choose location for where players spawn
         switchTime = START_GAME_TIME; // The timer now countsdown from START_GAME_TIME to 0

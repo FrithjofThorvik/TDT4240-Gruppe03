@@ -7,8 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Application;
+import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.states.gamemodes.GameMode;
 
+import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.ScreenManager.SM;
 
 
@@ -24,6 +27,8 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void initScreen() {
         Texture playTexture = new Texture("play.png");
+        Texture leaderboardTexture = new Texture("leaderboard.png");
+        Texture singlePlayerTexture = new Texture("singlePlayer.png");
         Texture backgroundTexture = new Texture("mainmenu.png");
 
         // Initialise background
@@ -33,7 +38,6 @@ public class MainMenuScreen extends AbstractScreen {
                 (Application.camera.viewportWidth) - (background.getWidth()),
                 (Application.camera.viewportHeight) - (background.getHeight())
         );
-        Application.stage.addActor(background);
 
         // Initialise Play Button
         Image playImg = new Image(playTexture);
@@ -47,6 +51,8 @@ public class MainMenuScreen extends AbstractScreen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 SM.removeAllActors(); // Removes all current actors from Application.stage
+
+                GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
                 SM.setScreen(ScreenManager.STATE.PLAY);
             }
         });
@@ -55,7 +61,53 @@ public class MainMenuScreen extends AbstractScreen {
                 (Application.camera.viewportHeight / 2f) - (playImg.getHeight() / 2f)
         );
 
-        Application.stage.addActor(playImg); // Add table actor to GameScreen stage
+        // Initialise single player button
+        Image singlePlayerImg = new Image(singlePlayerTexture);
+        singlePlayerImg.setSize(300f, 300f);
+        singlePlayerImg.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                SM.removeAllActors(); // Removes all current actors from Application.stage
+
+                GSM.setGameMode(GameStateManager.GAMEMODE.TRAINING);
+                SM.setScreen(ScreenManager.STATE.PLAY);
+            }
+        });
+        singlePlayerImg.setPosition(
+                (Application.camera.viewportWidth / 2f) - (singlePlayerImg.getWidth() / 2f),
+                (Application.camera.viewportHeight / 4f) - (singlePlayerImg.getHeight() / 2f)
+        );
+
+        // Initialize Leaderboard button
+        Image leaderboardImg = new Image(leaderboardTexture);
+        leaderboardImg.setSize(100f, 100f);
+        leaderboardImg.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                SM.removeAllActors(); // Removes all current actors from Application.stage
+                SM.setScreen(ScreenManager.STATE.LEADERBOARD);
+            }
+        });
+        leaderboardImg.setPosition(
+                (Application.camera.viewportWidth) - (leaderboardImg.getWidth()),
+                (Application.camera.viewportHeight) - (leaderboardImg.getHeight())
+        );
+
+        Application.stage.addActor(background);
+        Application.stage.addActor(singlePlayerImg);
+        Application.stage.addActor(playImg);
+        Application.stage.addActor(leaderboardImg);
+
     }
 
     @Override

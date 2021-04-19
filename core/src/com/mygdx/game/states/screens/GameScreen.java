@@ -8,6 +8,7 @@ import com.mygdx.game.ECS.CollisionHandler;
 import com.mygdx.game.managers.ControlManager;
 import com.mygdx.game.managers.EntityManager;
 import com.mygdx.game.managers.GameStateManager;
+import com.mygdx.game.states.gamemodes.GameMode;
 
 import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.EntityManager.EM;
@@ -41,11 +42,11 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
+        //new GameStateManager();
         new EntityManager(Application.batch); // Manager for generating all ECS functions
-        new GameStateManager(); // Manager for handling all game states
         new ControlManager(); // Manages all game controls
 
-        GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
+        //GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
 
         EM.createModeEntities();
         GSM.setGameState(GameStateManager.STATE.START_GAME);
@@ -74,7 +75,7 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void dispose() {
         super.dispose();
-        EM.dispose();
+        //EM.dispose();
         world.dispose();
     }
 }

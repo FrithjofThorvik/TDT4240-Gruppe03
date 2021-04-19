@@ -6,6 +6,7 @@ import com.mygdx.game.Application;
 import com.mygdx.game.states.screens.AbstractScreen;
 import com.mygdx.game.states.screens.EndScreen;
 import com.mygdx.game.states.screens.GameScreen;
+import com.mygdx.game.states.screens.LeaderboardScreen;
 import com.mygdx.game.states.screens.MainMenuScreen;
 
 import java.util.HashMap;
@@ -25,8 +26,8 @@ public class ScreenManager {
     public enum STATE {
         MAIN_MENU,
         PLAY,
-        END_SCREEN
-        // TODO: Implement TUTORIAL
+        END_SCREEN,
+        LEADERBOARD
     }
 
     // Store screens in HashMap
@@ -55,6 +56,7 @@ public class ScreenManager {
         this.screens.put(STATE.MAIN_MENU, new MainMenuScreen(app)); // Creates MainMenuScreen
         this.screens.put(STATE.END_SCREEN, new EndScreen(app)); // Creates EndScreen
         this.screens.put(STATE.PLAY, new GameScreen(app));  // Creates new GameScreen every time we change to the game screen
+        this.screens.put(STATE.LEADERBOARD, new LeaderboardScreen(app)); // Displays leaderboard information
     }
 
     // Set predefined screen
@@ -79,10 +81,6 @@ public class ScreenManager {
 
     // Remove all current actors
     public void removeAllActors() {
-        Array<Actor> actors = Application.stage.getActors();
-
-        for (int i = 0; i < actors.size; i++) {
-            actors.get(i).remove();
-        }
+        Application.stage.getActors().clear();
     }
 }

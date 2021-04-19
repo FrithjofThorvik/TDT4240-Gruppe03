@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.managers.ScreenManager;
 
 import static com.mygdx.game.managers.ScreenManager.SM;
@@ -38,7 +39,6 @@ public class Application extends Game {
     // Methods
     @Override
     public void create() {
-        System.out.println("create");
         // Setup batches
         batch = new SpriteBatch();
         this.shapeBatch = new ShapeRenderer();
@@ -58,6 +58,7 @@ public class Application extends Game {
         Gdx.input.setInputProcessor(stage); // Add input processing for stage (Press of Button, Image, etc)
 
         new ScreenManager(this); // Create ScreenManager
+        new GameStateManager();
     }
 
     @Override
@@ -73,7 +74,6 @@ public class Application extends Game {
 
     @Override
     public void resize(int width, int height) {
-        System.out.println("resize");
         viewport.update(width, height);
         camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
         camera.update();
