@@ -39,9 +39,8 @@ public abstract class AbstractPlayer extends AbstractEntity {
     @Override
     public void addCoreComponents() {
         this.entity.add(new Box2DComponent(
-                    this.position, this.size, false, 100f,
-                    BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE | BIT_POWERUP))
-                )
+                this.position, this.size, false, 25f,
+                BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE | BIT_POWERUP)))
                 .add(new SpriteComponent(this.texture, this.size.x, this.size.y, 1))
                 .add(new HealthComponent(this.health))
                 .add(new PositionComponent(this.position.x, this.position.y))
@@ -52,8 +51,12 @@ public abstract class AbstractPlayer extends AbstractEntity {
     }
 
     public abstract int getPlayerHealth();
+
     public abstract Vector2 getPlayerVelocity();
+
     public abstract Vector2 getPlayerSize();
+
     public abstract Vector2 getPlayerPosition();
+
     public abstract Texture getPlayerTexture();
 }

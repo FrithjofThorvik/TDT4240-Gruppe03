@@ -78,7 +78,7 @@ public class ScreenManager {
     }
 
     // Remove all current actors
-    private void removeAllActors() {
+    public void removeAllActors() {
         Array<Actor> actors = Application.stage.getActors();
 
         for (int i = 0; i < actors.size; i++) {

@@ -21,8 +21,8 @@ public class BouncerProjectile extends AbstractProjectile {
     int damage = 5;
     float speed = 1f;
     Vector2 size = new Vector2(10f, 10f);
-    Vector2 position = new Vector2(Application.camera.viewportWidth / 2f, Application.camera.viewportHeight);
-    public Texture texture = new Texture("play.png");
+    Vector2 position = new Vector2(0f, 0f);
+    public Texture texture = new Texture("bouncer.png");
     ProjectileType type = new BouncyType(); // The projectile type indicates which algorithm the projectile follows (these algorithms determine the behaviour of a projectile)
 
     @Override

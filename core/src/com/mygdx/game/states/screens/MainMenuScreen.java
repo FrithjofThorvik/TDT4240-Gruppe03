@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.ScreenManager;
@@ -23,6 +24,16 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void initScreen() {
         Texture playTexture = new Texture("play.png");
+        Texture backgroundTexture = new Texture("mainmenu.png");
+
+        // Initialise background
+        Image background = new Image(backgroundTexture);
+        background.setSize(Application.VIRTUAL_WORLD_WIDTH, Application.VIRTUAL_WORLD_HEIGHT);
+        background.setPosition(
+                (Application.camera.viewportWidth) - (background.getWidth()),
+                (Application.camera.viewportHeight) - (background.getHeight())
+        );
+        Application.stage.addActor(background);
 
         // Initialise Play Button
         Image playImg = new Image(playTexture);
@@ -35,6 +46,7 @@ public class MainMenuScreen extends AbstractScreen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                SM.removeAllActors(); // Removes all current actors from Application.stage
                 SM.setScreen(ScreenManager.STATE.PLAY);
             }
         });
