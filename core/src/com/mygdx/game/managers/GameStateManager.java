@@ -2,6 +2,7 @@ package com.mygdx.game.managers;
 
 import com.mygdx.game.states.gamemodes.LocalMultiplayer;
 import com.mygdx.game.states.gamemodes.GameMode;
+import com.mygdx.game.states.gamemodes.OnlineMultiplayer;
 import com.mygdx.game.states.gamemodes.Training;
 import com.mygdx.game.states.game.AbstractGameState;
 import com.mygdx.game.states.game.EndGame;
@@ -83,7 +84,7 @@ public class GameStateManager {
         this.gameModes = new HashMap<GAMEMODE, GameMode>();
 
         this.gameModes.put(GAMEMODE.LOCAL, new LocalMultiplayer());
-        //this.gameModes.put(GAMEMODE.ONLINE, new Online());
+        this.gameModes.put(GAMEMODE.ONLINE, new OnlineMultiplayer());
         this.gameModes.put(GAMEMODE.TRAINING, new Training());
     }
 
