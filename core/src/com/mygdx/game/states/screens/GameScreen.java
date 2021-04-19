@@ -1,6 +1,5 @@
 package com.mygdx.game.states.screens;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -23,13 +22,8 @@ public class GameScreen extends AbstractScreen {
     public static World world;
     public Box2DDebugRenderer b2dr;
 
-    private Engine engine;
-
     public GameScreen(final Application app) {
         super(app); // Passing Application to AbstractScreen
-
-        // Setup ECS engine
-        this.engine = new Engine();
 
         // Create Box2D world with physics
         this.b2dr = new Box2DDebugRenderer();
@@ -42,13 +36,19 @@ public class GameScreen extends AbstractScreen {
     }
 
     @Override
-    public void endScreen() {}
+    public void endScreen() {
+    }
 
     @Override
     public void show() {
+        new EntityManager(Application.batch); // Manager for generating all ECS functions
         new GameStateManager(); // Manager for handling all game states
-        new EntityManager(this.engine, Application.batch); // Manager for generating all ECS functions
         new ControlManager(); // Manages all game controls
+
+        GSM.setGameMode(GameStateManager.GAMEMODE.TRAINING);
+
+        EM.createModeEntities();
+        GSM.setGameState(GameStateManager.STATE.START_GAME);
 
         world.setContactListener(new CollisionHandler()); // Set contact listener for world
     }
@@ -75,7 +75,6 @@ public class GameScreen extends AbstractScreen {
     public void dispose() {
         super.dispose();
         EM.dispose();
-        GSM.dispose();
         world.dispose();
     }
 }

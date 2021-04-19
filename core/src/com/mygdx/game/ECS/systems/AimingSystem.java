@@ -11,6 +11,7 @@ import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
+import com.mygdx.game.ECS.components.isAimingComponent;
 import com.mygdx.game.managers.GameStateManager;
 
 import static com.mygdx.game.managers.EntityManager.EM;
@@ -23,20 +24,20 @@ import static com.mygdx.game.managers.ControlManager.CM;
  **/
 public class AimingSystem extends EntitySystem {
     // Prepare arrays for entities
-    private ImmutableArray<Entity> players;
+    private ImmutableArray<Entity> playersAiming;
 
     // Add entities to arrays
     public void addedToEngine(Engine e) {
-        this.players = e.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        this.playersAiming = e.getEntitiesFor(Family.all(PlayerComponent.class, isAimingComponent.class).get());
     }
 
     // Will be called by the engine automatically
     public void update(float dt) {
         // Check first if there are any players aiming
-        if (this.players.size() > 0) {
+        for (int i = 0; i < this.playersAiming.size(); i++) {
             // Calculate the aim angle when the screen is touched
             if (Gdx.input.isTouched()) {
-                Entity player = this.players.get(GSM.currentPlayer); // Get current player entity
+                Entity player = this.playersAiming.get(i); // Get current player entity
                 PositionComponent playerPosition = EM.positionMapper.get(player); // Get the position component of that player
                 ShootingComponent shootingComponent = EM.shootingMapper.get(player);
 
