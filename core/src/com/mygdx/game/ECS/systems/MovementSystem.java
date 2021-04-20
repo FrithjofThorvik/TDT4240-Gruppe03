@@ -8,16 +8,13 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.MovementControlComponent;
-import com.mygdx.game.ECS.components.PlayerComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.flags.MovementControlComponent;
+import com.mygdx.game.ECS.components.flags.PlayerComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
-import com.mygdx.game.managers.GameStateManager;
 
-import static com.mygdx.game.managers.EntityManager.EM;
-import static com.mygdx.game.managers.GameStateManager.GSM;
-import static com.mygdx.game.managers.ControlManager.CM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import static com.mygdx.game.utils.GameController.CM;
 
 
 /**
@@ -51,24 +48,29 @@ public class MovementSystem extends EntitySystem {
     private void handleMovement(Entity player) {
 
         // Get entity components
-        VelocityComponent playerVelocity = EM.velocityMapper.get(player);
-        Box2DComponent playerBox2D = EM.b2dMapper.get(player);
-        SpriteComponent playerSprite = EM.spriteMapper.get(player);
+        VelocityComponent playerVelocity = ECSManager.velocityMapper.get(player);
+        Box2DComponent playerBox2D = ECSManager.b2dMapper.get(player);
+        SpriteComponent playerSprite = ECSManager.spriteMapper.get(player);
 
         if (CM.rightPressed) {
-            playerBox2D.body.applyLinearImpulse(playerVelocity.velocity, playerBox2D.body.getWorldCenter(), false);
+            playerBox2D.body.applyLinearImpulse(new Vector2(10f, 0f), playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is already flipped from it's original state
             if (playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
 
         } else if (CM.leftPressed) {
-            Vector2 negativeImpulse = new Vector2(-playerVelocity.velocity.x, playerVelocity.velocity.y);
+            Vector2 negativeImpulse = new Vector2(-10f, 0f);
             playerBox2D.body.applyLinearImpulse(negativeImpulse, playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is not flipped from it's initial state
             if (!playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
         }
+
+        if (playerBox2D.body.getLinearVelocity().x > playerVelocity.velocity.x) {
+            playerBox2D.body.setLinearVelocity(playerVelocity.velocity.x, playerBox2D.body.getLinearVelocity().y);
+        } else if (playerBox2D.body.getLinearVelocity().x < -playerVelocity.velocity.x)
+            playerBox2D.body.setLinearVelocity(-playerVelocity.velocity.x, playerBox2D.body.getLinearVelocity().y);
     }
 }

@@ -8,11 +8,11 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
-import com.mygdx.game.ECS.components.RenderComponent;
+import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
+import com.mygdx.game.ECS.components.flags.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 
-import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
 
@@ -46,8 +46,8 @@ public class PhysicsSystem extends EntitySystem {
                 Entity entity = this.box2DEntities.get(i);
 
                 // Fetch entity component
-                PositionComponent entityPosition = EM.positionMapper.get(entity);
-                Box2DComponent entityBox2D = EM.b2dMapper.get(entity);
+                PositionComponent entityPosition = ECSManager.positionMapper.get(entity);
+                Box2DComponent entityBox2D = ECSManager.b2dMapper.get(entity);
 
                 // Synchronise position component with body position
                 entityPosition.position = new Vector2(entityBox2D.body.getPosition().x * PPM, entityBox2D.body.getPosition().y * PPM);

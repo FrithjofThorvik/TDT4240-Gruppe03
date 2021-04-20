@@ -7,11 +7,11 @@ import com.mygdx.game.Application;
 public class DesktopLauncher {
     public static void main (String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        new LwjglApplication(new Application(new DesktopInterFaceClass()), config);
         config.title = Application.APP_TITLE;
         config.width = Application.APP_DESKTOP_WIDTH;
         config.height = Application.APP_DESKTOP_HEIGHT;
         config.backgroundFPS = Application.APP_FPS;
         config.foregroundFPS = Application.APP_FPS;
-        new LwjglApplication(new Application(), config);
     }
 }

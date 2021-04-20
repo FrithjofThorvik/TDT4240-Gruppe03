@@ -9,9 +9,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.gamelogic.states.GameStateManager;
+import com.mygdx.game.gamelogic.states.ScreenManager;
+import com.mygdx.game.firebase.FirebaseInterface;
 
-import static com.mygdx.game.managers.ScreenManager.SM;
+import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 
 /**
@@ -35,19 +37,29 @@ public class Application extends Game {
     public static Stage stage;
     public static Viewport viewport;
 
+    //firebase
+    public static FirebaseInterface _FBIC;
+
+
+    public Application(FirebaseInterface FBIC) {
+        _FBIC = FBIC;
+    }
+
     // Methods
     @Override
     public void create() {
-        System.out.println("create");
         // Setup batches
         batch = new SpriteBatch();
         this.shapeBatch = new ShapeRenderer();
+
+        //firebase
+        _FBIC.SetOnValueChangedListener();
 
         // Initialize screen properties
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WORLD_WIDTH, VIRTUAL_WORLD_HEIGHT, camera);
         viewport.apply();
-        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
@@ -58,6 +70,7 @@ public class Application extends Game {
         Gdx.input.setInputProcessor(stage); // Add input processing for stage (Press of Button, Image, etc)
 
         new ScreenManager(this); // Create ScreenManager
+        new GameStateManager();
     }
 
     @Override
@@ -73,9 +86,8 @@ public class Application extends Game {
 
     @Override
     public void resize(int width, int height) {
-        System.out.println("resize");
         viewport.update(width, height);
-        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
     }
 

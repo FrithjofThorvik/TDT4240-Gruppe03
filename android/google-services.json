@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "51546242274",
+    "project_id": "tdt4240-gruppe03",
+    "storage_bucket": "tdt4240-gruppe03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51546242274:android:fad386bc3bbe40064032bb",
+        "android_client_info": {
+          "package_name": "com.mygdx.game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51546242274-5lebv1h7egl9ulusjse5pv4c6iosrkp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbqMYX3ct-M8NW4p6WSxMOp9Hepz74eb4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51546242274-5lebv1h7egl9ulusjse5pv4c6iosrkp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
