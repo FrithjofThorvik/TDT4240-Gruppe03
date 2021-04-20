@@ -3,7 +3,14 @@ package com.mygdx.game.states.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Application;
+import com.mygdx.game.managers.ScreenManager;
+
+import static com.mygdx.game.managers.ScreenManager.SM;
 
 /**
  * Contain the template for how screens are implemented
@@ -20,6 +27,29 @@ public abstract class AbstractScreen implements Screen {
     public abstract void initScreen(); // Abstract function: (Template Method)
     public abstract void endScreen(); // Abstract function: (Template Method)
     public abstract void update(float delta); // Abstract function: (Template Method)
+    public void addReturnButton(){
+        // Initialise return Button
+        Texture exitTexture = new Texture("button_exit.png");
+        Image returnImg = new Image(exitTexture);
+        returnImg.setSize(50f, 50f);
+        returnImg.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                SM.removeAllActors(); // Removes all current actors from Application.stage
+                SM.setScreen(ScreenManager.STATE.MAIN_MENU);
+            }
+        });
+        returnImg.setPosition(
+                (Application.camera.viewportWidth) - (returnImg.getWidth() + 20f),
+                (Application.camera.viewportHeight) - (returnImg.getHeight() + 20f)
+        );
+        Application.stage.addActor(returnImg); // Add table actor to GameScreen stage
+    }
 
     @Override
     public void render(float delta) {

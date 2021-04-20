@@ -34,6 +34,7 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void initScreen() {
         System.out.println("Initializing GameScreen...");
+        addReturnButton();
     }
 
     @Override
