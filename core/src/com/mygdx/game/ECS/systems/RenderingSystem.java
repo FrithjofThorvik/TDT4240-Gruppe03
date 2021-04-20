@@ -5,11 +5,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.ECS.components.FontComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.RenderComponent;
+import com.mygdx.game.ECS.components.flags.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 
 import static com.mygdx.game.managers.EntityManager.EM;

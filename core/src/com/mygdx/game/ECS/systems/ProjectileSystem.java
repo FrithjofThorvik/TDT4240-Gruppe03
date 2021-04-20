@@ -5,20 +5,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 
 import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.CollisionComponent;
-import com.mygdx.game.ECS.components.PlayerComponent;
-import com.mygdx.game.ECS.components.ProjectileAlgorithms.ProjectileType;
+import com.mygdx.game.ECS.components.flags.PlayerComponent;
 
 import com.mygdx.game.Application;
 
-import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
-import com.mygdx.game.managers.GameStateManager;
+import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
 
 import static com.mygdx.game.managers.EntityManager.EM;
-import static com.mygdx.game.managers.GameStateManager.GSM;
 
 
 /**

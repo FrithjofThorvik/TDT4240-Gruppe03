@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.entities.EntityCreator;
 
 import static com.mygdx.game.managers.EntityManager.EM;
 

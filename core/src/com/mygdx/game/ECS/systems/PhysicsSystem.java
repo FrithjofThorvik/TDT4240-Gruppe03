@@ -8,8 +8,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.ProjectileComponents.ProjectileComponent;
-import com.mygdx.game.ECS.components.RenderComponent;
+import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
+import com.mygdx.game.ECS.components.flags.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 
 import static com.mygdx.game.managers.EntityManager.EM;

@@ -7,10 +7,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.PlayerComponent;
+import com.mygdx.game.ECS.components.flags.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
-import com.mygdx.game.ECS.components.isShootingComponent;
-import com.mygdx.game.ECS.entities.EntityCreator;
+import com.mygdx.game.ECS.components.flags.isShootingComponent;
+import com.mygdx.game.managers.EntityCreator;
 import com.mygdx.game.managers.GameStateManager;
 
 import static com.mygdx.game.managers.EntityManager.EM;
@@ -18,7 +18,6 @@ import static com.mygdx.game.managers.GameStateManager.GSM;
 import static com.mygdx.game.managers.ControlManager.CM;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
-import static com.mygdx.game.utils.GameConstants.ROUND_TIME;
 
 
 /**

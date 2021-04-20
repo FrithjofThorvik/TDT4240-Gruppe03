@@ -1,17 +1,17 @@
 package com.mygdx.game.managers;
 
-import com.mygdx.game.states.gamemodes.LocalMultiplayer;
-import com.mygdx.game.states.gamemodes.GameMode;
-import com.mygdx.game.states.gamemodes.OnlineMultiplayer;
-import com.mygdx.game.states.gamemodes.Training;
-import com.mygdx.game.states.game.AbstractGameState;
-import com.mygdx.game.states.game.EndGame;
-import com.mygdx.game.states.game.PlayerAiming;
-import com.mygdx.game.states.game.PlayerShooting;
-import com.mygdx.game.states.game.ProjectileAirborne;
-import com.mygdx.game.states.game.StartGame;
-import com.mygdx.game.states.game.StartRound;
-import com.mygdx.game.states.game.SwitchRound;
+import com.mygdx.game.gamelogic.strategies.gamemodes.LocalMultiplayer;
+import com.mygdx.game.gamelogic.strategies.gamemodes.GameMode;
+import com.mygdx.game.gamelogic.strategies.gamemodes.OnlineMultiplayer;
+import com.mygdx.game.gamelogic.strategies.gamemodes.Training;
+import com.mygdx.game.gamelogic.states.game.AbstractGameState;
+import com.mygdx.game.gamelogic.states.game.EndGame;
+import com.mygdx.game.gamelogic.states.game.PlayerAiming;
+import com.mygdx.game.gamelogic.states.game.PlayerShooting;
+import com.mygdx.game.gamelogic.states.game.ProjectileAirborne;
+import com.mygdx.game.gamelogic.states.game.StartGame;
+import com.mygdx.game.gamelogic.states.game.StartRound;
+import com.mygdx.game.gamelogic.states.game.SwitchRound;
 
 import java.util.HashMap;
 

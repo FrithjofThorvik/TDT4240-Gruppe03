@@ -8,11 +8,11 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.PlayerComponent;
+import com.mygdx.game.ECS.components.flags.PlayerComponent;
 import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
-import com.mygdx.game.ECS.components.isAimingComponent;
+import com.mygdx.game.ECS.components.flags.isAimingComponent;
 import com.mygdx.game.managers.GameStateManager;
 
 import static com.mygdx.game.managers.EntityManager.EM;
