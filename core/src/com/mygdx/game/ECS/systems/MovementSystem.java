@@ -56,19 +56,24 @@ public class MovementSystem extends EntitySystem {
         SpriteComponent playerSprite = EM.spriteMapper.get(player);
 
         if (CM.rightPressed) {
-            playerBox2D.body.applyLinearImpulse(playerVelocity.velocity, playerBox2D.body.getWorldCenter(), false);
+            playerBox2D.body.applyLinearImpulse(new Vector2(10f, 0f), playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is already flipped from it's original state
             if (playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
 
         } else if (CM.leftPressed) {
-            Vector2 negativeImpulse = new Vector2(-playerVelocity.velocity.x, playerVelocity.velocity.y);
+            Vector2 negativeImpulse = new Vector2(-10f, 0f);
             playerBox2D.body.applyLinearImpulse(negativeImpulse, playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is not flipped from it's initial state
             if (!playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
         }
+
+        if (playerBox2D.body.getLinearVelocity().x > playerVelocity.velocity.x) {
+            playerBox2D.body.setLinearVelocity(playerVelocity.velocity.x, playerBox2D.body.getLinearVelocity().y);
+        } else if (playerBox2D.body.getLinearVelocity().x < -playerVelocity.velocity.x)
+            playerBox2D.body.setLinearVelocity(-playerVelocity.velocity.x, playerBox2D.body.getLinearVelocity().y);
     }
 }

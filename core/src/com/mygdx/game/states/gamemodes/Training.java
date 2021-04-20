@@ -73,6 +73,7 @@ public class Training implements GameMode {
 
     @Override
     public void startGame() { // Is called when the game starts
+        CM.startTraining(); // Enable moving buttons (includes aiming button)
         CM.setTouchable(true);
         setPlayerSpawn(); // Choose location for where players spawn
 

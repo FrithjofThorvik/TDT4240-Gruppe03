@@ -39,7 +39,7 @@ public abstract class AbstractPlayer extends AbstractEntity {
     @Override
     public void addCoreComponents() {
         this.entity.add(new Box2DComponent(
-                    this.position, this.size, false, 25f,
+                    this.position, this.size, false, 100f,
                     BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE))
                 )
                 .add(new SpriteComponent(this.texture, this.size.x, this.size.y, 1))

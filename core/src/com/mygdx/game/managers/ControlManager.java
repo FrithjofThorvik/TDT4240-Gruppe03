@@ -22,8 +22,7 @@ public class ControlManager {
     public static ControlManager CM;
     public int currentProjectile = 0;
     private int numberOfProjectiles = 0;
-    public boolean leftPressed, rightPressed, aimPressed, powerPressed = false;
-    private boolean anyTouched = false;
+    public boolean leftPressed, rightPressed, aimPressed, powerPressed, projectilePressed = false;
     private final Array<Texture> projectileTextures;
 
     private float scaler = 1.5f; // Use to quickly change scale of controller images
@@ -66,19 +65,12 @@ public class ControlManager {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 leftPressed = true;
-                anyTouched = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 leftPressed = false;
-            }
-
-            @Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                anyTouched = false;
-                return super.mouseMoved(event, x, y);
             }
         });
 
@@ -88,19 +80,12 @@ public class ControlManager {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 rightPressed = true;
-                anyTouched = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 rightPressed = false;
-            }
-
-            @Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                anyTouched = false;
-                return super.mouseMoved(event, x, y);
             }
         });
 
@@ -110,19 +95,12 @@ public class ControlManager {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 powerPressed = true;
-                anyTouched = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 powerPressed = false;
-            }
-
-            @Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                anyTouched = false;
-                return super.mouseMoved(event, x, y);
             }
         });
 
@@ -132,19 +110,12 @@ public class ControlManager {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 aimPressed = true;
-                anyTouched = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 aimPressed = false;
-            }
-
-            @Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                anyTouched = false;
-                return super.mouseMoved(event, x, y);
             }
         });
 
@@ -158,18 +129,13 @@ public class ControlManager {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 selectNewProjectile(false);
-                anyTouched = true;
+                projectilePressed = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-            }
-
-            @Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                anyTouched = false;
-                return super.mouseMoved(event, x, y);
+                projectilePressed = false;
             }
         });
 
@@ -179,18 +145,13 @@ public class ControlManager {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 selectNewProjectile(true);
-                anyTouched = true;
+                projectilePressed = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-            }
-
-            @Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                anyTouched = false;
-                return super.mouseMoved(event, x, y);
+                projectilePressed = false;
             }
         });
 
@@ -299,6 +260,6 @@ public class ControlManager {
     }
 
     public boolean checkControllerIsTouched() {
-        return anyTouched;
+        return leftPressed || rightPressed || powerPressed || aimPressed || projectilePressed;
     }
 }

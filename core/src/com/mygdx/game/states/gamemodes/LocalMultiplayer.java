@@ -178,6 +178,8 @@ public class LocalMultiplayer implements GameMode {
 
     @Override
     public void switchRound() { // Is called when the game is switching between round
+        CM.idle(); // Make all controller buttons idle
+        CM.setVisible(false); // Make all controller not visible
         // Remove or add components to entities
         players.get(currentPlayer).remove(isShootingComponent.class);
         players.get(currentPlayer).remove(isAimingComponent.class);

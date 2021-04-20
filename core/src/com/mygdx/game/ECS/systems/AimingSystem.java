@@ -43,15 +43,12 @@ public class AimingSystem extends EntitySystem {
                 ShootingComponent shootingComponent = EM.shootingMapper.get(player);
 
                 repositionAimArrow(player); // Reposition the aim arrow
+                if (!CM.checkControllerIsTouched()) // We don't want to calculate aim if we are touching controllers
+                    shootingComponent.angle = this.calculateAimAngle(playerPosition); // Update angle in the players ShootingComponent
 
                 // Check if power button is pushed
                 if (CM.powerPressed)
                     GSM.setGameState(GameStateManager.STATE.PLAYER_SHOOTING);
-                else {
-                    if (!CM.checkControllerIsTouched()) { // We don't want to calculate aim if we are touching controllers
-                        shootingComponent.angle = this.calculateAimAngle(playerPosition); // Update angle in the players ShootingComponent
-                    }
-                }
             }
         }
     }
