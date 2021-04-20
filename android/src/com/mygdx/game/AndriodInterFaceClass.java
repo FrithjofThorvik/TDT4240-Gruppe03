@@ -1,7 +1,9 @@
 package com.mygdx.game;
 
+import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.util.Log;
 
+import com.badlogic.gdx.utils.Array;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -10,29 +12,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import static android.content.ContentValues.TAG;
 
-public class AndriodInterFaceClass implements FirebaseInterface{
+public class AndriodInterFaceClass implements FirebaseInterface {
     FirebaseDatabase database;
     DatabaseReference myRef;
+    DatabaseReference highScoreRef;
+    Array<Integer> highscores;
 
-    public AndriodInterFaceClass()
-    {
+    public AndriodInterFaceClass() {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("message");
-    }
-
-    @Override
-    public void SomeFunction() {
-        System.out.println("Just some function");
-    }
-
-    @Override
-    public void FirstFireBaseTest() {
-        if(myRef != null){
-            myRef.setValue("woooohoo");
-        }
-        else{
-            System.out.println("Databasereference was not set up -> therefore could not write to D8");
-        }
+        highScoreRef = database.getReference().child("Highscore");
+        highscores = new Array<Integer>();
     }
 
     @Override
@@ -55,6 +45,26 @@ public class AndriodInterFaceClass implements FirebaseInterface{
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+
+        highScoreRef.addValueEventListener(new ValueEventListener() {
+            // Read from the database
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                int i = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    highscores.insert(i, snapshot.getValue(Integer.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
 
     //this function will set value in the database
@@ -63,4 +73,16 @@ public class AndriodInterFaceClass implements FirebaseInterface{
         myRef = database.getReference(target);
         myRef.setValue(value);
     }
+
+    @Override
+    public void SetHighScore(int value) {
+        highScoreRef.child("score" + highscores.size).setValue(value);
+    }
+
+    @Override
+    public Array<Integer> GetHighScore() {
+        return highscores;
+    }
+
+
 }

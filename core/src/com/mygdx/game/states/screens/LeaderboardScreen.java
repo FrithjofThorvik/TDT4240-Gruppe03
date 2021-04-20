@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.ScreenManager;
 
@@ -77,9 +78,10 @@ public class LeaderboardScreen extends AbstractScreen {
         super.render(delta); // Super.render(delta) sets BG_Color and calls update(float delta)
         Application.stage.draw();
         Application.batch.begin();
+        Array<Integer> highscore = Application._FBIC.GetHighScore();
         // Print 5 highest player scores
         for (int i = 0; i < 5; i++) {
-            this.font.draw(Application.batch, "Player " + (i + 1) + ": " + i * 100, Application.camera.viewportWidth / 2.4f, Application.camera.viewportHeight / 1.7f - i * 50f);
+            this.font.draw(Application.batch, "Score " + (i + 1) + ": " + highscore.get(i), Application.camera.viewportWidth / 2.4f, Application.camera.viewportHeight / 1.7f - i * 50f);
         }
         Application.batch.end();
     }

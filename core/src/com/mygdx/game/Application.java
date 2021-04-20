@@ -40,13 +40,13 @@ public class Application extends Game {
     public static Viewport viewport;
 
     //firebase
-    FirebaseInterface _FBIC;
+    public static FirebaseInterface _FBIC;
 
 
-    public Application(FirebaseInterface FBIC)
-    {
+    public Application(FirebaseInterface FBIC) {
         _FBIC = FBIC;
     }
+
     // Methods
     @Override
     public void create() {
@@ -55,16 +55,13 @@ public class Application extends Game {
         this.shapeBatch = new ShapeRenderer();
 
         //firebase
-        _FBIC.SomeFunction();
-        _FBIC.FirstFireBaseTest();
         _FBIC.SetOnValueChangedListener();
-        _FBIC.SetValueInDb("message", "this is new text");
 
         // Initialize screen properties
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WORLD_WIDTH, VIRTUAL_WORLD_HEIGHT, camera);
         viewport.apply();
-        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
@@ -92,7 +89,7 @@ public class Application extends Game {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
     }
 

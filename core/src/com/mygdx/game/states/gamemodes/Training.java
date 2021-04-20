@@ -21,6 +21,7 @@ import com.mygdx.game.states.gamemodes.GameMode;
 
 import java.text.DecimalFormat;
 
+import static com.mygdx.game.Application._FBIC;
 import static com.mygdx.game.managers.ControlManager.CM;
 import static com.mygdx.game.managers.EntityManager.EM;
 import static com.mygdx.game.managers.GameStateManager.GSM;
@@ -88,7 +89,9 @@ public class Training implements GameMode {
         // Remove entities
         EM.removeAllEntities();
 
-        SM.setScreen(ScreenManager.STATE.END_SCREEN); // Display the end screen
+        _FBIC.SetHighScore(score);
+
+        SM.setScreen(ScreenManager.STATE.LEADERBOARD); // Display the end screen
     }
 
     @Override
