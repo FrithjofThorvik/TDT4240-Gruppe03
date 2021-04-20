@@ -76,9 +76,9 @@ public class AimingSystem extends EntitySystem {
         double aimAngleInDegrees = 90f - (float) ECSManager.shootingMapper.get(player).angle / (float) Math.PI * 180f;
 
         // Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
-        ECSManager.spriteMapper.get(ECSManager.aimArrow).sprite.setRotation((float) aimAngleInDegrees);
-        ECSManager.positionMapper.get(ECSManager.aimArrow).position.x = playerPos.position.x;
-        ECSManager.positionMapper.get(ECSManager.aimArrow).position.y = playerPos.position.y + playerSprite.size.y;
+        ECSManager.spriteMapper.get(ECSManager.UIManager.getAimArrow()).sprite.setRotation((float) aimAngleInDegrees);
+        ECSManager.positionMapper.get(ECSManager.UIManager.getAimArrow()).position.x = playerPos.position.x;
+        ECSManager.positionMapper.get(ECSManager.UIManager.getAimArrow()).position.y = playerPos.position.y + playerSprite.size.y;
     }
 }
 

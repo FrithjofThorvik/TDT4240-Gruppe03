@@ -76,9 +76,9 @@ public class Training implements GameMode {
         setPlayerSpawn(); // Choose location for where players spawn
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(MovementSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -104,10 +104,10 @@ public class Training implements GameMode {
 
         // Remove or add components to entities
         player.add(new isAimingComponent());
-        ECSManager.addShootingRender();
+        ECSManager.UIManager.addShootingRender();
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(true);
     }
 
     @Override
@@ -117,18 +117,18 @@ public class Training implements GameMode {
         player.add(new isShootingComponent());
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(true);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
     public void projectileAirborne() { // Is called when a projectile has been fired and is currently airborne
         // Remove or add components to entities
         player.remove(isShootingComponent.class);
-        ECSManager.removeShootingRender();
+        ECSManager.UIManager.removeShootingRender();
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
 
         GSM.setGameState(GameStateManager.STATE.START_ROUND); // Change state
     }
@@ -142,26 +142,26 @@ public class Training implements GameMode {
         this.printTimer(); // Print information about how much time is left
         this.printScore(); // Prints the score
 
-        ECSManager.updatePowerBar(player); // Makes the powerbar display correctly
+        ECSManager.UIManager.updatePowerBar(player); // Makes the powerbar display correctly
     }
 
     @Override
     public void initEntities() {
-        ECSManager.createMap(mapFile, mapTexture);
-        ECSManager.spawnPlayers(1); // Spawn players
+        ECSManager.mapManager.createMap(mapFile, mapTexture);
+        ECSManager.gameEntityManager.spawnPlayers(1); // Spawn players
 
-        player = ECSManager.engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).first(); // Init the player variable
+        player = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get()).first(); // Init the player variable
 
-        scoreFont = ECSManager.entityTemplateMapper.getTextFont().createEntity(); // Init the score font variable
+        scoreFont = ECSManager.getEntityTemplateMapper().getTextFont().createEntity(); // Init the score font variable
         ECSManager.positionMapper.get(scoreFont).position = new Vector2(Application.camera.viewportWidth / 2f,
                 Application.camera.viewportHeight * 0.93f); // Set position of score font
 
-        target = ECSManager.spawnTarget(); // Init the target entity
+        target = ECSManager.gameEntityManager.spawnTarget(); // Init the target entity
     }
 
     // Print information about how much time is left in a round, etc...
     private void printTimer() {
-        FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.timer);
+        FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
         timerFont.text = "Timer: " + this.df.format(trainingLength - timer) + "s";
         timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
     }

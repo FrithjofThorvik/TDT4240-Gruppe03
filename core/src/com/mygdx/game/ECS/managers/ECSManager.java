@@ -43,8 +43,6 @@ import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 
 import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
-import static com.mygdx.game.utils.B2DConstants.*;
-import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
 import java.util.HashMap;
 
@@ -58,18 +56,14 @@ import java.util.HashMap;
  **/
 public class ECSManager {
     public static ECSManager ECSManager;
+    public MapManager mapManager;
+    public GameEntitiesManager gameEntityManager;
+    public UIManager UIManager;
 
 
-    public final Engine engine;
+    private final Engine engine;
     private final SpriteBatch batch;
-    public EntityTemplateMapper entityTemplateMapper;
-
-    // These entities are UI elements and are static in order to be accessible everywhere
-    public Entity aimArrow;
-    public Entity powerBar;
-    public Entity powerBarArrow;
-    public Entity timer;
-    public Entity map;
+    private final EntityTemplateMapper entityTemplateMapper;
 
     // Preparing component mappers -> the fastest way for getting entities
     public final ComponentMapper<Box2DComponent> b2dMapper = ComponentMapper.getFor(Box2DComponent.class);
@@ -88,11 +82,6 @@ public class ECSManager {
     //Tuple for storing entity/fixture pair
     public static HashMap<Fixture, Entity> entityFixtureHashMap = new HashMap<Fixture, Entity>();
 
-    // Textures
-    Texture powerBarTexture = new Texture("powerbar.png");
-    Texture rightArrowTexture = new Texture("right-arrow.png");
-    Texture aimArrowTexture = new Texture("aim-arrow.png");
-
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
     public ECSManager(SpriteBatch batch) {
@@ -106,7 +95,10 @@ public class ECSManager {
 
         // Create and add ECS systems and entities
         this.addSystems();
-        this.createUIEntities();
+
+        mapManager = new MapManager();
+        gameEntityManager = new GameEntitiesManager();
+        UIManager = new UIManager();
     }
 
 
@@ -130,54 +122,6 @@ public class ECSManager {
         this.engine.addSystem(physicsSystem);
         this.engine.addSystem(shootingSystem);
 
-    }
-
-    // Create entities with ECS components
-    public void createUIEntities() {
-        // Instantiate all UI entities
-        powerBar = new Entity();
-        powerBarArrow = new Entity();
-        aimArrow = new Entity();
-
-        timer = entityTemplateMapper.getTextFont().createEntity();
-        positionMapper.get(timer).position = new Vector2(Application.camera.viewportWidth / 2f,
-                Application.camera.viewportHeight * 0.97f);
-
-        powerBar.add(new SpriteComponent(
-                this.powerBarTexture,
-                40f,
-                350f, 1)
-        ).add(new PositionComponent(
-                Application.camera.viewportWidth - 50f,
-                Application.camera.viewportHeight / 2f)
-        );
-
-        powerBarArrow.add(new SpriteComponent(
-                this.rightArrowTexture,
-                40f,
-                40f,
-                1)
-        )
-                .add(new PositionComponent(
-                        Application.camera.viewportWidth - 70f,
-                        Application.camera.viewportHeight - (spriteMapper.get(powerBar).size.y) / 2f)
-                );
-
-        aimArrow.add(new PositionComponent(
-                Application.camera.viewportWidth / 2f,
-                Application.camera.viewportHeight / 2f)
-        )
-                .add(new SpriteComponent(
-                        this.aimArrowTexture,
-                        40f,
-                        20f,
-                        1)
-                );
-
-        // Add all ECS entities to the engine
-        this.engine.addEntity(powerBar);
-        this.engine.addEntity(powerBarArrow);
-        this.engine.addEntity(aimArrow);
     }
 
     // Init Mode specific entities
@@ -230,127 +174,21 @@ public class ECSManager {
         this.engine.addEntityListener(Box2D, box2DComponentListener);
     }
 
-    // Creates the map with all ground instances
-    public void createMap(String filename, String mapSprite) {
-        map = new Entity();
-        Texture mapTexture = new Texture(mapSprite);
-        // Instantiate map-sprite entity
-        map.add(new SpriteComponent(
-                mapTexture,
-                Application.camera.viewportWidth,
-                Application.camera.viewportHeight,
-                0)
-        )
-                .add(new PositionComponent(
-                        Application.camera.viewportWidth / 2f,
-                        Application.camera.viewportHeight / 2f)
-                )
-                .add(new RenderComponent());
-        this.engine.addEntity(map);
-
-        TiledMap tiledMap = new TmxMapLoader().load(filename);
-        MapObjects objects = tiledMap.getLayers().get("ground").getObjects();
-
-        // Loop through all ground objects, and give each object a Box2D body
-        for (MapObject object : objects) {
-            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
-
-            /** Since the map texture scales too the screen -> when we create box2D elements, they will have to scale the same amount **/
-            // Calculate scaleUp ratio
-            float scaleUpX = spriteMapper.get(map).size.x / mapTexture.getWidth();
-            float scaleUpY = spriteMapper.get(map).size.y / mapTexture.getHeight();
-
-            // Scale the mapObject rectangle shape
-            rectangle.width *= scaleUpX;
-            rectangle.height *= scaleUpY;
-            rectangle.x *= scaleUpX;
-            rectangle.y *= scaleUpY;
-
-            // Create a new map entity with box2d component equal to rectangle
-            Entity mapObject = new Entity();
-            mapObject.add(new Box2DComponent(
-                    rectangle.getCenter(new Vector2()),
-                    new Vector2(rectangle.width, rectangle.height),
-                    true,
-                    10000f,
-                    BIT_GROUND,
-                    (short) (BIT_PLAYER | BIT_PROJECTILE))
-            );
-            engine.addEntity(mapObject);
-        }
-    }
-
     // On update, call the engines update method
     public void update(float dt) {
         engine.update(dt);
     }
 
-    // Dispose everything
-    public void dispose() {
-        this.rightArrowTexture.dispose();
-        this.powerBarTexture.dispose();
-        this.aimArrowTexture.dispose();
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public EntityTemplateMapper getEntityTemplateMapper() {
+        return entityTemplateMapper;
     }
 
     public void removeAllEntities() {
         engine.removeAllEntities();
     }
 
-    public void removeShootingRender() {
-        aimArrow.remove(RenderComponent.class);
-        powerBar.remove(RenderComponent.class);
-        powerBarArrow.remove(RenderComponent.class);
-    }
-
-    public void addShootingRender() {
-        aimArrow.add(new RenderComponent());
-        powerBar.add(new RenderComponent());
-        powerBarArrow.add(new RenderComponent());
-    }
-
-    // Display the powerbar according to player power
-    public void updatePowerBar(Entity player) {
-        // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
-        float startPositionArrow = positionMapper.get(powerBar).position.y - spriteMapper.get(powerBar).size.y / 2;
-
-        //Set position of powerBarArrow -> given the power of the shootingComponent
-        float power = shootingMapper.get(player).power;
-        positionMapper.get(powerBarArrow).position.y = startPositionArrow + (spriteMapper.get(powerBar).size.y * (power / MAX_SHOOTING_POWER));
-    }
-
-    // Utility function for spawning players
-    public void spawnPlayers(int numberOfPlayers) {
-        for (int i = 0; i < numberOfPlayers; i++) {
-            if (i % 2 == 0)
-                entityTemplateMapper.getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity();
-            else
-                entityTemplateMapper.getPlayerClass(EntityTemplateMapper.PLAYERS.SPEEDY).createEntity();
-
-        }
-    }
-
-    // Utility function for creating health displayers
-    public void createHealthDisplayers() {
-        ImmutableArray<Entity> players = engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
-        for (int i = 0; i < players.size(); i++) {
-            Entity player = players.get(i); // Get a player
-
-            // Create the health displayer and add the player as the parent -> such that the health font is attached to the player
-            ECSManager.entityTemplateMapper.getHealthFont().createEntity().add(new ParentComponent(player));
-        }
-    }
-
-    // Utility function for creating a target (used in training mode)
-    public Entity spawnTarget() {
-        Entity target = new Entity();
-        target.add(new SpriteComponent(new Texture("target.png"), 75, 75, 1))
-                .add(new Box2DComponent(
-                        new Vector2((float) Application.VIRTUAL_WORLD_WIDTH / 2, Application.APP_DESKTOP_HEIGHT / 2 + 25), spriteMapper.get(target).size, false, 10000000f,
-                        BIT_PLAYER, (short) (BIT_PROJECTILE | BIT_GROUND))
-                )
-                .add(new PositionComponent(target.getComponent(Box2DComponent.class).body.getPosition().x, target.getComponent(Box2DComponent.class).body.getPosition().y))
-                .add(new RenderComponent());
-        engine.addEntity(target);
-        return target;
-    }
 }

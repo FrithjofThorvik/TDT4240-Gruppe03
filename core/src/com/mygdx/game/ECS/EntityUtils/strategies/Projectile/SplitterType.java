@@ -25,7 +25,7 @@ public class SplitterType implements ProjectileType {
 
         // Instantiate the new projectiles
         for (int i = 0; i < numberOfSplits; i++) {
-            Entity split = ECSManager.entityTemplateMapper.getProjectileClass(EntityTemplateMapper.PROJECTILES.BOUNCER).createEntity(); // Create the new projectile and as it parent use current projectile
+            Entity split = ECSManager.getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.BOUNCER).createEntity(); // Create the new projectile and as it parent use current projectile
             ECSManager.b2dMapper.get(split).body.setLinearVelocity(ECSManager.b2dMapper.get(projectile).body.getLinearVelocity()); // Make it so that the newly create projectile spawns at same position as current projectile
 
             // Get the new projectiles body and give it a variable impulse -> so that the projectile's movements vary

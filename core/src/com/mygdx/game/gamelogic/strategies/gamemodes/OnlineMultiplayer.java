@@ -83,9 +83,9 @@ public class OnlineMultiplayer implements GameMode {
             if (CM.aimPressed)
                 GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING); // Change state to player aiming if button is pressed
 
-            this.players = ECSManager.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
-            this.healthDisplayers = ECSManager.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
-            this.projectiles = ECSManager.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
+            this.players = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get());
+            this.healthDisplayers = ECSManager.getEngine().getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
+            this.projectiles = ECSManager.getEngine().getEntitiesFor(Family.one(ProjectileComponent.class).get());
 
             if (players.size() > 0) {
                 checkHealth(); // Check if any health components have reached 0, and terminate those players
@@ -113,18 +113,18 @@ public class OnlineMultiplayer implements GameMode {
     @Override
     public void startGame() { // Is called when the game starts
         // Initialize entity arrays
-        this.players = ECSManager.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
-        this.projectiles = ECSManager.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
-        this.healthDisplayers = ECSManager.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
+        this.players = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get());
+        this.projectiles = ECSManager.getEngine().getEntitiesFor(Family.one(ProjectileComponent.class).get());
+        this.healthDisplayers = ECSManager.getEngine().getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
 
         CM.setVisible(false); // Make all controller not visible
         setPlayerSpawn(); // Choose location for where players spawn
         switchTime = START_GAME_TIME; // The timer now countsdown from START_GAME_TIME to 0
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(MovementSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class OnlineMultiplayer implements GameMode {
         }
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(MovementSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(true);
     }
 
     @Override
@@ -166,11 +166,11 @@ public class OnlineMultiplayer implements GameMode {
         yourPlayer.remove(MovementControlComponent.class); // The player should loose ability to move whilst aiming
         yourPlayer.add(new isAimingComponent());
 
-        ECSManager.addShootingRender();
+        ECSManager.UIManager.addShootingRender();
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(true);
-        ECSManager.engine.getSystem(MovementSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(false);
     }
 
     @Override
@@ -182,8 +182,8 @@ public class OnlineMultiplayer implements GameMode {
         yourPlayer.add(new isShootingComponent());
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(true);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -193,11 +193,11 @@ public class OnlineMultiplayer implements GameMode {
 
         // Remove or add components to entities
         yourPlayer.remove(isShootingComponent.class);
-        ECSManager.removeShootingRender();
+        ECSManager.UIManager.removeShootingRender();
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -205,10 +205,10 @@ public class OnlineMultiplayer implements GameMode {
         // Remove or add components to entities
         yourPlayer.remove(isShootingComponent.class);
         yourPlayer.remove(isAimingComponent.class);
-        ECSManager.removeShootingRender();
+        ECSManager.UIManager.removeShootingRender();
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
 
         timer = 0; // Reset the timer
         stopTimer = false; // Start the timer again
@@ -221,7 +221,7 @@ public class OnlineMultiplayer implements GameMode {
         // Is called every update
         this.printTimer(); // Print information about how much time is left in a round, etc...
 
-        ECSManager.updatePowerBar(yourPlayer); // Makes the powerbar display correctly
+        ECSManager.UIManager.updatePowerBar(yourPlayer); // Makes the powerbar display correctly
 
         // Update health displays
         for (int i = 0; i < healthDisplayers.size(); i++) {
@@ -235,28 +235,28 @@ public class OnlineMultiplayer implements GameMode {
 
     @Override
     public void initEntities() {
-        ECSManager.createMap(mapFile, mapTexture);
+        ECSManager.mapManager.createMap(mapFile, mapTexture);
     }
 
     // Print information about how much time is left in a round, etc...
     private void printTimer() {
         // SWITCH_ROUND
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
-            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.timer);
+            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
             timerFont.text = "Switching players in: " + this.df.format(TIME_BETWEEN_ROUNDS - timer) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // START_GAME
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME)) {
-            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.timer);
+            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
             timerFont.text = "\n\n\n\n" + ((int) START_GAME_TIME - (int) timer);
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // OTHER
         else {
-            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.timer);
+            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
             timerFont.text = "Timer: " + this.df.format(ROUND_TIME - timer) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
@@ -278,7 +278,7 @@ public class OnlineMultiplayer implements GameMode {
                 player.removeAll();
             }
         }
-        this.players = ECSManager.engine.getEntitiesFor(Family.one(PlayerComponent.class).get()); // Update the player array
+        this.players = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get()); // Update the player array
     }
 
     // Set the spawnpoint of players
@@ -344,7 +344,7 @@ public class OnlineMultiplayer implements GameMode {
                     playerId = data.getString("id"); // Store the local player's id
                     System.out.println("[Server] Player connected [" + playerId + "]");
 
-                    onlinePlayers.put(playerId, ECSManager.entityTemplateMapper.getPlayerClass(EntityTemplateMapper.PLAYERS.SPEEDY).createEntity()); // Add player to array of online players
+                    onlinePlayers.put(playerId, ECSManager.getEntityTemplateMapper().getPlayerClass(EntityTemplateMapper.PLAYERS.SPEEDY).createEntity()); // Add player to array of online players
                     yourPlayer = onlinePlayers.get(playerId);
 
                 } catch (JSONException e) {
@@ -359,7 +359,7 @@ public class OnlineMultiplayer implements GameMode {
                     String id = data.getString("id");
                     System.out.println("[Server] New player connected [" + id + "]");
 
-                    onlinePlayers.put(id, ECSManager.entityTemplateMapper.getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity());
+                    onlinePlayers.put(id, ECSManager.getEntityTemplateMapper().getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity());
                 } catch (JSONException e) {
                     System.out.println("[Server] Error getting new playerId");
                 }
@@ -391,7 +391,7 @@ public class OnlineMultiplayer implements GameMode {
 
                         if (!id.equals(playerId)) {
                             // Create coop player
-                            Entity coopPlayer = ECSManager.entityTemplateMapper.getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity();
+                            Entity coopPlayer = ECSManager.getEntityTemplateMapper().getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity();
 
                             // Update position component
                             Vector2 position = new Vector2();

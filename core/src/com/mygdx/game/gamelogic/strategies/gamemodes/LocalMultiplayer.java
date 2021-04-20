@@ -66,9 +66,9 @@ public class LocalMultiplayer implements GameMode {
             GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING); // Change state to player aiming if button is pressed
 
         //Update arrays
-        this.players = ECSManager.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
-        this.healthDisplayers = ECSManager.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
-        this.projectiles = ECSManager.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
+        this.players = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get());
+        this.healthDisplayers = ECSManager.getEngine().getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
+        this.projectiles = ECSManager.getEngine().getEntitiesFor(Family.one(ProjectileComponent.class).get());
 
         checkForEndGame();// Ends the game if certain conditions are met
 
@@ -94,18 +94,18 @@ public class LocalMultiplayer implements GameMode {
     @Override
     public void startGame() { // Is called when the game starts
         // Initialize entity arrays
-        this.players = ECSManager.engine.getEntitiesFor(Family.one(PlayerComponent.class).get());
-        this.projectiles = ECSManager.engine.getEntitiesFor(Family.one(ProjectileComponent.class).get());
-        this.healthDisplayers = ECSManager.engine.getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
+        this.players = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get());
+        this.projectiles = ECSManager.getEngine().getEntitiesFor(Family.one(ProjectileComponent.class).get());
+        this.healthDisplayers = ECSManager.getEngine().getEntitiesFor(Family.one(HealthDisplayerComponent.class).get());
 
         CM.setVisible(false); // Make all controller not visible
         setPlayerSpawn(); // Choose location for where players spawn
         switchTime = START_GAME_TIME; // The timer now countsdown from START_GAME_TIME to 0
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(MovementSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class LocalMultiplayer implements GameMode {
         players.get(currentPlayer).add(new MovementControlComponent());
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(MovementSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(true);
     }
 
     @Override
@@ -139,11 +139,11 @@ public class LocalMultiplayer implements GameMode {
         players.get(currentPlayer).remove(MovementControlComponent.class); // The player should loose ability to move whilst aiming
         players.get(currentPlayer).add(new isAimingComponent());
 
-        ECSManager.addShootingRender();
+        ECSManager.UIManager.addShootingRender();
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(true);
-        ECSManager.engine.getSystem(MovementSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(false);
     }
 
     @Override
@@ -155,8 +155,8 @@ public class LocalMultiplayer implements GameMode {
         players.get(currentPlayer).add(new isShootingComponent());
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(true);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(true);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -166,11 +166,11 @@ public class LocalMultiplayer implements GameMode {
 
         // Remove or add components to entities
         players.get(currentPlayer).remove(isShootingComponent.class);
-        ECSManager.removeShootingRender();
+        ECSManager.UIManager.removeShootingRender();
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -180,10 +180,10 @@ public class LocalMultiplayer implements GameMode {
         // Remove or add components to entities
         players.get(currentPlayer).remove(isShootingComponent.class);
         players.get(currentPlayer).remove(isAimingComponent.class);
-        ECSManager.removeShootingRender();
+        ECSManager.UIManager.removeShootingRender();
         // Start or stop systems (if they should be processed or not)
-        ECSManager.engine.getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.engine.getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
 
         timer = 0; // Reset the timer
         stopTimer = false; // Start the timer again
@@ -201,7 +201,7 @@ public class LocalMultiplayer implements GameMode {
 
         // Get the player who's turn it is
         Entity player = this.players.get(currentPlayer);
-        ECSManager.updatePowerBar(player); // Makes the powerbar display correctly
+        ECSManager.UIManager.updatePowerBar(player); // Makes the powerbar display correctly
 
         // Update health displays
         for (int i = 0; i < healthDisplayers.size(); i++) {
@@ -215,30 +215,30 @@ public class LocalMultiplayer implements GameMode {
 
     @Override
     public void initEntities() {
-        ECSManager.createMap(mapFile, mapTexture);
-        ECSManager.spawnPlayers(5);
-        ECSManager.createHealthDisplayers();
+        ECSManager.mapManager.createMap(mapFile, mapTexture);
+        ECSManager.gameEntityManager.spawnPlayers(5);
+        ECSManager.gameEntityManager.createHealthDisplayers();
     }
 
     // Print information about how much time is left in a round, etc...
     private void printTimer() {
         // SWITCH_ROUND
         if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.SWITCH_ROUND)) {
-            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.timer);
+            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
             timerFont.text = "Switching players in: " + this.df.format(TIME_BETWEEN_ROUNDS - timer) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // START_GAME
         else if (GSM.gameState == GSM.getGameState(GameStateManager.STATE.START_GAME)) {
-            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.timer);
+            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
             timerFont.text = "\n\n\n\n" + ((int) START_GAME_TIME - (int) timer);
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
 
         // OTHER
         else {
-            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.timer);
+            FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
             timerFont.text = "Timer: " + this.df.format(ROUND_TIME - timer) + "s";
             timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
         }
@@ -260,7 +260,7 @@ public class LocalMultiplayer implements GameMode {
                 player.removeAll();
             }
         }
-        this.players = ECSManager.engine.getEntitiesFor(Family.one(PlayerComponent.class).get()); // Update the player array
+        this.players = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get()); // Update the player array
 
         // Reset player counter if max limit reached
         if (currentPlayer >= players.size())

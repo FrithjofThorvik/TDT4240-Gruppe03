@@ -44,7 +44,7 @@ public class ShootingSystem extends EntitySystem {
 
             // Create & shoot projectile if button stops being pressed, max power is reached, or round time is reached
             if (!CM.powerPressed || shootingComponent.power >= MAX_SHOOTING_POWER) {
-                Entity projectile = ECSManager.entityTemplateMapper.getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[CM.currentProjectile]).createEntity(); // Get the projectile chosen from the Controller
+                Entity projectile = ECSManager.getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[CM.currentProjectile]).createEntity(); // Get the projectile chosen from the Controller
                 ShootProjectile(projectile, shootingComponent, player); // Shoot the projectile
                 GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // Change the game state
             }

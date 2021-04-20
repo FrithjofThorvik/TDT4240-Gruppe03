@@ -44,7 +44,7 @@ public class GameController {
         // Get number of projectile types
         numberOfProjectiles = EntityTemplateMapper.PROJECTILES.values().length;
         for (int i = 0; i < numberOfProjectiles; i++) {
-            this.projectileTextures.add(ECSManager.entityTemplateMapper.getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[i]).getTexture());
+            this.projectileTextures.add(ECSManager.getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[i]).getTexture());
         }
 
         Actor controller = this.createControllerActor();
