@@ -1,4 +1,4 @@
-package com.mygdx.game.managers;
+package com.mygdx.game.ECS.EntityUtils;
 
 import com.mygdx.game.ECS.EntityUtils.templates.AbstractEntity;
 import com.mygdx.game.ECS.EntityUtils.templates.Fonts.HealthFont;
@@ -19,7 +19,7 @@ import java.util.HashMap;
  * This class is responsible for keeping a HashMap of available default construction of certain entities
  * Use this class in order when creating these entities -> so you don't need to remember all the different variants
  **/
-public class EntityCreator {
+public class EntityTemplateMapper {
 
     // Create enums for different classes of entities
     public enum PLAYERS {
@@ -38,7 +38,7 @@ public class EntityCreator {
     private HashMap<PLAYERS, com.mygdx.game.ECS.EntityUtils.templates.Players.AbstractPlayer> players;
     private HashMap<PROJECTILES, com.mygdx.game.ECS.EntityUtils.templates.Projectiles.AbstractProjectile> projectiles;
 
-    public EntityCreator() {
+    public EntityTemplateMapper() {
         this.initClasses();
     }
 

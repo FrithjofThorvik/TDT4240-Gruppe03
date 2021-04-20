@@ -1,16 +1,16 @@
-package com.mygdx.game.gamelogic.states.game.screens;
+package com.mygdx.game.gamelogic.states.screens;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Application;
+import com.mygdx.game.ECS.managers.ECSManager;
 import com.mygdx.game.utils.CollisionHandler;
-import com.mygdx.game.managers.ControlManager;
-import com.mygdx.game.managers.EntityManager;
-import com.mygdx.game.managers.GameStateManager;
+import com.mygdx.game.utils.GameController;
+import com.mygdx.game.gamelogic.states.GameStateManager;
 
-import static com.mygdx.game.managers.GameStateManager.GSM;
-import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
 
@@ -43,12 +43,12 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void show() {
         //new GameStateManager();
-        new EntityManager(Application.batch); // Manager for generating all ECS functions
-        new ControlManager(); // Manages all game controls
+        new ECSManager(Application.batch); // Manager for generating all ECS functions
+        new GameController(); // Manages all game controls
 
         //GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
 
-        EM.createModeEntities();
+        ECSManager.createModeEntities();
         GSM.setGameState(GameStateManager.STATE.START_GAME);
 
         world.setContactListener(new CollisionHandler()); // Set contact listener for world
@@ -67,7 +67,7 @@ public class GameScreen extends AbstractScreen {
         // Draw to screen
         Application.batch.begin();
         GSM.update(dt);
-        EM.update(dt);
+        ECSManager.update(dt);
         Application.batch.end();
         Application.stage.draw();
     }
@@ -75,7 +75,7 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void dispose() {
         super.dispose();
-        //EM.dispose();
+        //ECSManager.dispose();
         world.dispose();
     }
 }

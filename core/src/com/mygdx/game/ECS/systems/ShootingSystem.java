@@ -10,12 +10,12 @@ import com.mygdx.game.ECS.components.Box2DComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
-import com.mygdx.game.managers.EntityCreator;
-import com.mygdx.game.managers.GameStateManager;
+import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
+import com.mygdx.game.gamelogic.states.GameStateManager;
 
-import static com.mygdx.game.managers.EntityManager.EM;
-import static com.mygdx.game.managers.GameStateManager.GSM;
-import static com.mygdx.game.managers.ControlManager.CM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import static com.mygdx.game.utils.GameController.CM;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
@@ -38,13 +38,13 @@ public class ShootingSystem extends EntitySystem {
         // Check first if there are any players aiming
         for (int i = 0; i < this.playersShooting.size(); i++) {
             Entity player = this.playersShooting.get(i);
-            ShootingComponent shootingComponent = EM.shootingMapper.get(player);
+            ShootingComponent shootingComponent = ECSManager.shootingMapper.get(player);
 
             shootingComponent.power += dt; // Increase power
 
             // Create & shoot projectile if button stops being pressed, max power is reached, or round time is reached
             if (!CM.powerPressed || shootingComponent.power >= MAX_SHOOTING_POWER) {
-                Entity projectile = EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.values()[CM.currentProjectile]).createEntity(); // Get the projectile chosen from the Controller
+                Entity projectile = ECSManager.entityTemplateMapper.getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[CM.currentProjectile]).createEntity(); // Get the projectile chosen from the Controller
                 ShootProjectile(projectile, shootingComponent, player); // Shoot the projectile
                 GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // Change the game state
             }
@@ -53,9 +53,9 @@ public class ShootingSystem extends EntitySystem {
 
     public void ShootProjectile(Entity projectile, ShootingComponent shootingComponent, Entity player) {
         // Shoot projectile with Box2D impulse
-        EM.b2dMapper.get(projectile).body.setTransform((EM.positionMapper.get(player).position.x) / PPM, (EM.positionMapper.get(player).position.y + EM.spriteMapper.get(player).size.y) / PPM, 0);
-        Box2DComponent b2d = EM.b2dMapper.get(projectile); // Get Box2D component
-        float impulse = (float) (EM.projectileMapper.get(projectile).speed * shootingComponent.power);
+        ECSManager.b2dMapper.get(projectile).body.setTransform((ECSManager.positionMapper.get(player).position.x) / PPM, (ECSManager.positionMapper.get(player).position.y + ECSManager.spriteMapper.get(player).size.y) / PPM, 0);
+        Box2DComponent b2d = ECSManager.b2dMapper.get(projectile); // Get Box2D component
+        float impulse = (float) (ECSManager.projectileMapper.get(projectile).speed * shootingComponent.power);
         Vector2 impulseVector = new Vector2(
                 impulse * (float) Math.sin(shootingComponent.angle),
                 impulse * (float) Math.cos(shootingComponent.angle)); // Calculate velocity

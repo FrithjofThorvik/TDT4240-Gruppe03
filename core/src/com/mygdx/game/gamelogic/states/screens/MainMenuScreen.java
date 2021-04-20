@@ -1,15 +1,15 @@
-package com.mygdx.game.gamelogic.states.game.screens;
+package com.mygdx.game.gamelogic.states.screens;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Application;
-import com.mygdx.game.managers.GameStateManager;
-import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.gamelogic.states.GameStateManager;
+import com.mygdx.game.gamelogic.states.ScreenManager;
 
-import static com.mygdx.game.managers.GameStateManager.GSM;
-import static com.mygdx.game.managers.ScreenManager.SM;
+import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 
 /**
@@ -50,7 +50,7 @@ public class MainMenuScreen extends AbstractScreen {
                 SM.removeAllActors(); // Removes all current actors from Application.stage
 
                 GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
-                SM.setScreen(ScreenManager.STATE.PLAY);
+                SM.setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
             }
         });
         playImg.setPosition(
@@ -72,7 +72,7 @@ public class MainMenuScreen extends AbstractScreen {
                 SM.removeAllActors(); // Removes all current actors from Application.stage
 
                 GSM.setGameMode(GameStateManager.GAMEMODE.TRAINING);
-                SM.setScreen(ScreenManager.STATE.PLAY);
+                SM.setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
             }
         });
         singlePlayerImg.setPosition(

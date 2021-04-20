@@ -13,7 +13,7 @@ import com.mygdx.game.Application;
 
 import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
 
-import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 
 
 /**
@@ -38,10 +38,10 @@ public class ProjectileSystem extends EntitySystem {
                 // Get projectile
                 Entity projectile = this.projectiles.get(i);
 
-                if (EM.projectileMapper.has(projectile)) {
+                if (ECSManager.projectileMapper.has(projectile)) {
                     // If the projectile is mid air -> activate midair function
                     if (checkMidAir(projectile))
-                        EM.projectileMapper.get(projectile).projectileType.midAir(projectile); // Activate the function
+                        ECSManager.projectileMapper.get(projectile).projectileType.midAir(projectile); // Activate the function
 
                     // If the projectile is outside the screen border
                     if (checkOutOfBounds(projectile))
@@ -55,35 +55,35 @@ public class ProjectileSystem extends EntitySystem {
     }
 
     public boolean checkOutOfBounds(Entity projectile) {
-        float posX = EM.positionMapper.get(projectile).position.x;
+        float posX = ECSManager.positionMapper.get(projectile).position.x;
         // Remove projectile if it is out of bounds
         return (posX > Application.camera.viewportWidth || posX < 0);
     }
 
     public void checkCollision(Entity projectile) {
-        if (EM.collisionMapper.has(projectile)) {
-            Entity collisionEntity = EM.collisionMapper.get(projectile).collisionEntity; // Get the colliding entity
+        if (ECSManager.collisionMapper.has(projectile)) {
+            Entity collisionEntity = ECSManager.collisionMapper.get(projectile).collisionEntity; // Get the colliding entity
 
             // If projectile collides with player -> update players health
             if (players.contains(collisionEntity, true)) {
-                EM.healthMapper.get(collisionEntity).hp -= EM.projectileMapper.get(projectile).damage;
+                ECSManager.healthMapper.get(collisionEntity).hp -= ECSManager.projectileMapper.get(projectile).damage;
             }
 
             // If projectile collides with something other than projectile -> call the projectile collision function
             if (!projectiles.contains(collisionEntity, true)) {
                 // Activate the collision function for the projectile
-                EM.projectileMapper.get(projectile).projectileType.collision(projectile);
+                ECSManager.projectileMapper.get(projectile).projectileType.collision(projectile);
             }
 
         }
     }
 
     public boolean checkMidAir(Entity projectile) {
-        Box2DComponent entityBox2D = EM.b2dMapper.get(projectile);
+        Box2DComponent entityBox2D = ECSManager.b2dMapper.get(projectile);
 
         // Checks if a projectile has reached peak height and activates it's midAir function
-        if ((entityBox2D.body.getLinearVelocity().y <= 0 && !EM.projectileMapper.get(projectile).midAirReached)) {
-            EM.projectileMapper.get(projectile).midAirReached = true; // Set the flag that this projectile has reached midAir
+        if ((entityBox2D.body.getLinearVelocity().y <= 0 && !ECSManager.projectileMapper.get(projectile).midAirReached)) {
+            ECSManager.projectileMapper.get(projectile).midAirReached = true; // Set the flag that this projectile has reached midAir
             return true;
         }
         return false;

@@ -1,4 +1,4 @@
-package com.mygdx.game.gamelogic.states.game.screens;
+package com.mygdx.game.gamelogic.states.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;

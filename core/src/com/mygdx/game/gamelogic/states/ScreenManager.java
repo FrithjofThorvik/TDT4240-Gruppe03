@@ -1,11 +1,11 @@
-package com.mygdx.game.managers;
+package com.mygdx.game.gamelogic.states;
 
 import com.mygdx.game.Application;
-import com.mygdx.game.gamelogic.states.game.screens.AbstractScreen;
-import com.mygdx.game.gamelogic.states.game.screens.EndScreen;
-import com.mygdx.game.gamelogic.states.game.screens.GameScreen;
-import com.mygdx.game.gamelogic.states.game.screens.LeaderboardScreen;
-import com.mygdx.game.gamelogic.states.game.screens.MainMenuScreen;
+import com.mygdx.game.gamelogic.states.screens.AbstractScreen;
+import com.mygdx.game.gamelogic.states.screens.EndScreen;
+import com.mygdx.game.gamelogic.states.screens.GameScreen;
+import com.mygdx.game.gamelogic.states.screens.LeaderboardScreen;
+import com.mygdx.game.gamelogic.states.screens.MainMenuScreen;
 
 import java.util.HashMap;
 

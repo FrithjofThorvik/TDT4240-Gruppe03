@@ -1,4 +1,4 @@
-package com.mygdx.game.gamelogic.states.game.screens;
+package com.mygdx.game.gamelogic.states.screens;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -6,9 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.game.Application;
-import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.gamelogic.states.ScreenManager;
 
-import static com.mygdx.game.managers.ScreenManager.SM;
+import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 
 /**
@@ -41,7 +41,7 @@ public class EndScreen extends AbstractScreen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                SM.setScreen(ScreenManager.STATE.PLAY);
+                SM.setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
             }
         });
 

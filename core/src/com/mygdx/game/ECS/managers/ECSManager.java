@@ -1,4 +1,4 @@
-package com.mygdx.game.managers;
+package com.mygdx.game.ECS.managers;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.Application;
+import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
 import com.mygdx.game.ECS.components.CollisionComponent;
 import com.mygdx.game.ECS.components.flags.EffectComponent;
 import com.mygdx.game.ECS.components.flags.MovementControlComponent;
@@ -41,7 +42,7 @@ import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
 
-import static com.mygdx.game.managers.GameStateManager.GSM;
+import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 import static com.mygdx.game.utils.B2DConstants.*;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
@@ -55,12 +56,13 @@ import java.util.HashMap;
  * Adds entity listeners required for gameplay
  * Contains component mappers
  **/
-public class EntityManager {
-    public static EntityManager EM;
+public class ECSManager {
+    public static ECSManager ECSManager;
+
 
     public final Engine engine;
     private final SpriteBatch batch;
-    public EntityCreator entityCreator;
+    public EntityTemplateMapper entityTemplateMapper;
 
     // These entities are UI elements and are static in order to be accessible everywhere
     public Entity aimArrow;
@@ -93,11 +95,11 @@ public class EntityManager {
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
-    public EntityManager(SpriteBatch batch) {
-        EM = this;
+    public ECSManager(SpriteBatch batch) {
+        ECSManager = this;
         this.engine = new Engine();
         this.batch = batch;
-        this.entityCreator = new EntityCreator();
+        this.entityTemplateMapper = new EntityTemplateMapper();
 
         // Create ECS entity listeners -> has to be done before createEntities to function correctly
         this.createEntityListeners();
@@ -137,7 +139,7 @@ public class EntityManager {
         powerBarArrow = new Entity();
         aimArrow = new Entity();
 
-        timer = entityCreator.getTextFont().createEntity();
+        timer = entityTemplateMapper.getTextFont().createEntity();
         positionMapper.get(timer).position = new Vector2(Application.camera.viewportWidth / 2f,
                 Application.camera.viewportHeight * 0.97f);
 
@@ -320,9 +322,9 @@ public class EntityManager {
     public void spawnPlayers(int numberOfPlayers) {
         for (int i = 0; i < numberOfPlayers; i++) {
             if (i % 2 == 0)
-                entityCreator.getPlayerClass(EntityCreator.PLAYERS.DEFAULT).createEntity();
+                entityTemplateMapper.getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity();
             else
-                entityCreator.getPlayerClass(EntityCreator.PLAYERS.SPEEDY).createEntity();
+                entityTemplateMapper.getPlayerClass(EntityTemplateMapper.PLAYERS.SPEEDY).createEntity();
 
         }
     }
@@ -334,7 +336,7 @@ public class EntityManager {
             Entity player = players.get(i); // Get a player
 
             // Create the health displayer and add the player as the parent -> such that the health font is attached to the player
-            EM.entityCreator.getHealthFont().createEntity().add(new ParentComponent(player));
+            ECSManager.entityTemplateMapper.getHealthFont().createEntity().add(new ParentComponent(player));
         }
     }
 

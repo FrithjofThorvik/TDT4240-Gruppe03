@@ -13,11 +13,11 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.isAimingComponent;
-import com.mygdx.game.managers.GameStateManager;
+import com.mygdx.game.gamelogic.states.GameStateManager;
 
-import static com.mygdx.game.managers.EntityManager.EM;
-import static com.mygdx.game.managers.GameStateManager.GSM;
-import static com.mygdx.game.managers.ControlManager.CM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import static com.mygdx.game.utils.GameController.CM;
 
 
 /**
@@ -39,8 +39,8 @@ public class AimingSystem extends EntitySystem {
             // Calculate the aim angle when the screen is touched
             if (Gdx.input.isTouched()) {
                 Entity player = this.playersAiming.get(i); // Get current player entity
-                PositionComponent playerPosition = EM.positionMapper.get(player); // Get the position component of that player
-                ShootingComponent shootingComponent = EM.shootingMapper.get(player);
+                PositionComponent playerPosition = ECSManager.positionMapper.get(player); // Get the position component of that player
+                ShootingComponent shootingComponent = ECSManager.shootingMapper.get(player);
 
                 repositionAimArrow(player); // Reposition the aim arrow
                 if (!CM.checkControllerIsTouched()) // We don't want to calculate aim if we are touching controllers
@@ -69,16 +69,16 @@ public class AimingSystem extends EntitySystem {
 
     // Call to make the ai marrow update according to player aim angle
     private void repositionAimArrow(Entity player) {
-        PositionComponent playerPos = EM.positionMapper.get(player);
-        SpriteComponent playerSprite = EM.spriteMapper.get(player);
+        PositionComponent playerPos = ECSManager.positionMapper.get(player);
+        SpriteComponent playerSprite = ECSManager.spriteMapper.get(player);
 
         // Get the angle (in degrees) and power of the currentPlayer's shootingComponent
-        double aimAngleInDegrees = 90f - (float) EM.shootingMapper.get(player).angle / (float) Math.PI * 180f;
+        double aimAngleInDegrees = 90f - (float) ECSManager.shootingMapper.get(player).angle / (float) Math.PI * 180f;
 
         // Set rotation and position of AimArrow (displayed above the player -> rotated by where the player aims)
-        EM.spriteMapper.get(EM.aimArrow).sprite.setRotation((float) aimAngleInDegrees);
-        EM.positionMapper.get(EM.aimArrow).position.x = playerPos.position.x;
-        EM.positionMapper.get(EM.aimArrow).position.y = playerPos.position.y + playerSprite.size.y;
+        ECSManager.spriteMapper.get(ECSManager.aimArrow).sprite.setRotation((float) aimAngleInDegrees);
+        ECSManager.positionMapper.get(ECSManager.aimArrow).position.x = playerPos.position.x;
+        ECSManager.positionMapper.get(ECSManager.aimArrow).position.y = playerPos.position.y + playerSprite.size.y;
     }
 }
 

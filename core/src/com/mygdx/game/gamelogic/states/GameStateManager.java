@@ -1,9 +1,5 @@
-package com.mygdx.game.managers;
+package com.mygdx.game.gamelogic.states;
 
-import com.mygdx.game.gamelogic.strategies.gamemodes.LocalMultiplayer;
-import com.mygdx.game.gamelogic.strategies.gamemodes.GameMode;
-import com.mygdx.game.gamelogic.strategies.gamemodes.OnlineMultiplayer;
-import com.mygdx.game.gamelogic.strategies.gamemodes.Training;
 import com.mygdx.game.gamelogic.states.game.AbstractGameState;
 import com.mygdx.game.gamelogic.states.game.EndGame;
 import com.mygdx.game.gamelogic.states.game.PlayerAiming;
@@ -12,6 +8,10 @@ import com.mygdx.game.gamelogic.states.game.ProjectileAirborne;
 import com.mygdx.game.gamelogic.states.game.StartGame;
 import com.mygdx.game.gamelogic.states.game.StartRound;
 import com.mygdx.game.gamelogic.states.game.SwitchRound;
+import com.mygdx.game.gamelogic.strategies.gamemodes.LocalMultiplayer;
+import com.mygdx.game.gamelogic.strategies.gamemodes.GameMode;
+import com.mygdx.game.gamelogic.strategies.gamemodes.OnlineMultiplayer;
+import com.mygdx.game.gamelogic.strategies.gamemodes.Training;
 
 import java.util.HashMap;
 

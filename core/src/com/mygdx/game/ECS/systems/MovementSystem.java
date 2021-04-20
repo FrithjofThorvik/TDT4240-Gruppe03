@@ -13,8 +13,8 @@ import com.mygdx.game.ECS.components.flags.PlayerComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 
-import static com.mygdx.game.managers.EntityManager.EM;
-import static com.mygdx.game.managers.ControlManager.CM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import static com.mygdx.game.utils.GameController.CM;
 
 
 /**
@@ -48,9 +48,9 @@ public class MovementSystem extends EntitySystem {
     private void handleMovement(Entity player) {
 
         // Get entity components
-        VelocityComponent playerVelocity = EM.velocityMapper.get(player);
-        Box2DComponent playerBox2D = EM.b2dMapper.get(player);
-        SpriteComponent playerSprite = EM.spriteMapper.get(player);
+        VelocityComponent playerVelocity = ECSManager.velocityMapper.get(player);
+        Box2DComponent playerBox2D = ECSManager.b2dMapper.get(player);
+        SpriteComponent playerSprite = ECSManager.spriteMapper.get(player);
 
         if (CM.rightPressed) {
             playerBox2D.body.applyLinearImpulse(new Vector2(10f, 0f), playerBox2D.body.getWorldCenter(), false);

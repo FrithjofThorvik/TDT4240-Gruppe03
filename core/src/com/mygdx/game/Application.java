@@ -9,11 +9,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.managers.GameStateManager;
-import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.gamelogic.states.GameStateManager;
+import com.mygdx.game.gamelogic.states.ScreenManager;
 import com.mygdx.game.firebase.FirebaseInterface;
 
-import static com.mygdx.game.managers.ScreenManager.SM;
+import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 
 /**

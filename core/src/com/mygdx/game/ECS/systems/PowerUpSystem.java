@@ -6,8 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.ECS.components.flags.EffectComponent;
-
-import static com.mygdx.game.managers.EntityManager.EM;
+import com.mygdx.game.ECS.managers.ECSManager;
 
 
 /**
@@ -32,7 +31,7 @@ public class PowerUpSystem extends EntitySystem {
                 Entity entity = this.effects.get(i);
 
                 // Get entity components
-                EffectComponent effect = EM.effectMapper.get(entity);
+                //EffectComponent effect = ECSManager.effectMapper.get(entity);
                 // TODO: Do something here
             }
         }

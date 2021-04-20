@@ -1,7 +1,7 @@
 package com.mygdx.game.gamelogic.states.game;
 
 
-import static com.mygdx.game.managers.GameStateManager.GSM;
+import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 
 /**
  * This state is for cleaning up, and displaying game ending

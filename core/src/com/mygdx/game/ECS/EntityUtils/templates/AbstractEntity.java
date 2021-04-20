@@ -2,7 +2,7 @@ package com.mygdx.game.ECS.EntityUtils.templates;
 
 import com.badlogic.ashley.core.Entity;
 
-import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 
 /**
  *  The template method for creating entities
@@ -30,5 +30,5 @@ public abstract class AbstractEntity {
     public abstract void addClassComponents();
 
     // Add the current entity instance to EntityManager's engine
-    private void addToEngine() { EM.engine.addEntity(this.entity); };
+    private void addToEngine() { ECSManager.engine.addEntity(this.entity); };
 }

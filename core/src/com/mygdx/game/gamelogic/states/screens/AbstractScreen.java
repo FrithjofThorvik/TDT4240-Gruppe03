@@ -1,4 +1,4 @@
-package com.mygdx.game.gamelogic.states.game.screens;
+package com.mygdx.game.gamelogic.states.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Application;
-import com.mygdx.game.managers.ScreenManager;
+import com.mygdx.game.gamelogic.states.ScreenManager;
 
-import static com.mygdx.game.managers.ScreenManager.SM;
+import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 /**
  * Contain the template for how screens are implemented

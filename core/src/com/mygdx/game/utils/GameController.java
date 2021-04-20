@@ -1,4 +1,4 @@
-package com.mygdx.game.managers;
+package com.mygdx.game.utils;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,15 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
+import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
 
-import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 
 
 /**
  * This is used for creating a controller
  **/
-public class ControlManager {
-    public static ControlManager CM;
+public class GameController {
+    public static GameController CM;
     public int currentProjectile = 0;
     private int numberOfProjectiles = 0;
     public boolean leftPressed, rightPressed, aimPressed, powerPressed, projectilePressed = false;
@@ -36,14 +37,14 @@ public class ControlManager {
 
     // Prepare component mappers
 
-    public ControlManager() {
+    public GameController() {
         CM = this;
         this.projectileTextures = new Array<Texture>();
 
         // Get number of projectile types
-        numberOfProjectiles = EntityCreator.PROJECTILES.values().length;
+        numberOfProjectiles = EntityTemplateMapper.PROJECTILES.values().length;
         for (int i = 0; i < numberOfProjectiles; i++) {
-            this.projectileTextures.add(EM.entityCreator.getProjectileClass(EntityCreator.PROJECTILES.values()[i]).getTexture());
+            this.projectileTextures.add(ECSManager.entityTemplateMapper.getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[i]).getTexture());
         }
 
         Actor controller = this.createControllerActor();

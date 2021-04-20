@@ -11,7 +11,7 @@ import com.mygdx.game.ECS.components.PositionComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 
-import static com.mygdx.game.managers.EntityManager.EM;
+import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 
 
 /**
@@ -60,8 +60,8 @@ public class RenderingSystem extends EntitySystem {
                 if(spriteComponent.zValue == 0){
                     // Fetch each component
                     Entity entity = this.spriteEntities.get(i);
-                    SpriteComponent sc = EM.spriteMapper.get(entity);
-                    PositionComponent pc = EM.positionMapper.get(entity);
+                    SpriteComponent sc = ECSManager.spriteMapper.get(entity);
+                    PositionComponent pc = ECSManager.positionMapper.get(entity);
 
                     // Draw the sprite, so that the center of its sprite is the position of the given entity
                     sc.sprite.setSize(sc.size.x, sc.size.y);
@@ -75,8 +75,8 @@ public class RenderingSystem extends EntitySystem {
                 if(spriteComponent.zValue == 1){
                     // Fetch each component
                     Entity entity = this.spriteEntities.get(i);
-                    SpriteComponent sc = EM.spriteMapper.get(entity);
-                    PositionComponent pc = EM.positionMapper.get(entity);
+                    SpriteComponent sc = ECSManager.spriteMapper.get(entity);
+                    PositionComponent pc = ECSManager.positionMapper.get(entity);
 
                     // Draw the sprite, so that the center of its sprite is the position of the given entity
                     sc.sprite.setSize(sc.size.x, sc.size.y);
@@ -90,8 +90,8 @@ public class RenderingSystem extends EntitySystem {
             for (int i = 0; i < this.fontEntities.size(); i++) {
                 // Fetch each component
                 Entity entity = this.fontEntities.get(i);
-                FontComponent fc = EM.fontMapper.get(entity);
-                PositionComponent pc = EM.positionMapper.get(entity);
+                FontComponent fc = ECSManager.fontMapper.get(entity);
+                PositionComponent pc = ECSManager.positionMapper.get(entity);
 
                 // Draw font components to the given position with respect to center of font
                 fc.font.draw(
