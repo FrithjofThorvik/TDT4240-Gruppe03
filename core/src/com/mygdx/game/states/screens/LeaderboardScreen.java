@@ -9,11 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
 import com.mygdx.game.managers.ScreenManager;
+import com.sun.org.apache.xerces.internal.xs.ItemPSVI;
 
 import static com.mygdx.game.managers.ScreenManager.SM;
 
 public class LeaderboardScreen extends AbstractScreen {
     BitmapFont font;
+    Array<Integer> highscore;
+    int numberOfScoresShown = 5;
+
     public LeaderboardScreen(final Application app) {
         super(app);
     }
@@ -34,6 +38,7 @@ public class LeaderboardScreen extends AbstractScreen {
         );
         Application.stage.addActor(background);
         addReturnButton();
+        highscore = new Array<>();
     }
 
     @Override
@@ -56,11 +61,13 @@ public class LeaderboardScreen extends AbstractScreen {
         super.render(delta); // Super.render(delta) sets BG_Color and calls update(float delta)
         Application.stage.draw();
         Application.batch.begin();
-        Array<Integer> highscore = Application._FBIC.GetHighScore();
+
+        highscore = Application._FBIC.GetHighScore();
         highscore.sort();
         highscore.reverse();
+
         // Print 5 highest player scores
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < numberOfScoresShown; i++) {
             this.font.draw(Application.batch, "Score " + (i + 1) + ": " + highscore.get(i), Application.camera.viewportWidth / 2.4f, Application.camera.viewportHeight / 1.7f - i * 50f);
         }
         Application.batch.end();

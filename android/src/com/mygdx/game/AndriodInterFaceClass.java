@@ -16,7 +16,7 @@ public class AndriodInterFaceClass implements FirebaseInterface {
     FirebaseDatabase database;
     DatabaseReference myRef;
     DatabaseReference highScoreRef;
-    Array<Integer> highscores;
+    private Array<Integer> highscores;
 
     public AndriodInterFaceClass() {
         database = FirebaseDatabase.getInstance();
@@ -54,9 +54,12 @@ public class AndriodInterFaceClass implements FirebaseInterface {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 int i = 0;
+                Array<Integer> temp = new Array<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    highscores.insert(i, snapshot.getValue(Integer.class));
+                    temp.insert(i, snapshot.getValue(Integer.class));
+                    i++;
                 }
+                highscores = temp;
             }
 
             @Override
