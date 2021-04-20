@@ -90,6 +90,8 @@ public class Training implements GameMode {
         EM.removeAllEntities();
 
         _FBIC.SetHighScore(score);
+        timer = 0;
+        score = 0;
 
         SM.setScreen(ScreenManager.STATE.LEADERBOARD); // Display the end screen
     }
