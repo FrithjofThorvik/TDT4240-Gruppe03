@@ -1,6 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.firebase;
 
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.firebase.FirebaseInterface;
 
 public class CoreInterFaceClass implements FirebaseInterface {
 

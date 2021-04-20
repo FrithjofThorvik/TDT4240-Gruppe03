@@ -1,7 +1,7 @@
 package com.mygdx.game.desktop;
 
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.FirebaseInterface;
+import com.mygdx.game.firebase.FirebaseInterface;
 
 public class DesktopInterFaceClass implements FirebaseInterface {
 

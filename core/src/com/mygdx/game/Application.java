@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,8 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.managers.GameStateManager;
 import com.mygdx.game.managers.ScreenManager;
-import com.mygdx.game.FirebaseInterface;
-import com.mygdx.game.CoreInterFaceClass;
+import com.mygdx.game.firebase.FirebaseInterface;
 
 import static com.mygdx.game.managers.ScreenManager.SM;
 
