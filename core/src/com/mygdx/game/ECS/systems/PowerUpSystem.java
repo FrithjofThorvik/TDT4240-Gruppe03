@@ -31,7 +31,7 @@ import static com.mygdx.game.utils.B2DConstants.BIT_POWERUP;
  **/
 public class PowerUpSystem extends EntitySystem {
     PowerUpEffect effect;
-    int timeBetweenPowerUps = 5;
+    int timeBetweenPowerUps = 60;
     float timer = 0;
     // Prepare entity arrays
     private ImmutableArray<Entity> powerUps;
