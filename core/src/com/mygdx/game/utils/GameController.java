@@ -25,7 +25,7 @@ public class GameController {
     public boolean leftPressed, rightPressed, aimPressed, powerPressed, projectilePressed = false;
     private final Array<Texture> projectileTextures;
 
-    private float scaler = 1.5f; // Use to quickly change scale of controller images
+    private final float scaler = 1.5f; // Use to quickly change scale of controller images
 
     private Image aimImg;
     private Image powerImg;

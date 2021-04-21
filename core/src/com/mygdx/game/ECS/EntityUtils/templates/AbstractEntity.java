@@ -30,5 +30,5 @@ public abstract class AbstractEntity {
     public abstract void addClassComponents();
 
     // Add the current entity instance to EntityManager's engine
-    private void addToEngine() { ECSManager.getEngine().addEntity(this.entity); };
+    private void addToEngine() { ECSManager.getEngine().addEntity(this.entity); }
 }
