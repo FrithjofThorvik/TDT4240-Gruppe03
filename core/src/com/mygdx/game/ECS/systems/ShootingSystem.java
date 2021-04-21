@@ -52,6 +52,9 @@ public class ShootingSystem extends EntitySystem {
     }
 
     public void ShootProjectile(Entity projectile, ShootingComponent shootingComponent, Entity player) {
+        // Increase projectile damage by the player's damageMultiplier;
+        ECSManager.projectileMapper.get(projectile).damage *= shootingComponent.damageMult;
+
         // Shoot projectile with Box2D impulse
         ECSManager.b2dMapper.get(projectile).body.setTransform((ECSManager.positionMapper.get(player).position.x) / PPM, (ECSManager.positionMapper.get(player).position.y + ECSManager.spriteMapper.get(player).size.y) / PPM, 0);
         Box2DComponent b2d = ECSManager.b2dMapper.get(projectile); // Get Box2D component

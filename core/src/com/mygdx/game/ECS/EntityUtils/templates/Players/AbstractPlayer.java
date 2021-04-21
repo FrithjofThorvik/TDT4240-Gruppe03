@@ -11,6 +11,7 @@ import com.mygdx.game.ECS.components.ShootingComponent;
 import com.mygdx.game.ECS.components.SpriteComponent;
 import com.mygdx.game.ECS.components.VelocityComponent;
 import com.mygdx.game.ECS.EntityUtils.templates.AbstractEntity;
+import com.mygdx.game.ECS.systems.PowerUpSystem;
 
 import static com.mygdx.game.utils.B2DConstants.*;
 
@@ -38,9 +39,8 @@ public abstract class AbstractPlayer extends AbstractEntity {
 
     @Override
     public void addCoreComponents() {
-        this.entity.add(new Box2DComponent(
-                    this.position, this.size, false, 100f,
-                    BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE))
+        this.entity.add(new Box2DComponent(this.position, this.size, false, 100f,
+                BIT_PLAYER, (short) (BIT_GROUND | BIT_PROJECTILE | BIT_POWERUP))
                 )
                 .add(new SpriteComponent(this.texture, this.size.x, this.size.y, 1))
                 .add(new HealthComponent(this.health))
@@ -52,8 +52,12 @@ public abstract class AbstractPlayer extends AbstractEntity {
     }
 
     public abstract int getPlayerHealth();
+
     public abstract Vector2 getPlayerVelocity();
+
     public abstract Vector2 getPlayerSize();
+
     public abstract Vector2 getPlayerPosition();
+
     public abstract Texture getPlayerTexture();
 }

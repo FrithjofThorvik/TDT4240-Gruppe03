@@ -19,6 +19,7 @@ import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 
 import static com.mygdx.game.utils.B2DConstants.BIT_GROUND;
 import static com.mygdx.game.utils.B2DConstants.BIT_PLAYER;
+import static com.mygdx.game.utils.B2DConstants.BIT_POWERUP;
 import static com.mygdx.game.utils.B2DConstants.BIT_PROJECTILE;
 
 public class MapManager {
@@ -71,7 +72,7 @@ public class MapManager {
                     true,
                     10000f,
                     BIT_GROUND,
-                    (short) (BIT_PLAYER | BIT_PROJECTILE))
+                    (short) (BIT_PLAYER | BIT_PROJECTILE | BIT_POWERUP))
             );
             ECSManager.getEngine().addEntity(mapObject);
         }

@@ -13,6 +13,7 @@ import com.mygdx.game.ECS.components.flags.isAimingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
 import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
+import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.gamelogic.states.GameStateManager;
 import com.mygdx.game.gamelogic.states.ScreenManager;
@@ -79,6 +80,7 @@ public class Training implements GameMode {
         ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
         ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(false);
         ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
+        ECSManager.getEngine().getSystem(PowerUpSystem.class).setProcessing(false);
     }
 
     @Override

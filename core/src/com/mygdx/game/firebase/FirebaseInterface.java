@@ -4,12 +4,12 @@ import com.badlogic.gdx.utils.Array;
 
 public interface FirebaseInterface {
 
-    public void SetOnValueChangedListener();
+    void SetOnValueChangedListener();
 
-    public void SetValueInDb(String target, String value);
+    void SetValueInDb(String target, String value);
 
-    public void SetHighScore(int value);
+    void SetHighScore(int value);
 
-    public Array<Integer> GetHighScore();
+    Array<Integer> GetHighScore();
 
 }
