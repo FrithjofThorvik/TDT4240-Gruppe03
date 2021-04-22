@@ -9,27 +9,18 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.ECS.managers.ECSManager;
 import com.mygdx.game.gamelogic.states.GameStateManager;
 import com.mygdx.game.gamelogic.states.ScreenManager;
 import com.mygdx.game.firebase.FirebaseInterface;
-
-import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
+import com.mygdx.game.utils.GameConstants;
+import com.mygdx.game.utils.GameController;
 
 
 /**
  * This is used for initializing all core mechanics for starting an application
  **/
 public class Application extends Game {
-    // Application Globals
-    public static String APP_TITLE = "Projectile Wars";
-    public static int APP_DESKTOP_WIDTH = 1600;    // Scaled
-    public static int APP_DESKTOP_HEIGHT = 900;    // Scaled
-    public static int APP_FPS = 60;
-
-    // Game Globals
-    public static int VIRTUAL_WORLD_WIDTH = 1600;    // Core
-    public static int VIRTUAL_WORLD_HEIGHT = 900;    // Core
-
     // Batches & Stages
     public static SpriteBatch batch;
     public ShapeRenderer shapeBatch;
@@ -57,7 +48,7 @@ public class Application extends Game {
 
         // Initialize screen properties
         camera = new OrthographicCamera();
-        viewport = new FitViewport(VIRTUAL_WORLD_WIDTH, VIRTUAL_WORLD_HEIGHT, camera);
+        viewport = new FitViewport(GameConstants.VIRTUAL_WORLD_WIDTH, GameConstants.VIRTUAL_WORLD_HEIGHT, camera);
         viewport.apply();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
@@ -69,8 +60,10 @@ public class Application extends Game {
 
         Gdx.input.setInputProcessor(stage); // Add input processing for stage (Press of Button, Image, etc)
 
-        new ScreenManager(this); // Create ScreenManager
-        new GameStateManager();
+        ScreenManager.getInstance(this); // Create ScreenManager
+        GameStateManager.getInstance(); // Create GameStateManager
+        ECSManager.getInstance(); // Manager for generating all ECS functions
+        GameController.getInstance(); // Manages all game controls
     }
 
     @Override
@@ -95,7 +88,7 @@ public class Application extends Game {
     public void dispose() {
         super.dispose();
 
-        SM.dispose();
+        ScreenManager.getInstance(Application.this).dispose();
         batch.dispose();
         stage.dispose();
         this.shapeBatch.dispose();

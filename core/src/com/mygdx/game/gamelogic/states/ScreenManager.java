@@ -16,7 +16,7 @@ import java.util.HashMap;
  * TODO: Implement Tutorial screen
  **/
 public class ScreenManager {
-    public static ScreenManager SM; // Singleton instance of GameScreenManager
+    private static ScreenManager SM; // Singleton instance of GameScreenManager
     public final Application app; // Pass through application
     public static AbstractScreen screen;
 
@@ -32,20 +32,11 @@ public class ScreenManager {
     private HashMap<STATE, AbstractScreen> screens;
 
     // Passes the single instance of the app
-    public ScreenManager(final Application app) {
-        SM = this;
+    private ScreenManager(final Application app) {
         this.app = app;
 
         this.initScreens();
         this.setScreen(STATE.MAIN_MENU);
-    }
-
-    // Create singleton instance
-    public static ScreenManager getScreenManager(Application app) {
-        if (SM == null) {
-            SM = new ScreenManager(app);
-        }
-        return SM;
     }
 
     // Initialize all screens
@@ -80,5 +71,11 @@ public class ScreenManager {
     // Remove all current actors
     public void removeAllActors() {
         Application.stage.getActors().clear();
+    }
+
+    public static ScreenManager getInstance(final Application app) {
+        if (SM == null)
+            SM = new ScreenManager(app);
+        return SM;
     }
 }

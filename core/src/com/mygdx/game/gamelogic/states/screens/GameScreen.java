@@ -6,11 +6,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.managers.ECSManager;
 import com.mygdx.game.utils.CollisionHandler;
+import com.mygdx.game.utils.GameConstants;
 import com.mygdx.game.utils.GameController;
 import com.mygdx.game.gamelogic.states.GameStateManager;
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
 
@@ -28,6 +27,7 @@ public class GameScreen extends AbstractScreen {
         // Create Box2D world with physics
         this.b2dr = new Box2DDebugRenderer();
         world = new World(new Vector2(0, -10f), false);
+        GameController.getInstance().createControllerActor();
     }
 
     @Override
@@ -42,21 +42,15 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        //new GameStateManager();
-        new ECSManager(Application.batch); // Manager for generating all ECS functions
-        new GameController(); // Manages all game controls
-
-        //GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
-
-        ECSManager.createModeEntities();
-        GSM.setGameState(GameStateManager.STATE.START_GAME);
+        ECSManager.getInstance().createModeEntities();
+        GameStateManager.getInstance().setGameState(GameStateManager.STATE.START_GAME);
 
         world.setContactListener(new CollisionHandler()); // Set contact listener for world
     }
 
     @Override
     public void update(float dt) {
-        world.step(1f / Application.APP_FPS, 6, 2);
+        world.step(1f / GameConstants.APP_FPS, 6, 2);
     }
 
     @Override
@@ -66,8 +60,8 @@ public class GameScreen extends AbstractScreen {
 
         // Draw to screen
         Application.batch.begin();
-        GSM.update(dt);
-        ECSManager.update(dt);
+        GameStateManager.getInstance().update(dt);
+        ECSManager.getInstance().update(dt);
         Application.batch.end();
         Application.stage.draw();
     }

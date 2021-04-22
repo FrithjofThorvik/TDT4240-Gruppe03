@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
+import com.mygdx.game.utils.GameConstants;
 
 public class LeaderboardScreen extends AbstractScreen {
     BitmapFont font;
@@ -25,7 +26,7 @@ public class LeaderboardScreen extends AbstractScreen {
 
         // Initialise background
         Image background = new Image(backgroundTexture);
-        background.setSize(Application.VIRTUAL_WORLD_WIDTH, Application.VIRTUAL_WORLD_HEIGHT);
+        background.setSize(GameConstants.VIRTUAL_WORLD_WIDTH, GameConstants.VIRTUAL_WORLD_HEIGHT);
         background.setPosition(
                 (Application.camera.viewportWidth) - (background.getWidth()),
                 (Application.camera.viewportHeight) - (background.getHeight())

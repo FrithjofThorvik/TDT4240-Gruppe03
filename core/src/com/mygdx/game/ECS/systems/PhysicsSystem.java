@@ -11,8 +11,8 @@ import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 import com.mygdx.game.ECS.components.misc.SpriteComponent;
+import com.mygdx.game.ECS.managers.ECSManager;
 
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
 
@@ -46,8 +46,8 @@ public class PhysicsSystem extends EntitySystem {
                 Entity entity = this.box2DEntities.get(i);
 
                 // Fetch entity component
-                PositionComponent entityPosition = ECSManager.positionMapper.get(entity);
-                Box2DComponent entityBox2D = ECSManager.b2dMapper.get(entity);
+                PositionComponent entityPosition =  ECSManager.getInstance().positionMapper.get(entity);
+                Box2DComponent entityBox2D =  ECSManager.getInstance().b2dMapper.get(entity);
 
                 // Synchronise position component with body position
                 entityPosition.position = new Vector2(entityBox2D.body.getPosition().x * PPM, entityBox2D.body.getPosition().y * PPM);

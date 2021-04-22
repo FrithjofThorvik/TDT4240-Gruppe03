@@ -12,11 +12,10 @@ import com.mygdx.game.ECS.components.flags.PlayerComponent;
 import com.mygdx.game.ECS.components.misc.ShootingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
 import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
+import com.mygdx.game.ECS.managers.ECSManager;
 import com.mygdx.game.gamelogic.states.GameStateManager;
+import com.mygdx.game.utils.GameController;
 
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
-import static com.mygdx.game.utils.GameController.CM;
 import static com.mygdx.game.utils.B2DConstants.PPM;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
@@ -39,22 +38,22 @@ public class ShootingSystem extends EntitySystem {
         // Check first if there are any players aiming
         for (int i = 0; i < this.playersShooting.size(); i++) {
             Entity player = this.playersShooting.get(i);
-            ShootingComponent shootingComponent = ECSManager.shootingMapper.get(player);
+            ShootingComponent shootingComponent = ECSManager.getInstance().shootingMapper.get(player);
             updatePowerBar(player);
-            ECSManager.UIManager.getPowerBar().add(new RenderComponent());
-            ECSManager.UIManager.getPowerBarArrow().add(new RenderComponent());
+            ECSManager.getInstance().UIManager.getPowerBar().add(new RenderComponent());
+            ECSManager.getInstance().UIManager.getPowerBarArrow().add(new RenderComponent());
 
             shootingComponent.power += dt; // Increase power
 
             // Create & shoot projectile if button stops being pressed, max power is reached, or round time is reached
-            if (!CM.powerPressed || shootingComponent.power >= MAX_SHOOTING_POWER) {
-                Entity projectile = ECSManager.getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[CM.currentProjectile]).createEntity(); // Get the projectile chosen from the Controller
+            if (!GameController.getInstance().powerPressed || shootingComponent.power >= MAX_SHOOTING_POWER) {
+                Entity projectile = ECSManager.getInstance().getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[GameController.getInstance().currentProjectile]).createEntity(); // Get the projectile chosen from the Controller
                 ShootProjectile(projectile, shootingComponent, player); // Shoot the projectile
 
-                ECSManager.UIManager.getPowerBar().remove(RenderComponent.class);
-                ECSManager.UIManager.getPowerBarArrow().remove(RenderComponent.class);
-                ECSManager.UIManager.getAimArrow().remove(RenderComponent.class);
-                GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // Change the game state
+                ECSManager.getInstance().UIManager.getPowerBar().remove(RenderComponent.class);
+                ECSManager.getInstance().UIManager.getPowerBarArrow().remove(RenderComponent.class);
+                ECSManager.getInstance().UIManager.getAimArrow().remove(RenderComponent.class);
+                GameStateManager.getInstance().setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // Change the game state
             }
         }
     }
@@ -62,21 +61,21 @@ public class ShootingSystem extends EntitySystem {
     // Display the powerbar according to player power
     public void updatePowerBar(Entity player) {
         // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
-        float startPositionArrow = ECSManager.positionMapper.get(ECSManager.UIManager.getPowerBar()).position.y - ECSManager.spriteMapper.get(ECSManager.UIManager.getPowerBar()).size.y / 2;
+        float startPositionArrow = ECSManager.getInstance().positionMapper.get(ECSManager.getInstance().UIManager.getPowerBar()).position.y - ECSManager.getInstance().spriteMapper.get(ECSManager.getInstance().UIManager.getPowerBar()).size.y / 2;
 
         //Set position of powerBarArrow -> given the power of the shootingComponent
-        float power = ECSManager.shootingMapper.get(player).power;
-        ECSManager.positionMapper.get(ECSManager.UIManager.getPowerBarArrow()).position.y = startPositionArrow + (ECSManager.spriteMapper.get(ECSManager.UIManager.getPowerBar()).size.y * (power / MAX_SHOOTING_POWER));
+        float power = ECSManager.getInstance().shootingMapper.get(player).power;
+        ECSManager.getInstance().positionMapper.get(ECSManager.getInstance().UIManager.getPowerBarArrow()).position.y = startPositionArrow + (ECSManager.getInstance().spriteMapper.get(ECSManager.getInstance().UIManager.getPowerBar()).size.y * (power / MAX_SHOOTING_POWER));
     }
 
     public void ShootProjectile(Entity projectile, ShootingComponent shootingComponent, Entity player) {
         // Increase projectile damage by the player's damageMultiplier;
-        ECSManager.projectileMapper.get(projectile).damage *= shootingComponent.damageMult;
+        ECSManager.getInstance().projectileMapper.get(projectile).damage *= shootingComponent.damageMult;
 
         // Shoot projectile with Box2D impulse
-        ECSManager.b2dMapper.get(projectile).body.setTransform((ECSManager.positionMapper.get(player).position.x) / PPM, (ECSManager.positionMapper.get(player).position.y + ECSManager.spriteMapper.get(player).size.y) / PPM, 0);
-        Box2DComponent b2d = ECSManager.b2dMapper.get(projectile); // Get Box2D component
-        float impulse = (float) (ECSManager.projectileMapper.get(projectile).speed * shootingComponent.power);
+        ECSManager.getInstance().b2dMapper.get(projectile).body.setTransform((ECSManager.getInstance().positionMapper.get(player).position.x) / PPM, (ECSManager.getInstance().positionMapper.get(player).position.y + ECSManager.getInstance().spriteMapper.get(player).size.y) / PPM, 0);
+        Box2DComponent b2d = ECSManager.getInstance().b2dMapper.get(projectile); // Get Box2D component
+        float impulse = (float) (ECSManager.getInstance().projectileMapper.get(projectile).speed * shootingComponent.power);
         Vector2 impulseVector = new Vector2(
                 impulse * (float) Math.sin(shootingComponent.angle),
                 impulse * (float) Math.cos(shootingComponent.angle)); // Calculate velocity

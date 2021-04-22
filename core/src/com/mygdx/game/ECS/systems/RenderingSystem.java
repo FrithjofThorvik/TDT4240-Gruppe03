@@ -6,12 +6,12 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.misc.FontComponent;
 import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 import com.mygdx.game.ECS.components.misc.SpriteComponent;
-
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import com.mygdx.game.ECS.managers.ECSManager;
 
 
 /**
@@ -21,13 +21,6 @@ public class RenderingSystem extends EntitySystem {
     // Arrays for storing entity instances for fonts and sprites
     private ImmutableArray<Entity> spriteEntities;
     private ImmutableArray<Entity> fontEntities;
-
-    private final SpriteBatch batch;
-
-    // RenderingSystem constructor with Application batch instance
-    public RenderingSystem(SpriteBatch batch) {
-        this.batch = batch;
-    }
 
     // Get entities matching the given components, and store in respective array
     public void addedToEngine(Engine e) {
@@ -60,14 +53,14 @@ public class RenderingSystem extends EntitySystem {
                 if(spriteComponent.zValue == 0){
                     // Fetch each component
                     Entity entity = this.spriteEntities.get(i);
-                    SpriteComponent sc = ECSManager.spriteMapper.get(entity);
-                    PositionComponent pc = ECSManager.positionMapper.get(entity);
+                    SpriteComponent sc =  ECSManager.getInstance().spriteMapper.get(entity);
+                    PositionComponent pc =  ECSManager.getInstance().positionMapper.get(entity);
 
                     // Draw the sprite, so that the center of its sprite is the position of the given entity
                     sc.sprite.setSize(sc.size.x, sc.size.y);
                     sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2f);
                     sc.sprite.setOrigin(sc.size.x / 2f, sc.size.y / 2f);
-                    sc.sprite.draw(batch);
+                    sc.sprite.draw(Application.batch);
                 }
             }
             for (int i = 0; i < this.spriteEntities.size(); i++) {
@@ -75,14 +68,14 @@ public class RenderingSystem extends EntitySystem {
                 if(spriteComponent.zValue == 1){
                     // Fetch each component
                     Entity entity = this.spriteEntities.get(i);
-                    SpriteComponent sc = ECSManager.spriteMapper.get(entity);
-                    PositionComponent pc = ECSManager.positionMapper.get(entity);
+                    SpriteComponent sc =  ECSManager.getInstance().spriteMapper.get(entity);
+                    PositionComponent pc =  ECSManager.getInstance().positionMapper.get(entity);
 
                     // Draw the sprite, so that the center of its sprite is the position of the given entity
                     sc.sprite.setSize(sc.size.x, sc.size.y);
                     sc.sprite.setPosition(pc.position.x - sc.size.x / 2f, pc.position.y - sc.size.y / 2f);
                     sc.sprite.setOrigin(sc.size.x / 2f, sc.size.y / 2f);
-                    sc.sprite.draw(batch);
+                    sc.sprite.draw(Application.batch);
                 }
             }
 
@@ -90,12 +83,12 @@ public class RenderingSystem extends EntitySystem {
             for (int i = 0; i < this.fontEntities.size(); i++) {
                 // Fetch each component
                 Entity entity = this.fontEntities.get(i);
-                FontComponent fc = ECSManager.fontMapper.get(entity);
-                PositionComponent pc = ECSManager.positionMapper.get(entity);
+                FontComponent fc =  ECSManager.getInstance().fontMapper.get(entity);
+                PositionComponent pc =  ECSManager.getInstance().positionMapper.get(entity);
 
                 // Draw font components to the given position with respect to center of font
                 fc.font.draw(
-                        batch,
+                        Application.batch,
                         fc.text,
                         pc.position.x - (fc.layout.width / 2f),
                         pc.position.y - (fc.layout.height / 2f)

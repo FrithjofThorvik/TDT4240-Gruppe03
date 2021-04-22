@@ -11,20 +11,20 @@ import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.isAimingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
+import com.mygdx.game.ECS.managers.ECSManager;
 import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
 import com.mygdx.game.gamelogic.states.GameStateManager;
 import com.mygdx.game.gamelogic.states.ScreenManager;
+import com.mygdx.game.utils.GameConstants;
+import com.mygdx.game.utils.GameController;
 
 import java.text.DecimalFormat;
 
 import static com.mygdx.game.Application._FBIC;
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
-import static com.mygdx.game.utils.GameController.CM;
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
-import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
+
 import static com.mygdx.game.utils.B2DConstants.PPM;
 
 /**
@@ -55,8 +55,8 @@ public class Training implements GameMode {
         updateScore(); // Check if player hits the target
 
         // Check if aim button is pressed
-        if (CM.aimPressed)
-            GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING);
+        if (GameController.getInstance().aimPressed)
+            GameStateManager.getInstance().setGameState(GameStateManager.STATE.PLAYER_AIMING);
 
         moveTargetCountDown -= dt;
         if (moveTargetCountDown <= 0) {
@@ -66,49 +66,51 @@ public class Training implements GameMode {
 
         timer += dt; // Increase the timer
         if (timer >= trainingLength) // End game when timer runs out
-            GSM.setGameState(GameStateManager.STATE.END_GAME);
+            GameStateManager.getInstance().setGameState(GameStateManager.STATE.END_GAME);
 
     }
 
     @Override
     public void startGame() { // Is called when the game starts
-        CM.startTraining(); // Enable moving buttons (includes aiming button)
-        CM.setTouchable(true);
+        ECSManager.getInstance().UIManager.createUIEntities();
+
+        GameController.getInstance().startTraining(); // Enable moving buttons (includes aiming button)
+        GameController.getInstance().setTouchable(true);
         setPlayerSpawn(); // Choose location for where players spawn
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
-        ECSManager.getEngine().getSystem(MovementSystem.class).setProcessing(false);
-        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
-        ECSManager.getEngine().getSystem(PowerUpSystem.class).setProcessing(false);
+            ECSManager.getInstance().getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+            ECSManager.getInstance().getEngine().getSystem(MovementSystem.class).setProcessing(false);
+            ECSManager.getInstance().getEngine().getSystem(AimingSystem.class).setProcessing(false);
+            ECSManager.getInstance().getEngine().getSystem(PowerUpSystem.class).setProcessing(false);
     }
 
     @Override
     public void endGame() { // Is called when the game ends
         // Remove entities
-        ECSManager.removeAllEntities();
+        ECSManager.getInstance().removeAllEntities();
 
         _FBIC.SetHighScore(score);
         timer = 0;
         score = 0;
 
-        SM.setScreen(ScreenManager.STATE.LEADERBOARD); // Display the end screen
+        ScreenManager.getInstance(null).setScreen(ScreenManager.STATE.LEADERBOARD); // Display the end screen
     }
 
     @Override
     public void startRound() { // Is called when a new round starts
-        CM.startTraining(); // Enable moving buttons (includes aiming button)
+        GameController.getInstance().startTraining(); // Enable moving buttons (includes aiming button)
     }
 
     @Override
     public void playerAim() { // Is called when the player should start aiming
-        CM.startShooting(); // Enable shooting button
+        GameController.getInstance().startShooting(); // Enable shooting button
 
         // Remove or add components to entities
         player.add(new isAimingComponent());
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(true);
+             ECSManager.getInstance().getEngine().getSystem(AimingSystem.class).setProcessing(true);
     }
 
     @Override
@@ -118,8 +120,8 @@ public class Training implements GameMode {
         player.add(new isShootingComponent());
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(true);
-        ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
+             ECSManager.getInstance().getEngine().getSystem(ShootingSystem.class).setProcessing(true);
+             ECSManager.getInstance().getEngine().getSystem(AimingSystem.class).setProcessing(false);
     }
 
     @Override
@@ -128,9 +130,9 @@ public class Training implements GameMode {
         player.remove(isShootingComponent.class);
 
         // Start or stop systems (if they should be processed or not)
-        ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
+             ECSManager.getInstance().getEngine().getSystem(ShootingSystem.class).setProcessing(false);
 
-        GSM.setGameState(GameStateManager.STATE.START_ROUND); // Change state
+        GameStateManager.getInstance().setGameState(GameStateManager.STATE.START_ROUND); // Change state
     }
 
     @Override
@@ -146,57 +148,57 @@ public class Training implements GameMode {
 
     @Override
     public void initEntities() {
-        ECSManager.mapManager.createMap(mapFile, mapTexture);
-        ECSManager.gameEntityManager.spawnPlayers(1); // Spawn players
+             ECSManager.getInstance().mapManager.createMap(mapFile, mapTexture);
+             ECSManager.getInstance().gameEntityManager.spawnPlayers(1); // Spawn players
 
-        player = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get()).first(); // Init the player variable
+        player =      ECSManager.getInstance().getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get()).first(); // Init the player variable
 
-        scoreFont = ECSManager.getEntityTemplateMapper().getTextFont().createEntity(); // Init the score font variable
-        ECSManager.positionMapper.get(scoreFont).position = new Vector2(Application.camera.viewportWidth / 2f,
+        scoreFont =      ECSManager.getInstance().getEntityTemplateMapper().getTextFont().createEntity(); // Init the score font variable
+             ECSManager.getInstance().positionMapper.get(scoreFont).position = new Vector2(Application.camera.viewportWidth / 2f,
                 Application.camera.viewportHeight * 0.93f); // Set position of score font
 
-        target = ECSManager.gameEntityManager.spawnTarget(); // Init the target entity
+        target =      ECSManager.getInstance().gameEntityManager.spawnTarget(); // Init the target entity
     }
 
     // Print information about how much time is left in a round, etc...
     private void printTimer() {
-        FontComponent timerFont = ECSManager.fontMapper.get(ECSManager.UIManager.getTimer());
+        FontComponent timerFont =      ECSManager.getInstance().fontMapper.get(     ECSManager.getInstance().UIManager.getTimer());
         timerFont.text = "Timer: " + this.df.format(trainingLength - timer) + "s";
         timerFont.layout = new GlyphLayout(timerFont.font, timerFont.text);
     }
 
     // Print information about how much time is left in a round, etc...
     private void printScore() {
-        FontComponent scoreFont = ECSManager.fontMapper.get(this.scoreFont);
+        FontComponent scoreFont =      ECSManager.getInstance().fontMapper.get(this.scoreFont);
         scoreFont.text = "Score: " + this.df.format(this.score);
         scoreFont.layout = new GlyphLayout(scoreFont.font, scoreFont.text);
     }
 
     // Set the spawnpoint of players
     private void setPlayerSpawn() {
-        PositionComponent pos = ECSManager.positionMapper.get(player);
-        SpriteComponent sprite = ECSManager.spriteMapper.get(player);
+        PositionComponent pos =      ECSManager.getInstance().positionMapper.get(player);
+        SpriteComponent sprite =      ECSManager.getInstance().spriteMapper.get(player);
 
         // Spawn players with equal distance between them
-        ECSManager.b2dMapper.get(player).body.setTransform((sprite.size.x) / PPM, pos.position.y / PPM, 0);
+             ECSManager.getInstance().b2dMapper.get(player).body.setTransform((sprite.size.x) / PPM, pos.position.y / PPM, 0);
     }
 
     // Update the score
     private void updateScore() {
         // If a projectile collides with the target -> update score equal to projectile damage
-        if (ECSManager.collisionMapper.has(target)) {
-            Entity collisionEntity = ECSManager.collisionMapper.get(target).collisionEntity; // Get the colliding entity
-            if (ECSManager.projectileMapper.has(collisionEntity)) {
-                score += ECSManager.projectileMapper.get(collisionEntity).damage;
+        if (     ECSManager.getInstance().collisionMapper.has(target)) {
+            Entity collisionEntity =      ECSManager.getInstance().collisionMapper.get(target).collisionEntity; // Get the colliding entity
+            if (     ECSManager.getInstance().projectileMapper.has(collisionEntity)) {
+                score +=      ECSManager.getInstance().projectileMapper.get(collisionEntity).damage;
             }
         }
     }
 
     // Move the target
     private void moveTarget() {
-        PositionComponent pos = ECSManager.positionMapper.get(target);
+        PositionComponent pos =      ECSManager.getInstance().positionMapper.get(target);
         // Move the target to a random position within posFromEdge boundary
-        float posFromEdge = (float) Math.floor(Math.random() * Application.VIRTUAL_WORLD_WIDTH / 2);
-        ECSManager.b2dMapper.get(target).body.setTransform((Application.VIRTUAL_WORLD_WIDTH - posFromEdge) / PPM, pos.position.y / PPM, 0);
+        float posFromEdge = (float) Math.floor(Math.random() * GameConstants.VIRTUAL_WORLD_WIDTH / 2);
+             ECSManager.getInstance().b2dMapper.get(target).body.setTransform((GameConstants.VIRTUAL_WORLD_WIDTH - posFromEdge) / PPM, pos.position.y / PPM, 0);
     }
 }

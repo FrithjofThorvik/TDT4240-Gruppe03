@@ -1,7 +1,8 @@
 package com.mygdx.game.gamelogic.states.game;
 
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import com.mygdx.game.gamelogic.states.GameStateManager;
+
 
 /**
  * This state is for cleaning up, and displaying game ending
@@ -9,6 +10,6 @@ import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 public class EndGame extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.getGameMode().endGame(); // Call the gamemode's function
+        GameStateManager.getInstance().getGameMode().endGame(); // Call the gamemode's function
     }
 }

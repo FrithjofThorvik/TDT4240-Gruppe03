@@ -8,7 +8,6 @@ import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
 public class UIManager {
@@ -23,10 +22,6 @@ public class UIManager {
     Texture rightArrowTexture = new Texture("right-arrow.png");
     Texture aimArrowTexture = new Texture("aim-arrow.png");
 
-    public UIManager() {
-        createUIEntities();
-    }
-
     // Create entities with ECS components
     public void createUIEntities() {
         // Instantiate all UI entities
@@ -34,8 +29,8 @@ public class UIManager {
         powerBarArrow = new Entity();
         aimArrow = new Entity();
 
-        timer = ECSManager.getEntityTemplateMapper().getTextFont().createEntity();
-        ECSManager.positionMapper.get(getTimer()).position = new Vector2(Application.camera.viewportWidth / 2f,
+        timer = ECSManager.getInstance().getEntityTemplateMapper().getTextFont().createEntity();
+        ECSManager.getInstance().positionMapper.get(getTimer()).position = new Vector2(Application.camera.viewportWidth / 2f,
                 Application.camera.viewportHeight * 0.97f);
 
         getPowerBar().add(new SpriteComponent(
@@ -55,7 +50,7 @@ public class UIManager {
         )
                 .add(new PositionComponent(
                         Application.camera.viewportWidth - 70f,
-                        Application.camera.viewportHeight - (ECSManager.spriteMapper.get(getPowerBar()).size.y) / 2f)
+                        Application.camera.viewportHeight - (ECSManager.getInstance().spriteMapper.get(getPowerBar()).size.y) / 2f)
                 );
 
         getAimArrow().add(new PositionComponent(
@@ -70,9 +65,9 @@ public class UIManager {
                 );
 
         // Add all ECS entities to the engine
-        ECSManager.getEngine().addEntity(getPowerBar());
-        ECSManager.getEngine().addEntity(getPowerBarArrow());
-        ECSManager.getEngine().addEntity(getAimArrow());
+        ECSManager.getInstance().getEngine().addEntity(getPowerBar());
+        ECSManager.getInstance().getEngine().addEntity(getPowerBarArrow());
+        ECSManager.getInstance().getEngine().addEntity(getAimArrow());
     }
 
     // Dispose everything

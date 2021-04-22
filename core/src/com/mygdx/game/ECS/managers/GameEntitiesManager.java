@@ -13,8 +13,8 @@ import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
+import com.mygdx.game.utils.GameConstants;
 
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 
 import static com.mygdx.game.utils.B2DConstants.BIT_GROUND;
 import static com.mygdx.game.utils.B2DConstants.BIT_PLAYER;
@@ -25,21 +25,21 @@ public class GameEntitiesManager {
     public void spawnPlayers(int numberOfPlayers) {
         for (int i = 0; i < numberOfPlayers; i++) {
             if (i % 2 == 0)
-                ECSManager.getEntityTemplateMapper().getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity();
+                ECSManager.getInstance().getEntityTemplateMapper().getPlayerClass(EntityTemplateMapper.PLAYERS.DEFAULT).createEntity();
             else
-                ECSManager.getEntityTemplateMapper().getPlayerClass(EntityTemplateMapper.PLAYERS.SPEEDY).createEntity();
+                ECSManager.getInstance().getEntityTemplateMapper().getPlayerClass(EntityTemplateMapper.PLAYERS.SPEEDY).createEntity();
 
         }
     }
 
     // Utility function for creating health displayers
     public void createHealthDisplayers() {
-        ImmutableArray<Entity> players = ECSManager.getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get());
+        ImmutableArray<Entity> players = ECSManager.getInstance().getEngine().getEntitiesFor(Family.one(PlayerComponent.class).get());
         for (int i = 0; i < players.size(); i++) {
             Entity player = players.get(i); // Get a player
 
             // Create the health displayer and add the player as the parent -> such that the health font is attached to the player
-            ECSManager.getEntityTemplateMapper().getHealthFont().createEntity().add(new ParentComponent(player));
+            ECSManager.getInstance().getEntityTemplateMapper().getHealthFont().createEntity().add(new ParentComponent(player));
         }
     }
 
@@ -48,12 +48,12 @@ public class GameEntitiesManager {
         Entity target = new Entity();
         target.add(new SpriteComponent(new Texture("target.png"), 75, 75, 1))
                 .add(new Box2DComponent(
-                        new Vector2((float) Application.VIRTUAL_WORLD_WIDTH / 2, Application.APP_DESKTOP_HEIGHT / 2 + 25), ECSManager.spriteMapper.get(target).size, false, 10000000f,
+                        new Vector2((float) GameConstants.VIRTUAL_WORLD_WIDTH / 2, GameConstants.APP_DESKTOP_HEIGHT / 2 + 25), ECSManager.getInstance().spriteMapper.get(target).size, false, 10000000f,
                         BIT_PLAYER, (short) (BIT_PROJECTILE | BIT_GROUND))
                 )
                 .add(new PositionComponent(target.getComponent(Box2DComponent.class).body.getPosition().x, target.getComponent(Box2DComponent.class).body.getPosition().y))
                 .add(new RenderComponent());
-        ECSManager.getEngine().addEntity(target);
+        ECSManager.getInstance().getEngine().addEntity(target);
         return target;
     }
 }

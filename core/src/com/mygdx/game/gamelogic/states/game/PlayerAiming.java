@@ -1,7 +1,8 @@
 package com.mygdx.game.gamelogic.states.game;
 
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import com.mygdx.game.gamelogic.states.GameStateManager;
+
 
 /**
  * This is a state responsible for indicating that a player is aiming
@@ -9,6 +10,6 @@ import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 public class PlayerAiming extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.getGameMode().playerAim();// Call the gamemode's function
+        GameStateManager.getInstance().getGameMode().playerAim();// Call the gamemode's function
     }
 }
