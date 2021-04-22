@@ -38,7 +38,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         // Initialise Play Button
         Image playImg = new Image(playTexture);
-        playImg.setSize(100f, 100f);
+        playImg.setSize(300f, 300f);
         playImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -77,7 +77,7 @@ public class MainMenuScreen extends AbstractScreen {
         });
         singlePlayerImg.setPosition(
                 (Application.camera.viewportWidth / 2f) - (singlePlayerImg.getWidth() / 2f),
-                (Application.camera.viewportHeight / 4f) - (singlePlayerImg.getHeight() / 2f)
+                (Application.camera.viewportHeight / 4f) + 50f - (singlePlayerImg.getHeight() / 2f)
         );
 
         // Initialize Leaderboard button
