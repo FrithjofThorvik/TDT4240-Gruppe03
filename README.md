@@ -13,7 +13,7 @@
 <br></br>
 
 ## Overview
-Projectile Wars is a simple android game inspired by the "Worms" game series that was made as a part of the course TDT4240 - Software Architecture at NTNU. The game is developed with a focus on architecture, rather than features. This has resulted in an easily modifiable game, where the groundwork for further development has been laid. The game currenly offers a both a singleplayer gamemode with an online leaderboard to improve your skills, and a local multiplayer mode that has players fighting eachother to be the last man standing.
+Projectile Wars is a simple android game inspired by the "Worms" game series that was made as a part of the course TDT4240 - Software Architecture at NTNU. The game is developed with a focus on architecture, rather than features. This has resulted in an easily modifiable game, where the groundwork for further development has been laid. The game currenly offers a singleplayer gamemode (with an online leaderboard) to improve your skills, and a local multiplayer mode that has players fighting eachother to be the last man standing.
 <br></br>
 ![Skjermbilde 2021-04-22 kl  13 19 32](https://user-images.githubusercontent.com/43807082/115705934-6bc88c00-a36d-11eb-833a-8badd51edeca.png)
 
@@ -46,7 +46,7 @@ Please refer to our project documents for a more detailed and complete descripti
 <br></br>
 
 ## Installation and set-up
-(This guide assumes Android Studio, LibGDX and an Android SDK is already installed)
+(This guide assumes Android Studio, LibGDX and an Android SDK are already installed)
 1. Clone the repository:
 ```zsh
 $ git clone https://github.com/FrithjofThorvik/TDT4240-Gruppe03.git
