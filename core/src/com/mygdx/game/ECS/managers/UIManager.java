@@ -4,8 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 
 import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
@@ -75,32 +75,11 @@ public class UIManager {
         ECSManager.getEngine().addEntity(getAimArrow());
     }
 
-    // Display the powerbar according to player power
-    public void updatePowerBar(Entity player) {
-        // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
-        float startPositionArrow = ECSManager.positionMapper.get(getPowerBar()).position.y - ECSManager.spriteMapper.get(getPowerBar()).size.y / 2;
-
-        //Set position of powerBarArrow -> given the power of the shootingComponent
-        float power = ECSManager.shootingMapper.get(player).power;
-        ECSManager.positionMapper.get(getPowerBarArrow()).position.y = startPositionArrow + (ECSManager.spriteMapper.get(getPowerBar()).size.y * (power / MAX_SHOOTING_POWER));
-    }
     // Dispose everything
     public void dispose() {
         this.rightArrowTexture.dispose();
         this.powerBarTexture.dispose();
         this.aimArrowTexture.dispose();
-    }
-
-    public void removeShootingRender() {
-        getAimArrow().remove(RenderComponent.class);
-        getPowerBar().remove(RenderComponent.class);
-        getPowerBarArrow().remove(RenderComponent.class);
-    }
-
-    public void addShootingRender() {
-        getAimArrow().add(new RenderComponent());
-        getPowerBar().add(new RenderComponent());
-        getPowerBarArrow().add(new RenderComponent());
     }
 
     public Entity getAimArrow() {

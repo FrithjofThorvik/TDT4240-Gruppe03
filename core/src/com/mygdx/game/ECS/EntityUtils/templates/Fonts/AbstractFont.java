@@ -1,7 +1,7 @@
 package com.mygdx.game.ECS.EntityUtils.templates.Fonts;
 
-import com.mygdx.game.ECS.components.FontComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.misc.FontComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 import com.mygdx.game.ECS.EntityUtils.templates.AbstractEntity;
 /**

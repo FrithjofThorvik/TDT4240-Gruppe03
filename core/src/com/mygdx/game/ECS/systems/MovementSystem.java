@@ -7,11 +7,11 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.ECS.components.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
 import com.mygdx.game.ECS.components.flags.MovementControlComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
-import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.VelocityComponent;
 
 import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 import static com.mygdx.game.utils.GameController.CM;

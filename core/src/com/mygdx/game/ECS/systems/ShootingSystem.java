@@ -6,9 +6,10 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.ECS.components.Box2DComponent;
+import com.mygdx.game.ECS.components.flags.RenderComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.ShootingComponent;
+import com.mygdx.game.ECS.components.misc.ShootingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
 import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
 import com.mygdx.game.gamelogic.states.GameStateManager;
@@ -39,6 +40,9 @@ public class ShootingSystem extends EntitySystem {
         for (int i = 0; i < this.playersShooting.size(); i++) {
             Entity player = this.playersShooting.get(i);
             ShootingComponent shootingComponent = ECSManager.shootingMapper.get(player);
+            updatePowerBar(player);
+            ECSManager.UIManager.getPowerBar().add(new RenderComponent());
+            ECSManager.UIManager.getPowerBarArrow().add(new RenderComponent());
 
             shootingComponent.power += dt; // Increase power
 
@@ -46,9 +50,23 @@ public class ShootingSystem extends EntitySystem {
             if (!CM.powerPressed || shootingComponent.power >= MAX_SHOOTING_POWER) {
                 Entity projectile = ECSManager.getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[CM.currentProjectile]).createEntity(); // Get the projectile chosen from the Controller
                 ShootProjectile(projectile, shootingComponent, player); // Shoot the projectile
+
+                ECSManager.UIManager.getPowerBar().remove(RenderComponent.class);
+                ECSManager.UIManager.getPowerBarArrow().remove(RenderComponent.class);
+                ECSManager.UIManager.getAimArrow().remove(RenderComponent.class);
                 GSM.setGameState(GameStateManager.STATE.PROJECTILE_AIRBORNE); // Change the game state
             }
         }
+    }
+
+    // Display the powerbar according to player power
+    public void updatePowerBar(Entity player) {
+        // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
+        float startPositionArrow = ECSManager.positionMapper.get(ECSManager.UIManager.getPowerBar()).position.y - ECSManager.spriteMapper.get(ECSManager.UIManager.getPowerBar()).size.y / 2;
+
+        //Set position of powerBarArrow -> given the power of the shootingComponent
+        float power = ECSManager.shootingMapper.get(player).power;
+        ECSManager.positionMapper.get(ECSManager.UIManager.getPowerBarArrow()).position.y = startPositionArrow + (ECSManager.spriteMapper.get(ECSManager.UIManager.getPowerBar()).size.y * (power / MAX_SHOOTING_POWER));
     }
 
     public void ShootProjectile(Entity projectile, ShootingComponent shootingComponent, Entity player) {

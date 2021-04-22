@@ -8,13 +8,13 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.DefaultPowerUp;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.HealthUP;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.PowerUpEffect;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.SpeedUp;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.PowerUpComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;

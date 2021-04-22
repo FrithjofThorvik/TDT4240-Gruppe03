@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-import com.mygdx.game.ECS.components.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
 import com.mygdx.game.ECS.components.projectiles.SplitterComponent;
 import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
 

@@ -9,9 +9,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.ShootingComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.flags.RenderComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
+import com.mygdx.game.ECS.components.misc.ShootingComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.isAimingComponent;
 import com.mygdx.game.gamelogic.states.GameStateManager;
 
@@ -41,6 +42,8 @@ public class AimingSystem extends EntitySystem {
                 Entity player = this.playersAiming.get(i); // Get current player entity
                 PositionComponent playerPosition = ECSManager.positionMapper.get(player); // Get the position component of that player
                 ShootingComponent shootingComponent = ECSManager.shootingMapper.get(player);
+
+                ECSManager.UIManager.getAimArrow().add(new RenderComponent());
 
                 repositionAimArrow(player); // Reposition the aim arrow
                 if (!CM.checkControllerIsTouched()) // We don't want to calculate aim if we are touching controllers

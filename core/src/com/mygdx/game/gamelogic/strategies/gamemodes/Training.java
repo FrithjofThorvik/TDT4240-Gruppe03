@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.FontComponent;
+import com.mygdx.game.ECS.components.misc.FontComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.isAimingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
 import com.mygdx.game.ECS.systems.AimingSystem;
@@ -106,7 +106,6 @@ public class Training implements GameMode {
 
         // Remove or add components to entities
         player.add(new isAimingComponent());
-        ECSManager.UIManager.addShootingRender();
 
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(true);
@@ -127,7 +126,6 @@ public class Training implements GameMode {
     public void projectileAirborne() { // Is called when a projectile has been fired and is currently airborne
         // Remove or add components to entities
         player.remove(isShootingComponent.class);
-        ECSManager.UIManager.removeShootingRender();
 
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
@@ -144,7 +142,6 @@ public class Training implements GameMode {
         this.printTimer(); // Print information about how much time is left
         this.printScore(); // Prints the score
 
-        ECSManager.UIManager.updatePowerBar(player); // Makes the powerbar display correctly
     }
 
     @Override

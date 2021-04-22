@@ -5,12 +5,12 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.FontComponent;
-import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.misc.FontComponent;
+import com.mygdx.game.ECS.components.misc.HealthComponent;
 import com.mygdx.game.ECS.components.flags.HealthDisplayerComponent;
 import com.mygdx.game.ECS.components.flags.MovementControlComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
 import com.mygdx.game.ECS.components.flags.isAimingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
@@ -139,7 +139,6 @@ public class LocalMultiplayer implements GameMode {
         players.get(currentPlayer).remove(MovementControlComponent.class); // The player should loose ability to move whilst aiming
         players.get(currentPlayer).add(new isAimingComponent());
 
-        ECSManager.UIManager.addShootingRender();
 
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(true);
@@ -166,7 +165,6 @@ public class LocalMultiplayer implements GameMode {
 
         // Remove or add components to entities
         players.get(currentPlayer).remove(isShootingComponent.class);
-        ECSManager.UIManager.removeShootingRender();
 
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
@@ -180,7 +178,7 @@ public class LocalMultiplayer implements GameMode {
         // Remove or add components to entities
         players.get(currentPlayer).remove(isShootingComponent.class);
         players.get(currentPlayer).remove(isAimingComponent.class);
-        ECSManager.UIManager.removeShootingRender();
+
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
         ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
@@ -201,7 +199,6 @@ public class LocalMultiplayer implements GameMode {
 
         // Get the player who's turn it is
         Entity player = this.players.get(currentPlayer);
-        ECSManager.UIManager.updatePowerBar(player); // Makes the powerbar display correctly
 
         // Update health displays
         for (int i = 0; i < healthDisplayers.size(); i++) {

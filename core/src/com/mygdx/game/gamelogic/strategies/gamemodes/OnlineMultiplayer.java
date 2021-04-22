@@ -6,12 +6,12 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.FontComponent;
-import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.misc.FontComponent;
+import com.mygdx.game.ECS.components.misc.HealthComponent;
 import com.mygdx.game.ECS.components.flags.HealthDisplayerComponent;
 import com.mygdx.game.ECS.components.flags.MovementControlComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
 import com.mygdx.game.ECS.components.flags.isAimingComponent;
 import com.mygdx.game.ECS.components.flags.isShootingComponent;
@@ -74,11 +74,11 @@ public class OnlineMultiplayer implements GameMode {
 
     @Override
     public void update(float dt) {
-        if(players.size()>=2)
+        if (players.size() >= 2)
             gameStart = true;
 
         updateServer(); // Update server related things
-        if (gameStart && yourPlayer==currentPlayer) { // Wait until another player joins
+        if (gameStart && yourPlayer == currentPlayer) { // Wait until another player joins
             // Check if aim button is pressed
             if (CM.aimPressed)
                 GSM.setGameState(GameStateManager.STATE.PLAYER_AIMING); // Change state to player aiming if button is pressed
@@ -166,7 +166,6 @@ public class OnlineMultiplayer implements GameMode {
         yourPlayer.remove(MovementControlComponent.class); // The player should loose ability to move whilst aiming
         yourPlayer.add(new isAimingComponent());
 
-        ECSManager.UIManager.addShootingRender();
 
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(true);
@@ -193,7 +192,6 @@ public class OnlineMultiplayer implements GameMode {
 
         // Remove or add components to entities
         yourPlayer.remove(isShootingComponent.class);
-        ECSManager.UIManager.removeShootingRender();
 
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
@@ -205,7 +203,7 @@ public class OnlineMultiplayer implements GameMode {
         // Remove or add components to entities
         yourPlayer.remove(isShootingComponent.class);
         yourPlayer.remove(isAimingComponent.class);
-        ECSManager.UIManager.removeShootingRender();
+
         // Start or stop systems (if they should be processed or not)
         ECSManager.getEngine().getSystem(ShootingSystem.class).setProcessing(false);
         ECSManager.getEngine().getSystem(AimingSystem.class).setProcessing(false);
@@ -221,7 +219,6 @@ public class OnlineMultiplayer implements GameMode {
         // Is called every update
         this.printTimer(); // Print information about how much time is left in a round, etc...
 
-        ECSManager.UIManager.updatePowerBar(yourPlayer); // Makes the powerbar display correctly
 
         // Update health displays
         for (int i = 0; i < healthDisplayers.size(); i++) {
@@ -374,7 +371,7 @@ public class OnlineMultiplayer implements GameMode {
 
                     // Update moving players position
                     if (onlinePlayers.get(id) != null) {
-                        ECSManager.b2dMapper.get(onlinePlayers.get(id)).body.setTransform(position.x/PPM, position.y/PPM, 0); // Update Box2D position
+                        ECSManager.b2dMapper.get(onlinePlayers.get(id)).body.setTransform(position.x / PPM, position.y / PPM, 0); // Update Box2D position
                     }
                 } catch (JSONException e) {
                     System.out.println("[Server] Error getting new playerId");

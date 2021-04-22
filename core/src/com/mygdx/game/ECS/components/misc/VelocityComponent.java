@@ -1,4 +1,4 @@
-package com.mygdx.game.ECS.components;
+package com.mygdx.game.ECS.components.misc;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
