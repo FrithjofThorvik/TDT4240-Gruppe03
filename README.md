@@ -28,11 +28,11 @@ Projectile Wars is a simple android game inspired by the "Worms" game series tha
 - [Box2D](https://box2d.org/)
 - [Tiled](https://www.mapeditor.org/)
 - [Firebase](https://firebase.google.com/)
-
+<br></br>
 #### Architectural Patterns
 - Entity Component System
 - Backend as a service (BaaS)
-
+<br></br>
 #### Design Patterns
 - State Method
 - Template Method
@@ -40,6 +40,7 @@ Projectile Wars is a simple android game inspired by the "Worms" game series tha
 - Observer Pattern
 - Strategy Method
 
+<br></br>
 Please refer to our project documents for a more detailed and complete description of the architecture.
 
 <br></br>
