@@ -32,9 +32,9 @@ public abstract class AbstractScreen implements Screen {
 
     public void addReturnButton() {
         // Initialise return Button
-        Texture exitTexture = new Texture("button_exit.png");
+        Texture exitTexture = new Texture("button_exit_game.png");
         Image returnImg = new Image(exitTexture);
-        returnImg.setSize(50f, 50f);
+        returnImg.setSize(100f, 100f);
         returnImg.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -52,7 +52,7 @@ public abstract class AbstractScreen implements Screen {
         });
         returnImg.setPosition(
                 (Application.camera.viewportWidth) - (returnImg.getWidth() + 20f),
-                (Application.camera.viewportHeight) - (returnImg.getHeight() + 20f)
+                (Application.camera.viewportHeight) - (returnImg.getHeight())
         );
         Application.stage.addActor(returnImg); // Add table actor to GameScreen stage
     }
