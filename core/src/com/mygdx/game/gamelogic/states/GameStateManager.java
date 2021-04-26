@@ -22,7 +22,7 @@ import java.util.HashMap;
  * Will also be used as a data_layer to store & get game information
  **/
 public class GameStateManager {
-    public static GameStateManager GSM; // Makes the GameStateManager accessed globally
+    private static GameStateManager GSM; // Makes the GameStateManager accessed globally
     public AbstractGameState gameState; // Represents the current game state
     private GameMode gameMode; // Is used to pick the game mode
 
@@ -53,8 +53,7 @@ public class GameStateManager {
     private HashMap<GAMEMODE, GameMode> gameModes;
 
     // GameStateManager constructor instantiates a static instance of itself and initializes all states
-    public GameStateManager() {
-        GSM = this;
+    private GameStateManager() {
         this.initGameStates();
         this.initGameModes();
     }
@@ -100,12 +99,18 @@ public class GameStateManager {
     }
 
     // Set a the gamemode
-    public void setGameMode(GAMEMODE gameMode){
+    public void setGameMode(GAMEMODE gameMode) {
         this.gameMode = gameModes.get(gameMode);
     }
 
     // Get the current gamemode
-    public GameMode getGameMode(){
+    public GameMode getGameMode() {
         return this.gameMode;
+    }
+
+    public static GameStateManager getInstance() {
+        if (GSM == null)
+            GSM = new GameStateManager();
+        return GSM;
     }
 }

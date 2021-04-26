@@ -7,14 +7,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.ECS.components.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
 import com.mygdx.game.ECS.components.flags.MovementControlComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
-import com.mygdx.game.ECS.components.VelocityComponent;
-
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
-import static com.mygdx.game.utils.GameController.CM;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.VelocityComponent;
+import com.mygdx.game.ECS.managers.ECSManager;
+import com.mygdx.game.utils.GameController;;
 
 
 /**
@@ -48,18 +47,18 @@ public class MovementSystem extends EntitySystem {
     private void handleMovement(Entity player) {
 
         // Get entity components
-        VelocityComponent playerVelocity = ECSManager.velocityMapper.get(player);
-        Box2DComponent playerBox2D = ECSManager.b2dMapper.get(player);
-        SpriteComponent playerSprite = ECSManager.spriteMapper.get(player);
+        VelocityComponent playerVelocity = ECSManager.getInstance().velocityMapper.get(player);
+        Box2DComponent playerBox2D = ECSManager.getInstance().b2dMapper.get(player);
+        SpriteComponent playerSprite = ECSManager.getInstance().spriteMapper.get(player);
 
-        if (CM.rightPressed) {
+        if (GameController.getInstance().rightPressed) {
             playerBox2D.body.applyLinearImpulse(new Vector2(10f, 0f), playerBox2D.body.getWorldCenter(), false);
 
             // Flip sprite if it is already flipped from it's original state
             if (playerSprite.sprite.isFlipX())
                 playerSprite.sprite.flip(true, false);
 
-        } else if (CM.leftPressed) {
+        } else if (GameController.getInstance().leftPressed) {
             Vector2 negativeImpulse = new Vector2(-10f, 0f);
             playerBox2D.body.applyLinearImpulse(negativeImpulse, playerBox2D.body.getWorldCenter(), false);
 

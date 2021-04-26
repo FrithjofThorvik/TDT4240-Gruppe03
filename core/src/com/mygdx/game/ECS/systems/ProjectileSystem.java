@@ -6,14 +6,13 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import com.mygdx.game.ECS.components.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
 
 import com.mygdx.game.Application;
 
 import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
-
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import com.mygdx.game.ECS.managers.ECSManager;
 
 
 /**
@@ -38,10 +37,10 @@ public class ProjectileSystem extends EntitySystem {
                 // Get projectile
                 Entity projectile = this.projectiles.get(i);
 
-                if (ECSManager.projectileMapper.has(projectile)) {
+                if ( ECSManager.getInstance().projectileMapper.has(projectile)) {
                     // If the projectile is mid air -> activate midair function
                     if (checkMidAir(projectile))
-                        ECSManager.projectileMapper.get(projectile).projectileType.midAir(projectile); // Activate the function
+                        ECSManager.getInstance().projectileMapper.get(projectile).projectileType.midAir(projectile); // Activate the function
 
                     // If the projectile is outside the screen border
                     if (checkOutOfBounds(projectile))
@@ -55,35 +54,35 @@ public class ProjectileSystem extends EntitySystem {
     }
 
     public boolean checkOutOfBounds(Entity projectile) {
-        float posX = ECSManager.positionMapper.get(projectile).position.x;
+        float posX =  ECSManager.getInstance().positionMapper.get(projectile).position.x;
         // Remove projectile if it is out of bounds
         return (posX > Application.camera.viewportWidth || posX < 0);
     }
 
     public void checkCollision(Entity projectile) {
-        if (ECSManager.collisionMapper.has(projectile)) {
-            Entity collisionEntity = ECSManager.collisionMapper.get(projectile).collisionEntity; // Get the colliding entity
+        if ( ECSManager.getInstance().collisionMapper.has(projectile)) {
+            Entity collisionEntity =  ECSManager.getInstance().collisionMapper.get(projectile).collisionEntity; // Get the colliding entity
 
             // If projectile collides with player -> update players health
             if (players.contains(collisionEntity, true)) {
-                ECSManager.healthMapper.get(collisionEntity).hp -= ECSManager.projectileMapper.get(projectile).damage;
+                ECSManager.getInstance().healthMapper.get(collisionEntity).hp -=  ECSManager.getInstance().projectileMapper.get(projectile).damage;
             }
 
             // If projectile collides with something other than projectile -> call the projectile collision function
             if (!projectiles.contains(collisionEntity, true)) {
                 // Activate the collision function for the projectile
-                ECSManager.projectileMapper.get(projectile).projectileType.collision(projectile);
+                ECSManager.getInstance().projectileMapper.get(projectile).projectileType.collision(projectile);
             }
 
         }
     }
 
     public boolean checkMidAir(Entity projectile) {
-        Box2DComponent entityBox2D = ECSManager.b2dMapper.get(projectile);
+        Box2DComponent entityBox2D =  ECSManager.getInstance().b2dMapper.get(projectile);
 
         // Checks if a projectile has reached peak height and activates it's midAir function
-        if ((entityBox2D.body.getLinearVelocity().y <= 0 && !ECSManager.projectileMapper.get(projectile).midAirReached)) {
-            ECSManager.projectileMapper.get(projectile).midAirReached = true; // Set the flag that this projectile has reached midAir
+        if ((entityBox2D.body.getLinearVelocity().y <= 0 && ! ECSManager.getInstance().projectileMapper.get(projectile).midAirReached)) {
+            ECSManager.getInstance().projectileMapper.get(projectile).midAirReached = true; // Set the flag that this projectile has reached midAir
             return true;
         }
         return false;

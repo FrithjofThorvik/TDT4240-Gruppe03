@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Application;
+import com.mygdx.game.gamelogic.states.GameStateManager;
 import com.mygdx.game.gamelogic.states.ScreenManager;
 
-import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 /**
  * Contain the template for how screens are implemented
@@ -25,9 +25,12 @@ public abstract class AbstractScreen implements Screen {
     }
 
     public abstract void initScreen(); // Abstract function: (Template Method)
+
     public abstract void endScreen(); // Abstract function: (Template Method)
+
     public abstract void update(float delta); // Abstract function: (Template Method)
-    public void addReturnButton(){
+
+    public void addReturnButton() {
         // Initialise return Button
         Texture exitTexture = new Texture("button_exit_game.png");
         Image returnImg = new Image(exitTexture);
@@ -40,8 +43,11 @@ public abstract class AbstractScreen implements Screen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                SM.removeAllActors(); // Removes all current actors from Application.stage
-                SM.setScreen(ScreenManager.STATE.MAIN_MENU);
+                ScreenManager.getInstance(app).removeAllActors(); // Removes all current actors from Application.stage
+                if (GameStateManager.getInstance().gameState != null) {
+                    GameStateManager.getInstance().setGameState(GameStateManager.STATE.END_GAME);
+                }
+                ScreenManager.getInstance(app).setScreen(ScreenManager.STATE.MAIN_MENU);
             }
         });
         returnImg.setPosition(

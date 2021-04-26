@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.game.Application;
 import com.mygdx.game.gamelogic.states.ScreenManager;
 
-import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 
 /**
@@ -41,7 +40,7 @@ public class EndScreen extends AbstractScreen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                SM.setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
+                ScreenManager.getInstance(app).setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
             }
         });
 
@@ -56,7 +55,7 @@ public class EndScreen extends AbstractScreen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                SM.setScreen(ScreenManager.STATE.MAIN_MENU);
+                ScreenManager.getInstance(app).setScreen(ScreenManager.STATE.MAIN_MENU);
             }
         });
 

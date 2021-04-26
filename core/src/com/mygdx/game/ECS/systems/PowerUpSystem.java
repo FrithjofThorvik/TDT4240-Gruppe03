@@ -8,16 +8,17 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.DefaultPowerUp;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.HealthUP;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.PowerUpEffect;
 import com.mygdx.game.ECS.EntityUtils.strategies.PowerUp.SpeedUp;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.PowerUpComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import com.mygdx.game.ECS.managers.ECSManager;
+import com.mygdx.game.utils.GameConstants;
 
 import static com.mygdx.game.utils.B2DConstants.BIT_GROUND;
 import static com.mygdx.game.utils.B2DConstants.BIT_PLAYER;
@@ -55,9 +56,9 @@ public class PowerUpSystem extends EntitySystem {
                 // Get entity
                 Entity powerUp = this.powerUps.get(i);
 
-                if (ECSManager.collisionMapper.has(powerUp)) {
-                    Entity collisionEntity = ECSManager.collisionMapper.get(powerUp).collisionEntity;
-                    if (ECSManager.playerMapper.has(collisionEntity)) {
+                if ( ECSManager.getInstance().collisionMapper.has(powerUp)) {
+                    Entity collisionEntity =  ECSManager.getInstance().collisionMapper.get(powerUp).collisionEntity;
+                    if ( ECSManager.getInstance().playerMapper.has(collisionEntity)) {
                         getRandomPowerUp();
                         effect.applyEffect(collisionEntity);
                         powerUp.removeAll();
@@ -69,13 +70,13 @@ public class PowerUpSystem extends EntitySystem {
 
     private void spawnNewPowerUp() {
         Entity powerUp = new Entity();
-        float xPos = (float) Math.floor(Math.random() * Application.VIRTUAL_WORLD_WIDTH);
+        float xPos = (float) Math.floor(Math.random() * GameConstants.VIRTUAL_WORLD_WIDTH);
         powerUp.add(new SpriteComponent(new Texture("powerUp.png"), 25f, 25f, 1))
-                .add(new PositionComponent(xPos, Application.VIRTUAL_WORLD_HEIGHT))
-                .add(new Box2DComponent(ECSManager.positionMapper.get(powerUp).position, ECSManager.spriteMapper.get(powerUp).size, false, 1000f, BIT_POWERUP, (short) (BIT_PLAYER | BIT_GROUND)))
+                .add(new PositionComponent(xPos, GameConstants.VIRTUAL_WORLD_HEIGHT))
+                .add(new Box2DComponent( ECSManager.getInstance().positionMapper.get(powerUp).position,  ECSManager.getInstance().spriteMapper.get(powerUp).size, false, 1000f, BIT_POWERUP, (short) (BIT_PLAYER | BIT_GROUND)))
                 .add(new PowerUpComponent())
                 .add(new RenderComponent());
-        ECSManager.getEngine().addEntity(powerUp);
+        ECSManager.getInstance().getEngine().addEntity(powerUp);
     }
 
     private void getRandomPowerUp() {

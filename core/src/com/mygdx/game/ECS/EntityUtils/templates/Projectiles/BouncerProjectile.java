@@ -2,7 +2,7 @@ package com.mygdx.game.ECS.EntityUtils.templates.Projectiles;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.ECS.components.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
 import com.mygdx.game.ECS.EntityUtils.strategies.Projectile.BouncyType;
 import com.mygdx.game.ECS.EntityUtils.strategies.Projectile.ProjectileType;
 import com.mygdx.game.ECS.components.projectiles.BouncyComponent;

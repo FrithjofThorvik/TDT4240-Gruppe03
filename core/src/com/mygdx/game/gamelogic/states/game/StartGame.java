@@ -1,6 +1,6 @@
 package com.mygdx.game.gamelogic.states.game;
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import com.mygdx.game.gamelogic.states.GameStateManager;
 
 /**
  * This state is for displaying the start of the game session
@@ -9,6 +9,6 @@ import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 public class StartGame extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.getGameMode().startGame();// Call the gamemode's function
+        GameStateManager.getInstance().getGameMode().startGame();// Call the gamemode's function
     }
 }

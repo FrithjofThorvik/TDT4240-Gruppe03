@@ -1,6 +1,7 @@
 package com.mygdx.game.gamelogic.states.game;
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
+import com.mygdx.game.gamelogic.states.GameStateManager;
+
 
 
 /**
@@ -10,6 +11,6 @@ public class StartRound extends AbstractGameState {
 
     @Override
     public void startGameState() {
-        GSM.getGameMode().startRound();// Call the gamemode's function
+        GameStateManager.getInstance().getGameMode().startRound();// Call the gamemode's function
     }
 }

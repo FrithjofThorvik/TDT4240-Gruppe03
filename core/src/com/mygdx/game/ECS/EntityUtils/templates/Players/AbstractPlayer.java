@@ -2,16 +2,15 @@ package com.mygdx.game.ECS.EntityUtils.templates.Players;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.HealthComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
-import com.mygdx.game.ECS.components.ShootingComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
-import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.ECS.components.misc.ShootingComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.VelocityComponent;
 import com.mygdx.game.ECS.EntityUtils.templates.AbstractEntity;
-import com.mygdx.game.ECS.systems.PowerUpSystem;
 
 import static com.mygdx.game.utils.B2DConstants.*;
 

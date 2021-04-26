@@ -1,7 +1,7 @@
 package com.mygdx.game.gamelogic.states.game;
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 
+import com.mygdx.game.gamelogic.states.GameStateManager;
 
 /**
  * This state is for when projectiles are in air
@@ -9,6 +9,6 @@ import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 public class ProjectileAirborne extends AbstractGameState {
     @Override
     public void startGameState() {
-        GSM.getGameMode().projectileAirborne();// Call the gamemode's function
+        GameStateManager.getInstance().getGameMode().projectileAirborne();// Call the gamemode's function
     }
 }

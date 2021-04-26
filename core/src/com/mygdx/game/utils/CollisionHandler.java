@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.mygdx.game.ECS.components.CollisionComponent;
+import com.mygdx.game.ECS.components.misc.CollisionComponent;
 
 import static com.mygdx.game.ECS.managers.ECSManager.entityFixtureHashMap;
 

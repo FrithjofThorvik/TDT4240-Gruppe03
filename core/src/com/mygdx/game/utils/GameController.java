@@ -11,17 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Application;
 import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
-
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
+import com.mygdx.game.ECS.managers.ECSManager;
 
 
 /**
  * This is used for creating a controller
  **/
 public class GameController {
-    public static GameController CM;
+    private static GameController CM;
     public int currentProjectile = 0;
-    private int numberOfProjectiles = 0;
+    private int numberOfProjectiles;
     public boolean leftPressed, rightPressed, aimPressed, powerPressed, projectilePressed = false;
     private final Array<Texture> projectileTextures;
 
@@ -37,23 +36,21 @@ public class GameController {
 
     // Prepare component mappers
 
-    public GameController() {
-        CM = this;
+    private GameController() {
         this.projectileTextures = new Array<Texture>();
 
         // Get number of projectile types
         numberOfProjectiles = EntityTemplateMapper.PROJECTILES.values().length;
         for (int i = 0; i < numberOfProjectiles; i++) {
-            this.projectileTextures.add(ECSManager.getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[i]).getTexture());
+            this.projectileTextures.add(ECSManager.getInstance().getEntityTemplateMapper().getProjectileClass(EntityTemplateMapper.PROJECTILES.values()[i]).getTexture());
         }
 
-        Actor controller = this.createControllerActor();
-        Application.stage.addActor(controller); // Add table actor to GameScreen stage
+        this.createControllerActor();
         this.idle();
     }
 
     // Create controller table
-    private Actor createControllerActor() {
+    public void createControllerActor() {
         Texture buttonLeft = new Texture("button_left.png");
         Texture buttonRight = new Texture("button_right.png");
         Texture buttonPower = new Texture("button_power.png");
@@ -172,7 +169,8 @@ public class GameController {
 
         table.setColor(table.getColor().r, table.getColor().g, table.getColor().b, table.getColor().a - 0.2f);
 
-        return table;
+        projectileImg.setDrawable(new TextureRegionDrawable(this.projectileTextures.get(this.currentProjectile)));
+        Application.stage.addActor(table); // Add table actor to GameScreen stage table;
     }
 
     // Change currently active projectile texture in controller menu
@@ -261,5 +259,12 @@ public class GameController {
 
     public boolean checkControllerIsTouched() {
         return leftPressed || rightPressed || powerPressed || aimPressed || projectilePressed;
+    }
+
+    public static GameController getInstance() {
+        if (CM == null) {
+            CM = new GameController();
+        }
+        return CM;
     }
 }

@@ -7,9 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Application;
 import com.mygdx.game.gamelogic.states.GameStateManager;
 import com.mygdx.game.gamelogic.states.ScreenManager;
+import com.mygdx.game.utils.GameConstants;
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
-import static com.mygdx.game.gamelogic.states.ScreenManager.SM;
 
 
 /**
@@ -30,7 +29,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         // Initialise background
         Image background = new Image(backgroundTexture);
-        background.setSize(Application.VIRTUAL_WORLD_WIDTH, Application.VIRTUAL_WORLD_HEIGHT);
+        background.setSize(GameConstants.VIRTUAL_WORLD_WIDTH, GameConstants.VIRTUAL_WORLD_HEIGHT);
         background.setPosition(
                 (Application.camera.viewportWidth) - (background.getWidth()),
                 (Application.camera.viewportHeight) - (background.getHeight())
@@ -47,10 +46,10 @@ public class MainMenuScreen extends AbstractScreen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                SM.removeAllActors(); // Removes all current actors from Application.stage
+                ScreenManager.getInstance(null).removeAllActors(); // Removes all current actors from Application.stage
 
-                GSM.setGameMode(GameStateManager.GAMEMODE.LOCAL);
-                SM.setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
+                GameStateManager.getInstance().setGameMode(GameStateManager.GAMEMODE.LOCAL);
+                ScreenManager.getInstance(null).setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
             }
         });
         playImg.setPosition(
@@ -69,10 +68,10 @@ public class MainMenuScreen extends AbstractScreen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                SM.removeAllActors(); // Removes all current actors from Application.stage
+                ScreenManager.getInstance(app).removeAllActors(); // Removes all current actors from Application.stage
 
-                GSM.setGameMode(GameStateManager.GAMEMODE.TRAINING);
-                SM.setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
+                GameStateManager.getInstance().setGameMode(GameStateManager.GAMEMODE.TRAINING);
+                ScreenManager.getInstance(app).setScreen(com.mygdx.game.gamelogic.states.ScreenManager.STATE.PLAY);
             }
         });
         singlePlayerImg.setPosition(
@@ -91,8 +90,8 @@ public class MainMenuScreen extends AbstractScreen {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                SM.removeAllActors(); // Removes all current actors from Application.stage
-                SM.setScreen(ScreenManager.STATE.LEADERBOARD);
+                ScreenManager.getInstance(app).removeAllActors(); // Removes all current actors from Application.stage
+                ScreenManager.getInstance(app).setScreen(ScreenManager.STATE.LEADERBOARD);
             }
         });
         leaderboardImg.setPosition(

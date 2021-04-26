@@ -10,19 +10,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.ECS.EntityUtils.EntityTemplateMapper;
-import com.mygdx.game.ECS.components.CollisionComponent;
+import com.mygdx.game.ECS.components.misc.CollisionComponent;
 import com.mygdx.game.ECS.components.flags.MovementControlComponent;
-import com.mygdx.game.ECS.components.ParentComponent;
+import com.mygdx.game.ECS.components.misc.ParentComponent;
 import com.mygdx.game.ECS.components.flags.PowerUpComponent;
 import com.mygdx.game.ECS.components.projectiles.ProjectileComponent;
-import com.mygdx.game.ECS.components.ShootingComponent;
-import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.FontComponent;
-import com.mygdx.game.ECS.components.HealthComponent;
+import com.mygdx.game.ECS.components.misc.ShootingComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.FontComponent;
+import com.mygdx.game.ECS.components.misc.HealthComponent;
 import com.mygdx.game.ECS.components.flags.PlayerComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
-import com.mygdx.game.ECS.components.VelocityComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.VelocityComponent;
 import com.mygdx.game.ECS.systems.AimingSystem;
 import com.mygdx.game.ECS.systems.MovementSystem;
 import com.mygdx.game.ECS.systems.ShootingSystem;
@@ -30,8 +30,8 @@ import com.mygdx.game.ECS.systems.PhysicsSystem;
 import com.mygdx.game.ECS.systems.PowerUpSystem;
 import com.mygdx.game.ECS.systems.ProjectileSystem;
 import com.mygdx.game.ECS.systems.RenderingSystem;
+import com.mygdx.game.gamelogic.states.GameStateManager;
 
-import static com.mygdx.game.gamelogic.states.GameStateManager.GSM;
 
 import java.util.HashMap;
 
@@ -44,14 +44,13 @@ import java.util.HashMap;
  * Contains component mappers
  **/
 public class ECSManager {
-    public static ECSManager ECSManager;
+    private static ECSManager ECSManager;
     public MapManager mapManager;
     public GameEntitiesManager gameEntityManager;
     public UIManager UIManager;
 
 
     private final Engine engine;
-    private final SpriteBatch batch;
     private final EntityTemplateMapper entityTemplateMapper;
 
     // Preparing component mappers -> the fastest way for getting entities
@@ -73,10 +72,8 @@ public class ECSManager {
 
     // Takes in an engine from Ashley (instantiate engine in GameScreen)
     // Takes in batch because the RenderSystem will draw to screen
-    public ECSManager(SpriteBatch batch) {
-        ECSManager = this;
+    private ECSManager() {
         this.engine = new Engine();
-        this.batch = batch;
         this.entityTemplateMapper = new EntityTemplateMapper();
 
         // Create ECS entity listeners -> has to be done before createEntities to function correctly
@@ -96,7 +93,7 @@ public class ECSManager {
         // Instantiates all ECS systems
         MovementSystem movementSystem = new MovementSystem();
         AimingSystem aimingSystem = new AimingSystem();
-        RenderingSystem renderingSystem = new RenderingSystem(this.batch);
+        RenderingSystem renderingSystem = new RenderingSystem();
         ProjectileSystem projectileSystem = new ProjectileSystem();
         PowerUpSystem powerUpSystem = new PowerUpSystem();
         PhysicsSystem physicsSystem = new PhysicsSystem();
@@ -115,7 +112,7 @@ public class ECSManager {
 
     // Init Mode specific entities
     public void createModeEntities() {
-        GSM.getGameMode().initEntities();
+        GameStateManager.getInstance().getGameMode().initEntities();
     }
 
     // Add entity listeners for observe & listen to when adding and removing entities
@@ -178,6 +175,13 @@ public class ECSManager {
 
     public void removeAllEntities() {
         engine.removeAllEntities();
+    }
+
+    public static ECSManager getInstance() {
+        if (ECSManager == null) {
+            ECSManager = new ECSManager();
+        }
+        return ECSManager;
     }
 
 }

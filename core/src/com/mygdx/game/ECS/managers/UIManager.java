@@ -4,11 +4,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 import static com.mygdx.game.utils.GameConstants.MAX_SHOOTING_POWER;
 
 public class UIManager {
@@ -23,10 +22,6 @@ public class UIManager {
     Texture rightArrowTexture = new Texture("right-arrow.png");
     Texture aimArrowTexture = new Texture("aim-arrow.png");
 
-    public UIManager() {
-        createUIEntities();
-    }
-
     // Create entities with ECS components
     public void createUIEntities() {
         // Instantiate all UI entities
@@ -34,8 +29,8 @@ public class UIManager {
         powerBarArrow = new Entity();
         aimArrow = new Entity();
 
-        timer = ECSManager.getEntityTemplateMapper().getTextFont().createEntity();
-        ECSManager.positionMapper.get(getTimer()).position = new Vector2(Application.camera.viewportWidth / 2f,
+        timer = ECSManager.getInstance().getEntityTemplateMapper().getTextFont().createEntity();
+        ECSManager.getInstance().positionMapper.get(getTimer()).position = new Vector2(Application.camera.viewportWidth / 2f,
                 Application.camera.viewportHeight * 0.97f);
 
         getPowerBar().add(new SpriteComponent(
@@ -55,7 +50,7 @@ public class UIManager {
         )
                 .add(new PositionComponent(
                         Application.camera.viewportWidth - 70f,
-                        Application.camera.viewportHeight - (ECSManager.spriteMapper.get(getPowerBar()).size.y) / 2f)
+                        Application.camera.viewportHeight - (ECSManager.getInstance().spriteMapper.get(getPowerBar()).size.y) / 2f)
                 );
 
         getAimArrow().add(new PositionComponent(
@@ -70,37 +65,16 @@ public class UIManager {
                 );
 
         // Add all ECS entities to the engine
-        ECSManager.getEngine().addEntity(getPowerBar());
-        ECSManager.getEngine().addEntity(getPowerBarArrow());
-        ECSManager.getEngine().addEntity(getAimArrow());
+        ECSManager.getInstance().getEngine().addEntity(getPowerBar());
+        ECSManager.getInstance().getEngine().addEntity(getPowerBarArrow());
+        ECSManager.getInstance().getEngine().addEntity(getAimArrow());
     }
 
-    // Display the powerbar according to player power
-    public void updatePowerBar(Entity player) {
-        // Calculate the startingPosition of an powerBar arrow (this is done here so that if the screen is resized the arrowPosition is updated)
-        float startPositionArrow = ECSManager.positionMapper.get(getPowerBar()).position.y - ECSManager.spriteMapper.get(getPowerBar()).size.y / 2;
-
-        //Set position of powerBarArrow -> given the power of the shootingComponent
-        float power = ECSManager.shootingMapper.get(player).power;
-        ECSManager.positionMapper.get(getPowerBarArrow()).position.y = startPositionArrow + (ECSManager.spriteMapper.get(getPowerBar()).size.y * (power / MAX_SHOOTING_POWER));
-    }
     // Dispose everything
     public void dispose() {
         this.rightArrowTexture.dispose();
         this.powerBarTexture.dispose();
         this.aimArrowTexture.dispose();
-    }
-
-    public void removeShootingRender() {
-        getAimArrow().remove(RenderComponent.class);
-        getPowerBar().remove(RenderComponent.class);
-        getPowerBarArrow().remove(RenderComponent.class);
-    }
-
-    public void addShootingRender() {
-        getAimArrow().add(new RenderComponent());
-        getPowerBar().add(new RenderComponent());
-        getPowerBarArrow().add(new RenderComponent());
     }
 
     public Entity getAimArrow() {

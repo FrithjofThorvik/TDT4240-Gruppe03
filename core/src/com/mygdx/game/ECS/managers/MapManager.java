@@ -10,12 +10,11 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Application;
-import com.mygdx.game.ECS.components.Box2DComponent;
-import com.mygdx.game.ECS.components.PositionComponent;
-import com.mygdx.game.ECS.components.SpriteComponent;
+import com.mygdx.game.ECS.components.misc.Box2DComponent;
+import com.mygdx.game.ECS.components.misc.PositionComponent;
+import com.mygdx.game.ECS.components.misc.SpriteComponent;
 import com.mygdx.game.ECS.components.flags.RenderComponent;
 
-import static com.mygdx.game.ECS.managers.ECSManager.ECSManager;
 
 import static com.mygdx.game.utils.B2DConstants.BIT_GROUND;
 import static com.mygdx.game.utils.B2DConstants.BIT_PLAYER;
@@ -24,9 +23,6 @@ import static com.mygdx.game.utils.B2DConstants.BIT_PROJECTILE;
 
 public class MapManager {
     private Entity map;
-
-    public MapManager() {
-    }
 
     // Creates the map with all ground instances
     public void createMap(String filename, String mapSprite) {
@@ -44,7 +40,7 @@ public class MapManager {
                         Application.camera.viewportHeight / 2f)
                 )
                 .add(new RenderComponent());
-        ECSManager.getEngine().addEntity(getMap());
+        ECSManager.getInstance().getEngine().addEntity(getMap());
 
         TiledMap tiledMap = new TmxMapLoader().load(filename);
         MapObjects objects = tiledMap.getLayers().get("ground").getObjects();
@@ -55,8 +51,8 @@ public class MapManager {
 
             /** Since the map texture scales too the screen -> when we create box2D elements, they will have to scale the same amount **/
             // Calculate scaleUp ratio
-            float scaleUpX = ECSManager.spriteMapper.get(getMap()).size.x / mapTexture.getWidth();
-            float scaleUpY = ECSManager.spriteMapper.get(getMap()).size.y / mapTexture.getHeight();
+            float scaleUpX =  ECSManager.getInstance().spriteMapper.get(getMap()).size.x / mapTexture.getWidth();
+            float scaleUpY =  ECSManager.getInstance().spriteMapper.get(getMap()).size.y / mapTexture.getHeight();
 
             // Scale the mapObject rectangle shape
             rectangle.width *= scaleUpX;
@@ -74,7 +70,7 @@ public class MapManager {
                     BIT_GROUND,
                     (short) (BIT_PLAYER | BIT_PROJECTILE | BIT_POWERUP))
             );
-            ECSManager.getEngine().addEntity(mapObject);
+            ECSManager.getInstance().getEngine().addEntity(mapObject);
         }
     }
 
