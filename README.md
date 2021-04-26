@@ -53,9 +53,9 @@ $ git clone https://github.com/FrithjofThorvik/TDT4240-Gruppe03.git
 ```
 2. Open the project with Android Studio
 
-3. Build the project
+3. Build the project (and sync with gradle if needed)
 
-4. Run the project with Android Studio's built in android emulator
+4. Run the project with Android Studio's built in android emulator (android is required to access leaderboard)
 
 
 <br></br>
